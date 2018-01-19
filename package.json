@@ -1,6 +1,6 @@
 {
-  "name": "playing-rules-elements",
-  "description": "Game rules management web components for playful applications",
+  "name": "playing-rule-elements",
+  "description": "Game rule management web components for playful applications",
   "version": "1.0.0",
   "license": "MIT",
   "devDependencies": {
