@@ -1,0 +1,108 @@
+<!--
+An element for displaying point rule data.
+
+Example:
+
+    <playing-view-level rule=[[rule]] new></playing-view-level>
+
+@group Playing Elements
+@element playing-view-level
+-->
+<dom-module id="playing-view-level">
+  <template>
+    <style include="mostly-styles">
+      :host {
+        display: block;
+      }
+
+      *[role=widget] {
+        margin-bottom: 16px;
+      }
+
+      label {
+        @apply --mostly-label;
+      }
+
+      div.multiline {
+        white-space: pre-line;
+      }
+
+      div {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        -o-hyphens: auto;
+        hyphens: auto;
+      }
+    </style>
+    
+    <div role="widget" hidden$="[[!rule.description]]">
+      <label>[[i18n('play.rule.field.description')]]</label>
+      <div name="description" class="multiline">[[rule.description]]</div>
+    </div>
+
+    <div role="widget" hidden$="[[!rule.image]]">
+      <label>[[i18n('play.rule.field.image')]]</label>
+      <img id="image" src$="[[rule.image.url]]">
+    </div>
+
+    <div role="widget">
+      <label>[[i18n('play.rule.level.constraints.items')]]</label>
+      <div class="table">
+        <div class="table-header">
+          <div class="flex-4">[[i18n('play.rule.level.constraints.items.name')]]</div>
+          <div class="flex-1">[[i18n('play.rule.level.constraints.items.maximum')]]</div>
+          <div class="flex-1">[[i18n('play.rule.level.constraints.items.hidden')]]</div>
+        </div>
+        <div class="table-rows">
+          <template is="dom-repeat" items="[[rule.constraints.items]]" as="item">
+            <div class="table-row">
+              <div class="flex-4">[[item.name]]</div>
+              <div class="flex-1">[[item.maximum]]</div>
+              <div class="flex-1">[[item.hidden]]</div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div role="widget">
+      <label>[[i18n('play.rule.field.constraints')]]</label>
+      <div class="table">
+        <div class="table-header">
+          <div class="flex">[[i18n('play.rule.level.constraints.maxItems')]]</div>
+        </div>
+        <div class="table-rows">
+          <div class="table-row">
+            <div class="flex">[[rule.constraints.maxItems]]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    class PlayingViewLevel extends Polymer.mixinBehaviors([Mostly.I18nBehavior], Polymer.Element) {
+
+      static get is() { return 'playing-view-level' };
+
+      static get properties() {
+        return {
+          /**
+           * The rule object to be displayed.
+           */
+          rule: {
+            type: Object,
+            value: {}
+          }
+        }
+      }
+    }
+
+    customElements.define(PlayingViewLevel.is, PlayingViewLevel);
+  </script>
+</dom-module>

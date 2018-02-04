@@ -1,0 +1,79 @@
+<!--
+An element for displaying point rule data.
+
+Example:
+
+    <playing-view-custom rule=[[rule]] new></playing-view-custom>
+
+@group Playing Elements
+@element playing-view-custom
+-->
+<dom-module id="playing-view-custom">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      *[role=widget] {
+        margin-bottom: 16px;
+      }
+
+      label {
+        @apply --mostly-label;
+      }
+
+      div.multiline {
+        white-space: pre-line;
+      }
+
+      div {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        -o-hyphens: auto;
+        hyphens: auto;
+      }
+    </style>
+    
+    <div role="widget" hidden$="[[!rule.description]]">
+      <label>[[i18n('play.rule.field.description')]]</label>
+      <div name="description" class="multiline">[[rule.description]]</div>
+    </div>
+
+    <div role="widget" hidden$="[[!rule.image]]">
+      <label>[[i18n('play.rule.field.image')]]</label>
+      <img id="image" src$="[[rule.image.url]]">
+    </div>
+
+    <div role="widget" hidden$="[[!rule.constraints.formula]]">
+      <label>[[i18n('play.rule.custom.constraints.formula')]]</label>
+      <div name="formula" class="multiline">[[rule.constraints.formula]]</div>
+    </div>
+
+  </template>
+
+  <script>
+    class PlayingViewCustom extends Polymer.mixinBehaviors([Mostly.I18nBehavior], Polymer.Element) {
+
+      static get is() { return 'playing-view-custom' };
+
+      static get properties() {
+        return {
+          /**
+           * The rule object to be displayed.
+           */
+          rule: {
+            type: Object,
+            value: {}
+          }
+        }
+      }
+    }
+
+    customElements.define(PlayingViewCustom.is, PlayingViewCustom);
+  </script>
+</dom-module>

@@ -1,0 +1,258 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-pages/iron-pages.html">
+<link rel="import" href="../../iron-form/iron-form.html">
+
+<link rel="import" href="../../paper-card/paper-card.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../paper-listbox/paper-listbox.html">
+<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../paper-item/paper-icon-item.html">
+<link rel="import" href="../../paper-toast/paper-toast.html">
+
+<link rel="import" href="../../iron-input/iron-input.html">
+<link rel="import" href="../../iron-icon/iron-icon.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
+<link rel="import" href="../../iron-icons/social-icons.html">
+
+<link rel="import" href="../../mostly-elements/mostly-common/mostly-resource.html">
+<link rel="import" href="../../mostly-elements/mostly-common/mostly-connection.html">
+<link rel="import" href="../../mostly-elements/behaviors/mostly-i18n-behavior.html">
+<link rel="import" href="../../mostly-elements/behaviors/mostly-filters-behavior.html">
+
+<link rel="import" href="../playing-rule/playing-create-rule.html">
+<link rel="import" href="../playing-rule/playing-manage-rule.html">
+<link rel="import" href="../playing-rule/playing-rule-search.html">
+
+<!--
+An element for managing rules in Playing game services.
+@group Playing UI Elements
+@element playing-rules
+-->
+<dom-module id="playing-rules">
+  <template>
+    <style include="mostly-styles">
+      :host {
+        display: block;
+        position: relative;
+        @apply --layout-flex;
+      }
+
+      .main {
+        position: relative;
+      }
+
+      #createDropdown {
+        position: absolute;
+        right: 0;
+        padding: 0;
+        top: 15px;
+      }
+
+      paper-menu-button {
+        width: 130px;
+        height: 48px;
+        margin-bottom: 16px;
+      }
+
+      paper-button {
+        width: 100%;
+      }
+
+      paper-button iron-icon {
+        padding-right: 8px;
+      }
+
+      paper-listbox {
+        width: 130px;
+        outline: none;
+      }
+
+      paper-icon-item {
+        --paper-item-icon-width: 30px;
+      }
+
+      paper-listbox paper-icon-item iron-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      paper-listbox paper-icon-item:hover {
+        background: var(--mostly-container-hover, #fafafa);
+        cursor: pointer;
+      }
+
+      paper-card {
+        @apply --mostly-card;
+      }
+    </style>
+
+    <mostly-connection user="{{_currentUser}}"></mostly-connection>
+
+    <mostly-page>
+      <div slot="header">
+        <span class="flex">[[i18n('play.rule.heading')]]</span>
+      </div>
+      <div class="main">
+        <paper-toast id="toast"></paper-toast>
+        <iron-pages selected="[[page]]" attr-for-selected="name">
+          <section name="search">
+            <div class="horizontal layout center">
+              <template is="dom-if" if="[[_canCreateRule(readonly, _currentUser)]]">
+                <div class="flex">
+                  <paper-menu-button no-animations id="createDropdown" no-overlap
+                          horizontal-align="right" vertical-align="top" vertical-offset="-4">
+                    <paper-button noink class="primary" id="createButton" slot="dropdown-trigger">
+                      <iron-icon icon="mostly:add"></iron-icon>
+                      <div>[[i18n('play.rule.new')]]</div>
+                    </paper-button>
+                    <paper-listbox no-animation id="menu" selectable="item" slot="dropdown-content">
+                      <paper-icon-item id="achievement" data-type="achievement" on-tap="_createRule">
+                        <iron-icon icon="playing:achievement" slot="item-icon"></iron-icon>
+                        <span>[[i18n('play.rule.new.achievement')]]</span>
+                      </paper-icon-item>
+                      <paper-icon-item id="level" data-type="level" on-tap="_createRule">
+                        <iron-icon icon="playing:level" slot="item-icon"></iron-icon>
+                        <span>[[i18n('play.rule.new.level')]]</span>
+                      </paper-icon-item>
+                      <paper-icon-item id="custom" data-type="custom" on-tap="_createRule">
+                        <iron-icon icon="playing:custom" slot="item-icon"></iron-icon>
+                        <span>[[i18n('play.rule.new.custom')]]</span>
+                      </paper-icon-item>
+                    </paper-listbox>
+                  </paper-menu-button>
+                </div>
+              </template>
+            </div>
+            <playing-rule-search></playing-rule-search>
+          </section>
+
+          <section name="create-rule">
+            <paper-card>
+              <playing-create-rule id="ruleCreator"
+                    type="[[createdType]]"
+                    readonly$="[[readonly]]"></playing-create-rule>
+            </paper-card>
+          </section>
+
+          <section name="manage-rule">
+            <playing-manage-rule id="ruleManager"
+                    rule="[[selectedRule.id]]"
+                    type="[[selectedRule.type]]"
+                    readonly$="[[readonly]]"></playing-manage-rule>
+          </section>
+        </iron-pages>
+      </div>
+    </mostly-page>
+  </template>
+
+  <script>
+    class PlayingRules extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior, Mostly.FiltersBehavior, Mostly.RoutingBehavior], Polymer.Element) {
+
+      static get is() { return 'playing-rules' };
+
+      static get properties() {
+        return {
+          /**
+           * The rule manage page to be displayed.
+           */
+          page: {
+            type: String,
+            value: 'search',
+            notify: true
+          },
+
+          /**
+           * Selected rule.
+           */
+          selectedRule: Object,
+
+          /**
+           * Type of created rule
+           */
+          createdType: String,
+
+          /**
+           * True if currently in read only mode.
+           */
+          readonly: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+
+          _currentUser: {
+            type: Object
+          }
+        }
+      }
+
+      ready() {
+        super.ready();
+        this.addEventListener('goHome', this._goSearch);
+        this.addEventListener('playing-rule-created', this._toast);
+        this.addEventListener('manageRule', this._manageRule);
+      }
+
+      /**
+       * Go to the 'search' page.
+       */
+      _goSearch() {
+        this.selectedRule = null;
+        this.$$('playing-rule-search')._searchTermChanged();
+        this.entity = {};
+        this.page = 'search';
+        this.navigateTo('play', 'rule-management');
+      }
+
+      /**
+       * Got to the 'create-rule' page.
+       */
+      _createRule(e) {
+        this.createdType = e.target.id; // TODO
+        this.page = 'create-rule';
+      }
+
+      _manageRule(e) {
+        this.selectedRule = null;
+        this.selectedRule = e.detail.rule;
+        this.page = 'manage-rule';
+      }
+
+      _hasAdministrationPermissions(user) {
+        return user && (user.isAdministrator || this.isMember(user, 'powerusers'));
+      }
+
+      _canCreateRule(readonly, currentUser) {
+        return !readonly && this._hasAdministrationPermissions(currentUser);
+      }
+
+      /**
+       * Displays a message.
+       */
+      _toast(event) {
+        var msg;
+        switch (event.type) {
+          case 'playing-rule-created':
+            msg = 'Rule ' + event.detail.rule + ' created';
+            break;
+        }
+        if (msg) {
+          this.$.toast.text = msg;
+          this.$.toast.open();
+        }
+      }
+
+      /**
+       * Determines whether a custom element is registered
+       */
+      _isRegistered(tag) {
+        return document.createElement(tag) instanceof Polymer.Element;
+      }
+    }
+
+    customElements.define(PlayingRules.is, PlayingRules);
+  </script>
+</dom-module>

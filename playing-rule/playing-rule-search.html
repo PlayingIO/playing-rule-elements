@@ -1,0 +1,162 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-icon/iron-icon.html">
+<link rel="import" href="../../iron-icons/editor-icons.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../paper-item/paper-icon-item.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../paper-listbox/paper-listbox.html">
+<link rel="import" href="../../paper-menu-button/paper-menu-button.html">
+
+<link rel="import" href="../../mostly-elements/mostly-common/mostly-resource.html">
+<link rel="import" href="../../mostly-elements/widgets/mostly-pagination-controls.html">
+
+<!--
+`playing-rule-search`
+@group Playing Elements
+@element playing-rule-search
+-->
+<dom-module id="playing-rule-search">
+  <template>
+    <style include="mostly-styles">
+      :host {
+        display: block;
+        @apply --playing-rule-search-layout;
+      }
+
+      .search {
+        width: calc(100% - 11rem);
+      }
+
+      .title {
+        margin: 0 0 .8em;
+        padding: 0;
+      }
+
+      .fade-6 {
+        opacity: 0.6;
+      }
+
+      .counter {
+        margin-right: 2em;
+      }
+
+      h3 iron-icon {
+        width: 1.3em;
+        margin-right: .2rem;
+      }
+
+      paper-card {
+        @apply --mostly-card;
+      }
+
+    </style>
+
+    <mostly-resource id="ruleSearch" auto
+            path="rules"
+            response="{{rules}}"></mostly-resource>
+
+    <paper-card class="search">
+      <paper-input noink autofocus="true" value="{{searchTerm}}" type="search"
+              placeholder="[[i18n('play.rule.search.placeholder')]]">
+        <iron-icon icon="mostly:search" prefix></iron-icon>
+      </paper-input>
+    </paper-card>
+
+    <!-- rules -->
+    <paper-card name="rules">
+      <h3 class="title">
+        <iron-icon icon="mostly:rule" prefix></iron-icon>  [[i18n('play.rule.heading')]]
+      </h3>
+      <div class="fade-6">
+        <p>[[i18n('play.rule.guide.search')]]</p>
+      </div>
+      <div class="table">
+        <div class="table-header">
+          <div class="flex-2">[[i18n('play.rule.field.name')]]</div>
+          <div class="flex-1">[[i18n('play.rule.field.type')]]</div>
+          <div class="flex-4">[[i18n('play.rule.field.description')]]</div>
+        </div>
+        <div class="table-rows">
+          <template is="dom-repeat" items="[[rules.data]]" as="item">
+            <div class="table-row" on-tap="_manageRule">
+              <div class="flex-2">[[item.name]]</div>
+              <div class="flex-1">[[i18n(item.type, 'play.rule.')]]</div>
+              <div class="flex-4">[[item.description]]</div>
+            </div>
+          </template>
+          <template is="dom-if" if=[[_empty(rules.data)]]>
+            <div class="table-row">
+              <div class="empty-result">[[i18n('play.rule.search.empty')]]</div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <mostly-pagination-controls page="{{rulesCurrentPage}}" number-of-pages="[[rules.numberOfPages]]"></mostly-pagination-controls>
+    </paper-card>
+
+  </template>
+
+  <script>
+    class PlayingRuleSearch extends Polymer.mixinBehaviors([Mostly.I18nBehavior], Polymer.Element) {
+
+      static get is() { return 'playing-rule-search' };
+
+      static get properties() {
+        return {
+          searchTerm: {
+            type: String,
+            value: '',
+            observer: '_searchTermChanged',
+            notify: true
+          },
+
+          rules: Object,
+
+          rulesCurrentPage: {
+            type: 'Number',
+            value: 1
+          },
+
+          currentPageSize: {
+            type: 'Number',
+            value: 10
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_searchRules(rulesCurrentPage)'
+        ];
+      }
+
+      _searchTermChanged() {
+        this.rulesCurrentPage = 1;
+        this.currentPageSize = 10;
+        this._searchRules();
+      }
+
+      _searchRules() {
+        var params = {
+          '$skip': (this.rulesCurrentPage - 1) * this.currentPageSize
+        };
+        if (this.searchTerm) {
+          params['name[$like]'] = this.searchTerm;
+        }
+        this.$.ruleSearch.params = params;
+      }
+
+      _manageRule(e) {
+        this.fire('manageRule', { rule: e.model.item });
+      }
+
+      _empty(entries) {
+        return entries && entries.length === 0;
+      }
+
+    }
+
+    customElements.define(PlayingRuleSearch.is, PlayingRuleSearch);
+  </script>
+</dom-module>
