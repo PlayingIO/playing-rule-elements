@@ -73,7 +73,7 @@ Example:
             </div>
           </template>
         </div>
-        <template is="dom-if" if=[[_empty(rule.achievement.rules)]]>
+        <template is="dom-if" if=[[_empty(rule.achievement.rules.*)]]>
           <div class="form-row">
             <div class="empty-result">[[i18n('play.rule.achievement.rules.empty')]]</div>
           </div>
@@ -173,6 +173,10 @@ Example:
           return this.rule.achievement.rules.length < this.selectedMetric.constraints.items.length;
         }
         return true;
+      }
+
+      _empty() {
+        return !(this.rule.achievement && this.rule.achievement.rules && this.rule.achievement.rules.length >= 0);
       }
     }
 
