@@ -140,7 +140,14 @@
 
           rule: {
             type: Object,
-            value: {}
+            value: () => {
+              return {
+                achievement: {},
+                level: {},
+                custom: {},
+                variables: []
+              };
+            }
           },
 
           errors: {

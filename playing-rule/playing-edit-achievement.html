@@ -40,14 +40,15 @@ Example:
       <mostly-select role="widget"
               label="[[i18n('play.rule.achievement')]]"
               placeholder="[[i18n('play.rule.achievement.metric.placeholder')]]"
-              selected="{{selectedMetric}}"
+              selected="{{rule.achievement.metric}}"
+              attr-for-selected="name"
               required>
         <template is="dom-repeat" items="[[metrics.data]]" as="item">
           <paper-item name="[[item.id]]">[[item.name]]</paper-item>
         </template>
       </mostly-select>
 
-      <template is="dom-if" if="[[_isMetricSelected(selectedMetric)]]">
+      <template is="dom-if" if="[[_isMetricSelected(rule.achievement.metric)]]">
         <div class="layout vertical">
           <label>[[i18n('play.rule.achievement.rules')]]</label>
           <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">
@@ -56,11 +57,11 @@ Example:
                 <mostly-select
                         label="[[i18n('play.rule.achievement.rules.item')]]"
                         placeholder="[[i18n('play.rule.achievement.rules.item.placeholder')]]"
-                        selected="{{reward.selectedItem}}"
+                        selected="{{reward.item.name}}"
                         attr-for-selected="name"
                         required>
-                  <template is="dom-repeat" items="[[rule.achievement.metric.constraints.items]]" as="item">
-                    <paper-item name="[[item.id]]">[[item.name]]</paper-item>
+                  <template is="dom-repeat" items="[[selectedMetric.constraints.items]]" as="item">
+                    <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                   </template>
                 </mostly-select>
               </div>
@@ -122,28 +123,13 @@ Example:
 
           metrics: Object,
 
-          selectedMetric: {
-            type: Number,
-            value: -1
-          },
-
-          selectedMetricItem: {
-            type: Number,
-            value: -1
-          },
-
-          resultFormatter: {
-            type: Function,
-            value: function() {
-              return this._resultFormatter.bind(this);
-            }
-          }
+          selectedMetric: Object
         }
       }
 
       static get observers() {
         return [
-          '_refresh(selectedMetric)'
+          '_refresh(rule.achievement.metric)'
         ];
       }
 
@@ -155,22 +141,24 @@ Example:
       }
 
       _isMetricSelected() {
-        return this.selectedMetric >= 0;
+        return this.rule && this.rule.achievement && this.rule.achievement.metric;
       }
 
       _refresh() {
-        if (this.selectedMetric >= 0) {
-          this.set('rule.achievement', this.rule.achievement || {});
-          var metric = this.metrics.data[this.selectedMetric];
-          if (metric) {
-            this.set('rule.achievement.metric', metric);
+        if (this.rule.achievement && this.rule.achievement.metric) {
+          var index = this.metrics.data.findIndex(m => m.id === this.rule.achievement.metric);
+          if (index >= 0) {
+            this.selectedMetric = this.metrics.data[index];
           }
+        } else {
+          this.selectedMetric = null;
         }
       }
 
       _addReward() {
         this.set('rule.achievement.rules', this.rule.achievement.rules || []);
         this.push('rule.achievement.rules', {
+          selected: -1,
           item: { name: '', number: 1 },
           requires: {}
         });
@@ -181,14 +169,10 @@ Example:
       }
 
       _getAvailableRewards() {
-        if (this.rule.achievement && this.rule.achievement.metric && this.rule.achievement.rules) {
-          return this.rule.achievement.rules.length < this.rule.achievement.metric.constraints.items.length;
+        if (this.selectedMetric && this.rule.achievement.rules) {
+          return this.rule.achievement.rules.length < this.selectedMetric.constraints.items.length;
         }
         return true;
-      }
-
-      _resultFormatter(item) {
-        return item.name;
       }
     }
 
