@@ -190,6 +190,7 @@
       }
 
       _goHome() {
+        this._resetFields();
         this.fire('goHome');
       }
 
@@ -232,12 +233,16 @@
       }
 
       _cancel() {
-        this._resetFields();
         this._goHome();
       }
 
       _resetFields() {
-        this.rule = {};
+        this.rule = {
+          achievement: {},
+          level: {},
+          custom: {},
+          variables: []
+        };
         this.errors = '';
       }
 
