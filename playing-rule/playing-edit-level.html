@@ -96,9 +96,9 @@ Example:
     <mostly-collapse-button role="widget">
       <div slot="collapse-trigger">[[i18n('play.rule.advanced')]]</div>
       <div slot="collapse-content">
-        <label>[[i18n('documentPage.tags')]]</label>
-        <playing-tag-suggestion document="[[rule]]" allow-new-tags
-                placeholder="[[i18n('documentPage.tags.placeholder')]]">
+        <label>[[i18n('playing.tags')]]</label>
+        <playing-tag-suggestion path="rules" target="[[rule]]" allow-new-tags
+                placeholder="[[i18n('playing.tags.placeholder')]]">
         </playing-tag-suggestion>
       </div>
     </mostly-collapse-button>
