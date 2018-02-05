@@ -19,15 +19,70 @@ Example:
       *[role=widget] {
         margin-bottom: 16px;
       }
+
+      .form-buttons {
+        padding: 1em;
+        margin: 0px -1.2rem 0;
+      }
     </style>
+
+    <mostly-resource id="metrics" auto path="sets" response="{{metrics}}"></mostly-resource>
 
     <div class="layout vertical">
       <paper-input name="description" label="[[i18n('play.rule.field.description')]]"
             value="{{rule.description}}" maxlength="300"
             char-counter always-float-label></paper-input>
+
       <playing-dropzone name="image" role="widget"
               label="[[i18n('play.rule.field.image')]]"
               document="{{rule}}" xpath="image"></playing-dropzone>
+
+      <mostly-select role="widget"
+              label="[[i18n('play.rule.achievement')]]"
+              placeholder="[[i18n('play.rule.achievement.metric.placeholder')]]"
+              selected="{{selectedMetric}}"
+              required>
+        <template is="dom-repeat" items="[[metrics.data]]" as="item">
+          <paper-item name="[[item.id]]">[[item.name]]</paper-item>
+        </template>
+      </mostly-select>
+
+      <template is="dom-if" if="[[_isMetricSelected(selectedMetric)]]">
+        <div class="layout vertical">
+          <label>[[i18n('play.rule.achievement.rules')]]</label>
+          <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">
+            <div class="form-row">
+              <div class="flex-2">
+                <mostly-select
+                        label="[[i18n('play.rule.achievement.rules.item')]]"
+                        placeholder="[[i18n('play.rule.achievement.rules.item.placeholder')]]"
+                        selected="{{reward.selectedItem}}"
+                        attr-for-selected="name"
+                        required>
+                  <template is="dom-repeat" items="[[rule.achievement.metric.constraints.items]]" as="item">
+                    <paper-item name="[[item.id]]">[[item.name]]</paper-item>
+                  </template>
+                </mostly-select>
+              </div>
+              <div class="flex-4">AAAA
+              </div>
+              <div class="form-actions">
+                <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeReward"></iron-icon>
+              </div>
+            </div>
+          </template>
+        </div>
+        <template is="dom-if" if=[[_empty(rule.achievement.rules)]]>
+          <div class="form-row">
+            <div class="empty-result">[[i18n('play.rule.achievement.rules.empty')]]</div>
+          </div>
+        </template>
+        <div class="form-buttons">
+          <paper-button noink id="addItemButton" class="primary"
+                  disabled="[[!_getAvailableRewards(rule.achievement.rules.splices)]]"
+                  on-tap="_addReward">[[i18n('command.add')]]</paper-button>
+        </div>
+      </template>
     </div>
 
     <mostly-collapse-button role="widget">
@@ -65,6 +120,18 @@ Example:
             value: false
           },
 
+          metrics: Object,
+
+          selectedMetric: {
+            type: Number,
+            value: -1
+          },
+
+          selectedMetricItem: {
+            type: Number,
+            value: -1
+          },
+
           resultFormatter: {
             type: Function,
             value: function() {
@@ -74,11 +141,50 @@ Example:
         }
       }
 
+      static get observers() {
+        return [
+          '_refresh(selectedMetric)'
+        ];
+      }
+
       /**
        * Resets the form fields to empty values.
        */
       _resetFields() {
         this.rule = { achievement: {} };
+      }
+
+      _isMetricSelected() {
+        return this.selectedMetric >= 0;
+      }
+
+      _refresh() {
+        if (this.selectedMetric >= 0) {
+          this.set('rule.achievement', this.rule.achievement || {});
+          var metric = this.metrics.data[this.selectedMetric];
+          if (metric) {
+            this.set('rule.achievement.metric', metric);
+          }
+        }
+      }
+
+      _addReward() {
+        this.set('rule.achievement.rules', this.rule.achievement.rules || []);
+        this.push('rule.achievement.rules', {
+          item: { name: '', number: 1 },
+          requires: {}
+        });
+      }
+
+      _removeReward(e) {
+        this.splice('rule.achievement.rules', e.target.dataIndex, 1);
+      }
+
+      _getAvailableRewards() {
+        if (this.rule.achievement && this.rule.achievement.metric && this.rule.achievement.rules) {
+          return this.rule.achievement.rules.length < this.rule.achievement.metric.constraints.items.length;
+        }
+        return true;
       }
 
       _resultFormatter(item) {
