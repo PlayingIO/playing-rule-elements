@@ -109,15 +109,15 @@ An element for managing rules in Playing game services.
                     </paper-button>
                     <paper-listbox no-animation id="menu" selectable="item" slot="dropdown-content">
                       <paper-icon-item id="achievement" data-type="achievement" on-tap="_createRule">
-                        <iron-icon icon="playing:achievement" slot="item-icon"></iron-icon>
+                        <iron-icon icon="playing:badge" slot="item-icon"></iron-icon>
                         <span>[[i18n('play.rule.new.achievement')]]</span>
                       </paper-icon-item>
                       <paper-icon-item id="level" data-type="level" on-tap="_createRule">
-                        <iron-icon icon="playing:level" slot="item-icon"></iron-icon>
+                        <iron-icon icon="playing:state" slot="item-icon"></iron-icon>
                         <span>[[i18n('play.rule.new.level')]]</span>
                       </paper-icon-item>
                       <paper-icon-item id="custom" data-type="custom" on-tap="_createRule">
-                        <iron-icon icon="playing:custom" slot="item-icon"></iron-icon>
+                        <iron-icon icon="playing:rules" slot="item-icon"></iron-icon>
                         <span>[[i18n('play.rule.new.custom')]]</span>
                       </paper-icon-item>
                     </paper-listbox>

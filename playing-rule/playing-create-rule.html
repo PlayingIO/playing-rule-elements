@@ -85,7 +85,7 @@
 
     <div class="header horizontal layout center">
       <paper-icon-button class="backButton" icon="icons:arrow-back" on-tap="_goHome"></paper-icon-button>
-      <h3><iron-icon icon$="playing:[[type]]"></iron-icon>[[_ruleHeading(type)]]</h3>
+      <h3><iron-icon icon="[[_ruleIcon(type)]]"></iron-icon>[[_ruleHeading(type)]]</h3>
     </div>
 
     <iron-form id="form">
@@ -168,6 +168,14 @@
           event.preventDefault();
           this._create();
         });
+      }
+
+      _ruleIcon(type) {
+        switch (type) {
+          case 'achievement': return 'playing:badge';
+          case 'level': return 'playing:state';
+          case 'custom': return 'playing:rules';
+        }
       }
 
       _ruleHeading(type) {
