@@ -211,7 +211,7 @@ An element for managing rules in Playing game services.
        * Got to the 'create-rule' page.
        */
       _createRule(e) {
-        this.createdType = e.target.id; // TODO
+        this.createdType = e.currentTarget.dataset.type;
         this.page = 'create-rule';
       }
 
