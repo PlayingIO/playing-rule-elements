@@ -1,0 +1,102 @@
+<!--
+Data model
+
+```js
+[
+  type: 'and',
+  conditions: [
+    {
+      type: 'metric', id: 'exp', operator: 'gt', value: '100'
+    },
+    {
+      type: 'and',
+      conditions: [
+        { type: 'point', id: 'exp', operator: 'lt', value: '200' },
+        { type: 'action', id: 'login', operator: 'eq', value: '10' }
+      ]
+    }
+  ]
+]
+```
+
+`playing-edit-conditions`
+@group Mostly UI
+@element playing-edit-conditions
+-->
+<dom-module id="playing-edit-conditions">
+  <template>
+    <style include="mostly-styles">
+      *[role=widget] {
+        margin-bottom: 16px;
+        padding-left: 2em;
+      }
+
+      label {
+        @apply --mostly-label;
+      }
+    </style>
+
+    <div role="widget">
+      <template is="dom-repeat" items="{{data}}" as="cond">
+        <div class="form-row">
+          <div class="form-actions">Match</div>
+          <div class="flex">
+            <mostly-select role="widget"
+                    placeholder="[[i18n('play.rule.achievement.metric.placeholder')]]"
+                    selected="{{cond.type}}"
+                    attr-for-selected="name"
+                    no-label-float required>
+              <template is="dom-repeat" items="[[conditionTypes]]" as="item">
+                <paper-item name="[[item]]">[[item]]</paper-item>
+              </template>
+            </mostly-select>
+          </div>
+          <div class="form-actions">
+            <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeCondition"></iron-icon>
+          </div>
+        </div>
+        <template is="dom-if" if="[[cond.conditions]]"></template>
+          <playing-edit-conditions data="{{cond.conditions}}"></playing-edit-conditions>
+        </template>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    class PlayingEditConditions extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior], Polymer.Element) {
+
+      static get is() { return 'playing-edit-conditions' };
+      
+      static get properties() {
+        return {
+          data: {
+            type: Array,
+            observer: 'dataChanged'
+          },
+
+          type: {
+            type: String,
+            observer: 'typeChanged'
+          },
+
+          conditionTypes: {
+            type: Array,
+            value: ['metric', 'action', 'team', 'and', 'or']
+          }
+        };
+      }
+
+      dataChanged() {
+        console.log('### conditions:', this.data);
+      }
+
+      typeChanged() {
+        console.log('### type changed:', this.type);
+      }
+    }
+
+    customElements.define(PlayingEditConditions.is, PlayingEditConditions);
+  </script>
+</dom-module>
