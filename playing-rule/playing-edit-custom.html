@@ -13,7 +13,6 @@ Example:
     <style include="mostly-styles">
       :host {
         display: block;
-        width: 100%;
       }
 
       *[role=widget] {
@@ -22,15 +21,15 @@ Example:
     </style>
 
     <div class="layout vertical" role="widget">
-      <paper-input name="description" label="[[i18n('play.rule.field.description')]]"
+      <mostly-input name="description" label="[[i18n('play.rule.field.description')]]"
             value="{{rule.description}}" maxlength="300"
-            char-counter always-float-label></paper-input>
+            char-counter always-float-label></mostly-input>
       <playing-dropzone name="image" role="widget"
               label="[[i18n('play.rule.field.image')]]"
               document="{{rule}}" xpath="image"></playing-dropzone>
-      <paper-input name="formula" label="[[i18n('play.rule.custom.constraints.formula')]]"
+      <mostly-input name="formula" label="[[i18n('play.rule.custom.constraints.formula')]]"
             value="{{rule.constraints.formula}}" maxlength="300"
-            char-counter always-float-label></paper-input>
+            char-counter always-float-label></mostly-input>
     </div>
 
     <mostly-collapse-button role="widget">

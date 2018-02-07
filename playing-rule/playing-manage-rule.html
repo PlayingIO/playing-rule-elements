@@ -9,7 +9,9 @@
 <link rel="import" href="../../mostly-elements/behaviors/mostly-i18n-behavior.html">
 <link rel="import" href="../../mostly-elements/mostly-common/mostly-connection.html">
 <link rel="import" href="../../mostly-elements/mostly-common/mostly-resource.html">
+<link rel="import" href="../../mostly-elements/widgets/mostly-card.html">
 <link rel="import" href="../../mostly-elements/widgets/mostly-dialog.html">
+<link rel="import" href="../../mostly-elements/widgets/mostly-input.html">
 
 <link rel="import" href="playing-edit-achievement.html">
 <link rel="import" href="playing-edit-custom.html">
@@ -36,6 +38,10 @@ Example:
         display: block;
       }
 
+      [hidden] {
+        display: none !important;
+      }
+
       label {
         font-weight: bold;
         margin-bottom: 5px;
@@ -43,6 +49,7 @@ Example:
 
       .header {
         @apply --layout-start;
+        padding: 0px;
       }
 
       .backButton {
@@ -86,8 +93,8 @@ Example:
         text-decoration: underline;
       }
 
-      playing-view-point {
-        margin: 2em;
+      #viewer, #editor {
+        margin: 1em;
       }
 
       paper-dialog {
@@ -109,10 +116,6 @@ Example:
         padding: 2em;
         font-size: 1.1rem;
       }
-
-      paper-card {
-        @apply --mostly-card;
-      }
     </style>
 
     <mostly-resource id="request"
@@ -124,10 +127,10 @@ Example:
 
     <paper-toast id="toast"></paper-toast>
 
-    <paper-card>
+    <mostly-card>
       <div class="header horizontal layout">
         <paper-icon-button class="backButton" icon="icons:arrow-back" on-tap="_goHome"></paper-icon-button>
-        <iron-icon icon$="mostly:[[type]]" class="icon"></iron-icon>
+        <iron-icon icon="[[_ruleIcon(type)]]" class="icon"></iron-icon>
         <div class="layout vertical">
           <h3 class="name">[[rule.name]]</h3>
           <h4 class="subname">[[_ruleHeading(type)]]</h4>
@@ -148,36 +151,19 @@ Example:
         </div>
       </div>
 
-      <iron-pages selected="[[page]]" attr-for-selected="name">
-        <section name="viewer">
-          <!-- rule -->
-          <template is="dom-if" if="[[_isEqual(type, 'achievement')]]">
-            <playing-view-achievement id="ruleViewer" rule="[[rule]]"></playing-view-achievement>
-          </template>
+      <div id="errors" hidden$="[[!errors]]">[[errors]]</div>
 
-          <template is="dom-if" if="[[_isEqual(type, 'level')]]">
-            <playing-view-level id="ruleViewer" rule="[[rule]]"></playing-view-level>
-          </template>
-
-          <template is="dom-if" if="[[_isEqual(type, 'custom')]]">
-            <playing-view-custom id="ruleViewer" rule="[[rule]]"></playing-view-custom>
-          </template>
+      <iron-pages selected="[[page]]" attr-for-selected="id">
+        <section id="viewer">
+          <mostly-layout id="viewerLayout" href="[[_layoutHref(type, 'view')]]"
+                model="[[_layoutModel(rule, new)]]"></mostly-layout>
         </section>
-        <section name="editor">
-          <h2>[[i18n('play.rule.editRule.heading')]]</h2>
+        <section id="editor">
+          <h3>[[i18n('play.rule.editRule.heading')]]</h3>
           <iron-form id="editRuleForm">
             <form class="vertical layout">
-              <template is="dom-if" if="[[_isEqual(type, 'achievement')]]">
-                <playing-edit-achievement id="ruleEditor" rule="[[rule]]"></playing-edit-achievement>
-              </template>
-
-              <template is="dom-if" if="[[_isEqual(type, 'level')]]">
-                <playing-edit-level id="ruleEditor" rule="[[rule]]"></playing-edit-level>
-              </template>
-
-              <template is="dom-if" if="[[_isEqual(type, 'custom')]]">
-                <playing-edit-custom id="ruleEditor" rule="[[rule]]"></playing-edit-custom>
-              </template>
+              <mostly-layout id="editorLayout" href="[[_layoutHref(type, 'edit')]]"
+                  model="[[_layoutModel(rule, new)]]"></mostly-layout>
             </form>
           </iron-form>
           <div class="horizontal end-justified layout">
@@ -189,7 +175,7 @@ Example:
             </paper-button>
           </div>
         </section>
-    </paper-card>
+    </mostly-card>
 
     <mostly-dialog id="deleteRuleDialog" with-backdrop>
       <h2>[[i18n('play.rule.delete.confirm')]]</h2>
@@ -264,15 +250,34 @@ Example:
       }
 
       _rulePath(type, rule) {
-        if (rule && rule.type && rule.id) {
-          return rule.type + 's/' + rule.id;
+        if (rule && rule.id) {
+          return 'rules/' + rule.id;
         } else {
-          return type + 's/' + rule;
+          return 'rules/' + rule;
+        }
+      }
+
+      _ruleIcon(type) {
+        switch (type) {
+          case 'achievement': return 'playing:badge';
+          case 'level': return 'playing:state';
+          case 'custom': return 'playing:rules';
         }
       }
 
       _ruleHeading(type) {
         return this.i18n('play.rule.' + type + '.heading');
+      }
+
+      _layoutHref(type, layout) {
+        return type && this.resolveUrl(`playing-${layout}-${type}.html`);
+      }
+
+      _layoutModel() {
+        return {
+          rule: this.rule,
+          "new": true
+        };
       }
 
       _toggleDialog(e) {

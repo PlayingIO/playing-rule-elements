@@ -1,0 +1,185 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
+<link rel="import" href="playing-edit-requires-node.html">
+
+<!--
+An element to edit requirement conditions.
+
++ The template represents the DOM to create for the nodes
++ The `data` property specifies the model of a node
++ The `controller` provides helpers to render a given node, and these methods __must__ be implemented.
+
+### Template model
+
+Given the following `data` array:
+
+##### data.json
+
+```js
+[
+  type: 'and',
+  conditions: [
+    {
+      type: 'metric', id: 'exp', operator: 'gt', value: '100'
+    },
+    {
+      type: 'and',
+      conditions: [
+        { type: 'point', id: 'exp', operator: 'lt', value: '200' },
+        { type: 'action', id: 'login', operator: 'eq', value: '10' }
+      ]
+    }
+  ]
+]
+```
+
+The following code would render the requirement conditions:
+
+```html
+<playing-edit-requires data="[[data]]" controller="[[controller]]">
+  <template>
+    <template is="dom-if" if="[[!opened]]">
+      <iron-icon icon="hardware:keyboard-arrow-right" toggle></iron-icon>
+    </template>
+    <template is="dom-if" if="[[opened]]">
+      <iron-icon icon="hardware:keyboard-arrow-down" toggle></iron-icon>
+    </template>
+    <span>My title is: [[item.title]]</span>
+    <span>Am I a leaf? [[isLeaf]]</span>
+  </template>
+</playing-edit-requires>
+```
+
+The attribute `[toggle]` can be added to any element in the template to toggle a node between opened and closed.
+
+In addition to the template, you must also provide a `controller`.
+For example, for the previous sample:
+
+```js
+controller = {
+  // How to get children of a node. Returns a promise.
+  getConditions: function(node) {
+    return Promise.resolve(node.conditions);
+  },
+
+  // Logics you may want to have to control if a node is a expression condition.
+  isExpression: function(node) {
+    return node.conditions.length === 0;
+  }
+};
+```
+
+`playing-edit-requires`
+@group Mostly UI
+@element playing-edit-requires
+-->
+<dom-module id="playing-edit-requires">
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply --playing-edit-requires-theme;
+      }
+    </style>
+
+    <slot></slot>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'playing-edit-requires',
+      properties: {
+
+        data: Object,
+
+        /**
+         * An object for accessing information for rendering a tree item.
+         *
+         * getChildren(node) : Promise<Array<Object>>
+         * isLeaf(node) : Boolean
+         */
+        controller: Object,
+
+        /**
+        * Template used to render each tree item.
+        */
+        template: Object,
+
+        nodeKey: {
+          type: String,
+          value: 'id'
+        }
+      },
+
+      observers: [
+        '_update(data, controller)'
+      ],
+
+      /**
+      * Initializes the tree whenever the data and/or controller changes.
+      */
+      _update: function() {
+        if (this.data && this.controller) {
+          var template = Polymer.dom(this).querySelector('template');
+          if (this._root) {
+            Polymer.dom(this).removeChild(this._root);
+          }
+          this._root = document.createElement('playing-edit-condtion');
+          this._root.id = 'root';
+          this._root.template = template;
+          this._root.dataHost = this.dataHost;
+          this._root.controller = this.controller;
+          this._root.nodeKey = this.nodeKey;
+          this._root.data = this.data;
+          this._root.dataset[this.nodeKey] = this.data[this.nodeKey];
+          Polymer.dom(this).appendChild(this._root);
+          this._root.open();
+        }
+      },
+
+      /**
+      * Find and open a set of nodes given a set of keys.
+      * Nodes keys must be sorted in terms of hierarchy, otherwise some nodes
+      * might not be rendered yet.
+      */
+      open: function() {
+        this._openNodes(arguments);
+      },
+
+      /**
+      * Recursively opens a set of nodes.
+      */
+      _openNodes: function(keys) {
+        if (!keys || keys.length === 0) {
+          return;
+        }
+        var node = this._find(keys[0]);
+        if (node) {
+          node.open().then(() => {
+            this._openNodes(Array.prototype.slice.call(keys, 1));
+          });
+        }
+      },
+
+      /**
+      * Find a node by key.
+      */
+      _find: function(key) {
+        return this.querySelector('[data-' + this.nodeKey + '="' + key + '"]');
+      },
+
+      removeNodes: function(keys) {
+        if (!keys || keys.length === 0) {
+          return;
+        }
+        var node = this._find(keys[0]);
+        if (node) {
+          node.removeSelf().then(() => {
+            this.removeNodes(Array.prototype.slice.call(keys, 1));
+          });
+        }
+      }
+
+    });
+  </script>
+</dom-module>

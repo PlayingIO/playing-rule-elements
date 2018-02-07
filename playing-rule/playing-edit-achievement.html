@@ -13,7 +13,6 @@ Example:
     <style include="mostly-styles">
       :host {
         display: block;
-        width: 100%;
       }
 
       *[role=widget] {
@@ -29,9 +28,9 @@ Example:
     <mostly-resource id="metrics" auto path="sets" response="{{metrics}}"></mostly-resource>
 
     <div class="layout vertical">
-      <paper-input name="description" label="[[i18n('play.rule.field.description')]]"
+      <mostly-input name="description" label="[[i18n('play.rule.field.description')]]"
             value="{{rule.description}}" maxlength="300"
-            char-counter always-float-label></paper-input>
+            char-counter always-float-label></mostly-input>
 
       <playing-dropzone name="image" role="widget"
               label="[[i18n('play.rule.field.image')]]"
@@ -145,7 +144,7 @@ Example:
       }
 
       _refresh() {
-        if (this.rule.achievement && this.rule.achievement.metric) {
+        if (this.rule && this.rule.achievement && this.rule.achievement.metric) {
           var index = this.metrics.data.findIndex(m => m.id === this.rule.achievement.metric);
           if (index >= 0) {
             this.selectedMetric = this.metrics.data[index];
@@ -176,7 +175,10 @@ Example:
       }
 
       _empty() {
-        return !(this.rule.achievement && this.rule.achievement.rules && this.rule.achievement.rules.length >= 0);
+        return !(this.rule
+          && this.rule.achievement
+          && this.rule.achievement.rules
+          && this.rule.achievement.rules.length >= 0);
       }
     }
 

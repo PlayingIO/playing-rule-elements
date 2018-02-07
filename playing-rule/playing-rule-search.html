@@ -4,11 +4,12 @@
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../paper-item/paper-icon-item.html">
-<link rel="import" href="../../paper-input/paper-input.html">
 <link rel="import" href="../../paper-listbox/paper-listbox.html">
 <link rel="import" href="../../paper-menu-button/paper-menu-button.html">
 
 <link rel="import" href="../../mostly-elements/mostly-common/mostly-resource.html">
+<link rel="import" href="../../mostly-elements/widgets/mostly-card.html">
+<link rel="import" href="../../mostly-elements/widgets/mostly-input.html">
 <link rel="import" href="../../mostly-elements/widgets/mostly-pagination-controls.html">
 
 <!--
@@ -37,37 +38,25 @@
         opacity: 0.6;
       }
 
-      .counter {
-        margin-right: 2em;
-      }
-
       h3 iron-icon {
         width: 1.3em;
         margin-right: .2rem;
       }
-
-      paper-card {
-        @apply --mostly-card;
-      }
-
     </style>
 
     <mostly-resource id="ruleSearch" auto
             path="rules"
             response="{{rules}}"></mostly-resource>
 
-    <paper-card class="search">
-      <paper-input noink autofocus="true" value="{{searchTerm}}" type="search"
+    <mostly-card class="search">
+      <mostly-input noink autofocus="true" value="{{searchTerm}}" type="search"
               placeholder="[[i18n('play.rule.search.placeholder')]]">
         <iron-icon icon="mostly:search" prefix></iron-icon>
-      </paper-input>
-    </paper-card>
+      </mostly-input>
+    </mostly-card>
 
     <!-- rules -->
-    <paper-card name="rules">
-      <h3 class="title">
-        <iron-icon icon="playing:rules" prefix></iron-icon>  [[i18n('play.rule.heading')]]
-      </h3>
+    <mostly-card name="rules" icon="playing:rules" heading="[[i18n('play.rule.heading')]]">
       <div class="fade-6">
         <p>[[i18n('play.rule.guide.search')]]</p>
       </div>
@@ -93,7 +82,7 @@
         </div>
       </div>
       <mostly-pagination-controls page="{{rulesCurrentPage}}" number-of-pages="[[rules.numberOfPages]]"></mostly-pagination-controls>
-    </paper-card>
+    </mostly-card>
 
   </template>
 
