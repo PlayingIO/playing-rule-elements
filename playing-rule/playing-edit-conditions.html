@@ -58,6 +58,8 @@ Data model
             <mostly-select
                     placeholder="[[i18n('play.rule.rule.placeholder')]]"
                     selected="{{cond.rule}}"
+                    data-index="[[index]]"
+                    on-selected-changed="_ruleChanged"
                     attr-for-selected="name"
                     no-label-float required>
               <template is="dom-repeat" items="[[conditionRules]]" as="rule">
@@ -89,6 +91,8 @@ Data model
                 <mostly-select
                         placeholder="[[i18n('play.rule.metric.placeholder')]]"
                         selected="{{cond.metric}}"
+                        data-index="[[index]]"
+                        on-selected-changed="_metricChanged"
                         attr-for-selected="name"
                         required>
                   <template is="dom-repeat" items="[[metrics.data]]" as="item">
@@ -231,6 +235,25 @@ Data model
         this.splice('data', e.currentTarget.dataIndex, 1);
       }
 
+      _ruleChanged(e) {
+        var rule = {};
+        switch (e.detail.value) {
+          case 'metric': rule = { rule: 'metric' }; break;
+          case 'action': rule = { rule: 'action' }; break;
+          case 'team': rule = { rule: 'team' }; break;
+          case 'and': rule = { rule: 'and', conditions: [] }; break;
+          case 'or': rule = { rule: 'or', conditions: [] }; break;
+        }
+        this.splice('data', e.currentTarget.dataIndex, 1, rule)
+      }
+
+      _metricChanged(e) {
+        var index = this.metrics.data.findIndex(m => m.id === e.detail.value);
+        if (index >= 0) {
+          var metric = this.metrics.data[index];
+          this.set(`data.${e.currentTarget.dataIndex}.type`, metric.type);
+        }
+      }
     }
 
     customElements.define(PlayingEditConditions.is, PlayingEditConditions);
