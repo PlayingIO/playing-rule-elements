@@ -1,3 +1,5 @@
+<link rel="import" href="playing-edit-conditions.html">
+
 <!--
 An element for creating and editing achievement rule data.
 
@@ -38,7 +40,7 @@ Example:
 
       <mostly-select role="widget"
               label="[[i18n('play.rule.achievement')]]"
-              placeholder="[[i18n('play.rule.achievement.metric.placeholder')]]"
+              placeholder="[[i18n('play.rule.metric.placeholder')]]"
               selected="{{rule.achievement.metric}}"
               attr-for-selected="name"
               required>
@@ -64,7 +66,8 @@ Example:
                   </template>
                 </mostly-select>
               </div>
-              <div class="flex-4">AAAA
+              <div class="flex-4">
+                <playing-edit-conditions requires="[[item.requires]]"></playing-edit-conditions>
               </div>
               <div class="form-actions">
                 <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeReward"></iron-icon>
@@ -159,12 +162,12 @@ Example:
         this.push('rule.achievement.rules', {
           selected: -1,
           item: { name: '', number: 1 },
-          requires: {}
+          requires: []
         });
       }
 
       _removeReward(e) {
-        this.splice('rule.achievement.rules', e.target.dataIndex, 1);
+        this.splice('rule.achievement.rules', e.currentTarget.dataIndex, 1);
       }
 
       _getAvailableRewards() {

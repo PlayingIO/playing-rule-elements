@@ -237,24 +237,43 @@ Data model
       
       static get properties() {
         return {
+          /**
+           * the rules array
+           */
           data: {
-            type: Array
+            type: Array,
+            value: () => [{ rule: null }]
           },
 
+          /**
+           * metrics response data
+           */
           metrics: Object,
 
+          /**
+           * parent rule type
+           */
           parent: String,
 
+          /**
+           * all rule types
+           */
           conditionRules: {
             type: Array,
             value: ['metric', 'action', 'team', 'and', 'or']
           },
 
+          /**
+           * all operation types
+           */
           operationTypes: {
             type: Array,
             value: ['eq', 'ne', 'gt', 'ge', 'lt', 'le']
           },
 
+          /**
+           * equal or not operations
+           */
           operationEquals: {
             type: Array,
             value: ['eq', 'ne']
