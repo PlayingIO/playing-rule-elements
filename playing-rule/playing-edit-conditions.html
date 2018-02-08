@@ -133,12 +133,34 @@ Data model
                                 selected="{{cond.item}}"
                                 attr-for-selected="name"
                                 no-label-float required>
-                          <template is="dom-repeat" items="[[_getMetricItems(cond.metric)]]" as="item">
-                            <paper-item name="[[item.id]]">[[item.name]]</paper-item>
+                          <template is="dom-repeat" items="[[_getMetricConstraints(cond.metric, 'items')]]" as="item">
+                            <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                           </template>
                         </mostly-select>
                       </div>
                       <div class="flex-1">
+                        <mostly-select
+                                placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                                selected="{{cond.operator}}"
+                                attr-for-selected="name"
+                                no-label-float required>
+                          <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                            <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                          </template>
+                        </mostly-select>
+                      </div>
+                      <div class="flex-2">
+                        <mostly-input
+                            type="number" value="{{cond.value}}"
+                            required></mostly-input>
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- state metric operator -->
+                  <section name="state">
+                    <div class="form-row">
+                      <div class="flex-2">
                         <mostly-select
                                 placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
                                 selected="{{cond.operator}}"
@@ -150,9 +172,15 @@ Data model
                         </mostly-select>
                       </div>
                       <div class="flex-2">
-                        <mostly-input
-                            type="number" value="{{cond.value}}"
-                            required></mostly-input>
+                        <mostly-select
+                                placeholder="[[i18n('play.rule.condition.state.placeholder')]]"
+                                selected="{{cond.value}}"
+                                attr-for-selected="name"
+                                no-label-float required>
+                          <template is="dom-repeat" items="[[_getMetricConstraints(cond.metric, 'states')]]" as="item">
+                            <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                          </template>
+                        </mostly-select>
                       </div>
                     </div>
                   </section>
@@ -216,12 +244,12 @@ Data model
         return rule && (rule === 'and' || rule === 'or');
       }
 
-      _getMetricItems(metric) {
+      _getMetricConstraints(metric, field) {
         if (this.metrics) {
           var index = this.metrics.data.findIndex(m => m.id === metric);
           if (index >= 0) {
             var constraints = this.metrics.data[index].constraints;
-            return constraints && constraints.items;
+            return constraints && constraints[field];
           }
         }
         return [];
@@ -251,7 +279,8 @@ Data model
         var index = this.metrics.data.findIndex(m => m.id === e.detail.value);
         if (index >= 0) {
           var metric = this.metrics.data[index];
-          this.set(`data.${e.currentTarget.dataIndex}.type`, metric.type);
+          var rule = { rule: 'metric', metric: e.detail.value, type: metric.type }
+          this.set(`data.${e.currentTarget.dataIndex}`, rule);
         }
       }
     }
