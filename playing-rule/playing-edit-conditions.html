@@ -27,33 +27,97 @@ Data model
   <template>
     <style include="mostly-styles">
       *[role=widget] {
-        margin-bottom: 16px;
         padding-left: 2em;
       }
 
       label {
         @apply --mostly-label;
       }
+
+      .form-heading {
+        width: 50px;
+      }
     </style>
+
+    <mostly-resource id="metrics" auto path="metrics" response="{{metrics}}"></mostly-resource>
 
     <div role="widget">
       <template is="dom-repeat" items="{{data}}" as="cond">
         <div class="form-row">
-          <div class="form-actions">Match</div>
+          <div class="form-heading">Match</div>
           <div class="flex">
-            <mostly-select role="widget"
-                    placeholder="[[i18n('play.rule.achievement.metric.placeholder')]]"
-                    selected="{{cond.type}}"
+            <mostly-select
+                    placeholder="[[i18n('play.rule.metric.placeholder')]]"
+                    selected="{{cond.rule}}"
                     attr-for-selected="name"
                     no-label-float required>
-              <template is="dom-repeat" items="[[conditionTypes]]" as="item">
-                <paper-item name="[[item]]">[[item]]</paper-item>
+              <template is="dom-repeat" items="[[conditionRules]]" as="rule">
+                <paper-item name="[[rule]]">[[i18n(rule, 'play.rule.condition.type.')]]</paper-item>
               </template>
             </mostly-select>
           </div>
           <div class="form-actions">
-            <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeCondition"></iron-icon>
+            <mostly-toggle-icon icon="error-outline" icon-checked="error"
+                    title="Invert the rule"
+                    checked="{{cond.not}}"
+                    disabled$="[[_disableInvert(cond.type)]]"></mostly-toggle-icon>
           </div>
+          <div class="form-actions">
+            <iron-icon icon="mostly:remove"
+                    class="remove"
+                    data-index="[[index]]"
+                    on-tap="_removeCondition"></iron-icon>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-heading">&nbsp;</div>
+          <div class="flex">
+            <iron-pages selected="[[cond.rule]]" attr-for-selected="name">
+
+              <!-- metric rule -->
+              <section name="metric">
+
+                <mostly-select
+                        placeholder="[[i18n('play.rule.metric.placeholder')]]"
+                        selected="{{cond.metric}}"
+                        attr-for-selected="name"
+                        required>
+                  <template is="dom-repeat" items="[[metrics.data]]" as="item">
+                    <paper-item name="[[item.id]]">[[item.name]]</paper-item>
+                  </template>
+                </mostly-select>
+                
+                <iron-pages selected="[[cond.type]]" attr-for-selected="name">
+
+                  <!-- point metric operator -->
+                  <section name="point">
+                    <div class="form-row">
+                      <div class="flex-1">
+                        <mostly-select
+                                placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                                selected="{{cond.operator}}"
+                                attr-for-selected="name"
+                                no-label-float required>
+                          <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                            <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                          </template>
+                        </mostly-select>
+                      </div>
+                      <div class="flex-4">
+                        <mostly-input
+                            type="number" value="{{cond.value}}"
+                            required></mostly-input>
+                      </div>
+                    </div>
+                  </section>
+
+                </iron-pages>
+              </section>
+
+            </iron-pages>
+          </div>
+          <div class="form-actions">&nbsp;</div>
+          <div class="form-actions">&nbsp;</div>
         </div>
         <template is="dom-if" if="[[cond.conditions]]"></template>
           <playing-edit-conditions data="{{cond.conditions}}"></playing-edit-conditions>
@@ -76,16 +140,43 @@ Data model
             observer: 'dataChanged'
           },
 
+          metrics: Object,
+
           type: {
             type: String,
             observer: 'typeChanged'
           },
 
-          conditionTypes: {
+          conditionRules: {
             type: Array,
             value: ['metric', 'action', 'team', 'and', 'or']
+          },
+
+          operationTypes: {
+            type: Array,
+            value: ['eq', 'ne', 'gt', 'ge', 'lt', 'le']
+          },
+
+          operationEquals: {
+            type: Array,
+            value: ['eq', 'ne']
           }
         };
+      }
+
+      _disableInvert(type) {
+        return type === 'and' || type === 'or';
+      }
+
+      _getMetricItems(metric) {
+        if (this.metrics) {
+          var index = this.metrics.data.findIndex(m => m.id === metric);
+          if (index >= 0) {
+            var constraints = this.metrics.data[index].constraints;
+            return constraints && constraints.items;
+          }
+        }
+        return [];
       }
 
       dataChanged() {
