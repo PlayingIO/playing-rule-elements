@@ -160,7 +160,7 @@ Data model
                   <!-- state metric operator -->
                   <section name="state">
                     <div class="form-row">
-                      <div class="flex-2">
+                      <div class="flex-1">
                         <mostly-select
                                 placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
                                 selected="{{cond.operator}}"
@@ -171,7 +171,7 @@ Data model
                           </template>
                         </mostly-select>
                       </div>
-                      <div class="flex-2">
+                      <div class="flex-3">
                         <mostly-select
                                 placeholder="[[i18n('play.rule.condition.state.placeholder')]]"
                                 selected="{{cond.value}}"
@@ -181,6 +181,28 @@ Data model
                             <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                           </template>
                         </mostly-select>
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- compound metric operator -->
+                  <section name="compound">
+                    <div class="form-row">
+                      <div class="flex-1">
+                        <mostly-select
+                                placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                                selected="{{cond.operator}}"
+                                attr-for-selected="name"
+                                no-label-float required>
+                          <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                            <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                          </template>
+                        </mostly-select>
+                      </div>
+                      <div class="flex-3">
+                        <mostly-input
+                            type="number" value="{{cond.value}}"
+                            required></mostly-input>
                       </div>
                     </div>
                   </section>
