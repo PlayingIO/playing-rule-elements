@@ -27,15 +27,24 @@ Data model
   <template>
     <style include="mostly-styles">
       *[role=widget] {
-        padding-left: 2em;
+        padding-left: 1em;
+        border-left: 2px solid #ddd;
       }
 
       label {
         @apply --mostly-label;
       }
 
+      .form-row {
+        padding: 0px 0 0px 5px;
+      }
+
       .form-heading {
         width: 50px;
+      }
+
+      .form-buttons {
+        padding-top: 10px;
       }
     </style>
 
@@ -47,7 +56,7 @@ Data model
           <div class="form-heading">Match</div>
           <div class="flex">
             <mostly-select
-                    placeholder="[[i18n('play.rule.metric.placeholder')]]"
+                    placeholder="[[i18n('play.rule.rule.placeholder')]]"
                     selected="{{cond.rule}}"
                     attr-for-selected="name"
                     no-label-float required>
@@ -156,13 +165,13 @@ Data model
           <playing-edit-conditions data="{{cond.conditions}}" parent="[[cond.rule]]"></playing-edit-conditions>
         </template>
       </template>
-      <template is="dom-if" if="[[_hasConditions(parent)]]">
-        <div class="form-buttons">
-          <paper-button noink id="addConditionButton" class="primary"
-                  on-tap="_addCondition">[[i18n('command.add')]]</paper-button>
-        </div>
-      </template>
     </div>
+    <template is="dom-if" if="[[_hasConditions(parent)]]">
+      <div class="form-buttons">
+        <paper-button noink id="addConditionButton" class="primary"
+                on-tap="_addCondition">[[i18n('command.add')]]</paper-button>
+      </div>
+    </template>
 
   </template>
 
@@ -199,12 +208,6 @@ Data model
         };
       }
 
-      static get observers() {
-        return [
-          '_ruleChanged(data.0.rule)'
-        ];
-      }
-
       _hasConditions(rule) {
         return rule && (rule === 'and' || rule === 'or');
       }
@@ -228,19 +231,6 @@ Data model
         this.splice('data', e.currentTarget.dataIndex, 1);
       }
 
-      _ruleChanged(rule) {
-        if (rule && this.data && this.data.length > 0) {
-          // clear current data when rule changed
-          var current = this.data[0];
-          if ((current.rule === 'metric' || current.rule === 'action' || current.rule === 'team') && current.conditions) {
-            this.set('data', [{ rule: current.rule }]);
-          }
-          if ((current.rule === 'and' || current.rule == 'or') && !current.conditions) {
-            this.set('data', [{ rule: current.rule, conditions: [] }]);
-          }
-        }
-        console.log('### conditions:', this.data);
-      }
     }
 
     customElements.define(PlayingEditConditions.is, PlayingEditConditions);
