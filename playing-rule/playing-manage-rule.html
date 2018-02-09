@@ -120,7 +120,7 @@ Example:
 
     <mostly-resource id="request"
             path="[[path]]"
-            schemas='*'></mostly-resource>
+            schemas='achievement.metric,*'></mostly-resource>
     <mostly-resource id="editRequest"
             path="[[path]]"
             schemas='*'></mostly-resource>
@@ -215,7 +215,7 @@ Example:
 
           path: {
             type: String,
-            computed: '_rulePath(type, rule)'
+            computed: '_rulePath(rule)'
           },
 
           empty: Boolean,
@@ -249,7 +249,7 @@ Example:
         }
       }
 
-      _rulePath(type, rule) {
+      _rulePath(rule) {
         if (rule && rule.id) {
           return 'rules/' + rule.id;
         } else {
