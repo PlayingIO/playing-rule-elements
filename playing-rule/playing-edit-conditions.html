@@ -77,10 +77,11 @@ Data model
                     disabled$="[[_hasConditions(cond.rule)]]"></mostly-toggle-icon>
           </div>
           <div class="form-actions">
-            <iron-icon icon="mostly:remove"
+            <paper-icon-button icon="mostly:remove"
                     class="remove"
                     data-index="[[index]]"
-                    on-tap="_removeCondition"></iron-icon>
+                    on-tap="_removeCondition"
+                    disabled$="[[!parentRule]]"></paper-icon-button>
           </div>
         </div>
 
@@ -287,14 +288,14 @@ Data model
         </template>
 
         <template is="dom-if" if="[[cond.conditions]]">
-          <playing-edit-conditions data="{{cond.conditions}}" parent="[[cond.rule]]"></playing-edit-conditions>
+          <playing-edit-conditions data="{{cond.conditions}}" parentRule="[[cond.rule]]"></playing-edit-conditions>
         </template>
       </template>
     </div>
-    <template is="dom-if" if="[[_hasConditions(parent)]]">
+    <template is="dom-if" if="[[_hasConditions(parentRule)]]">
       <div class="form-buttons">
         <paper-button noink id="addConditionButton" class="primary"
-                on-tap="_addCondition">[[i18n('command.add')]]</paper-button>
+                on-tap="_addCondition">[[i18n('play.rule.command.rule.add')]]</paper-button>
       </div>
     </template>
 
@@ -334,7 +335,7 @@ Data model
           /**
            * parent rule type
            */
-          parent: String,
+          parentRule: String,
 
           /**
            * all rule types
