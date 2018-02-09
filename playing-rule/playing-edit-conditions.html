@@ -49,9 +49,9 @@ Data model
       }
     </style>
 
-    <mostly-resource id="metrics" auto path="metrics" response="{{metrics}}"></mostly-resource>
-    <mostly-resource id="actions" auto path="actions" response="{{actions}}"></mostly-resource>
-    <mostly-resource id="teams" auto path="teams" response="{{teams}}"></mostly-resource>
+    <mostly-resource id="metrics" path="metrics" schemas="*" response-data={{metrics}}></mostly-resource>
+    <mostly-resource id="actions" path="actions" schemas="*" response-data={{actions}}></mostly-resource>
+    <mostly-resource id="teams" path="teams"" schemas="*" response-data={{teams}}></mostly-resource>
 
     <div role="widget">
 
@@ -90,8 +90,7 @@ Data model
             <paper-icon-button icon="mostly:remove"
                     class="remove"
                     data-index="[[index]]"
-                    on-tap="_removeRule"
-                    disabled$="[[!parentRule]]"></paper-icon-button>
+                    on-tap="_removeRule"></paper-icon-button>
           </div>
         </div>
 
@@ -111,7 +110,7 @@ Data model
                           on-selected-changed="_metricChanged"
                           attr-for-selected="name"
                           required>
-                    <template is="dom-repeat" items="[[metrics.data]]" as="item">
+                    <template is="dom-repeat" items="[[metrics]]" as="item">
                       <paper-item name="[[item.id]]">[[item.name]]</paper-item>
                     </template>
                   </mostly-select>
@@ -235,7 +234,7 @@ Data model
                               selected="{{cond.action}}"
                               attr-for-selected="name"
                               no-label-float required>
-                        <template is="dom-repeat" items="[[actions.data]]" as="item">
+                        <template is="dom-repeat" items="[[actions]]" as="item">
                           <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                         </template>
                       </mostly-select>
@@ -268,7 +267,7 @@ Data model
                               selected="{{cond.team}}"
                               attr-for-selected="name"
                               no-label-float required>
-                        <template is="dom-repeat" items="[[actions.data]]" as="item">
+                        <template is="dom-repeat" items="[[actions]]" as="item">
                           <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                         </template>
                       </mostly-select>
@@ -298,7 +297,8 @@ Data model
         </template>
 
         <template is="dom-if" if="[[cond.conditions]]">
-          <playing-edit-conditions data="{{cond.conditions}}" parentRule="[[cond.rule]]"></playing-edit-conditions>
+          <playing-edit-conditions data="{{cond.conditions}}"
+                  metrics="[[metrics]]" actions="[[actions]]" teams="[[teams]]"></playing-edit-conditions>
           <div class="form-buttons">
             <paper-button noink id="addConditionButton" class="primary"
                     data-index="[[index]]"
@@ -323,28 +323,30 @@ Data model
            */
           data: {
             type: Array,
-            value: []
+            value: [],
+            observer: '_dataChanged'
           },
 
           /**
-           * metrics response data
+           * metrics
            */
-          metrics: Object,
+          metrics: {
+            type: Array
+          },
 
           /**
-           * actions response data
+           * actions
            */
-          actions: Object,
+          actions: {
+            type: Array
+          },
 
           /**
-           * teams response data
+           * teams
            */
-          teams: Object,
-
-          /**
-           * parent rule type
-           */
-          parentRule: String,
+          teams: {
+            type: Array
+          },
 
           /**
            * all rule types
@@ -372,15 +374,22 @@ Data model
         };
       }
 
+      _dataChanged() {
+        // fetch metrics/actions/teams data
+        if (!this.metrics) this.$.metrics.get();
+        if (!this.actions) this.$.actions.get();
+        if (!this.teams) this.$.teams.get();
+      }
+
       _hasConditions(rule) {
         return rule && (rule === 'and' || rule === 'or');
       }
 
       _getMetricConstraints(metric, field) {
         if (this.metrics) {
-          var index = this.metrics.data.findIndex(m => m.id === metric);
+          var index = this.metrics.findIndex(m => m.id === metric);
           if (index >= 0) {
-            var constraints = this.metrics.data[index].constraints;
+            var constraints = this.metrics[index].constraints;
             return constraints && constraints[field];
           }
         }
@@ -389,9 +398,9 @@ Data model
 
       _getTeamRoles(team) {
         if (this.teams) {
-          var index = this.teams.data.findIndex(t => t.di == team);
+          var index = this.teams.findIndex(t => t.di == team);
           if (index >= 0) {
-            return this.teams.data[index].roles;
+            return this.teams[index].roles;
           }
         }
       }
@@ -421,9 +430,9 @@ Data model
       }
 
       _metricChanged(e) {
-        var index = this.metrics.data.findIndex(m => m.id === e.detail.value);
+        var index = this.metrics.findIndex(m => m.id === e.detail.value);
         if (index >= 0) {
-          var metric = this.metrics.data[index];
+          var metric = this.metrics[index];
           var rule = { rule: 'metric', metric: e.detail.value, type: metric.type }
           this.set(`data.${e.currentTarget.dataIndex}`, rule);
         }
