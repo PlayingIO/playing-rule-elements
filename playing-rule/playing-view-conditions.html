@@ -1,0 +1,410 @@
+<!--
+`playing-view-conditions`
+@group Mostly UI
+@element playing-view-conditions
+-->
+<dom-module id="playing-view-conditions">
+  <template>
+    <style include="mostly-styles">
+      *[role=widget] {
+        padding-left: 1em;
+      }
+
+      label {
+        @apply --mostly-label;
+      }
+
+      .form-row {
+        padding: 0px;
+      }
+
+      .form-heading {
+        padding-right: 0px;
+        width: 50px;
+      }
+
+      .form-buttons {
+        padding-top: 10px;
+      }
+    </style>
+
+    <mostly-resource id="metrics" path="metrics" schemas="*" response-data={{metrics}} auto cached></mostly-resource>
+    <mostly-resource id="actions" path="actions" schemas="*" response-data={{actions}} auto cached></mostly-resource>
+    <mostly-resource id="teams" path="teams"" schemas="*" response-data={{teams}} auto cached></mostly-resource>
+
+    <div role="widget">
+
+      <template is="dom-if" if="[[!data.length]]">
+        <label>[[i18n('play.rule.command.rule.create.guide')]]</label>
+      </template>
+
+      <template is="dom-repeat" items="{{data}}" as="cond">
+        <div class="form-row">
+          <div class="form-heading">Match</div>
+          <div class="flex">
+            <mostly-select
+                    placeholder="[[i18n('play.rule.rewards.rules.placeholder')]]"
+                    selected="{{cond.rule}}"
+                    data-index="[[index]]"
+                    on-selected-changed="_ruleChanged"
+                    attr-for-selected="name"
+                    no-label-float required>
+              <template is="dom-repeat" items="[[conditionRules]]" as="rule">
+                <paper-item name="[[rule]]">[[i18n(rule, 'play.rule.condition.type.')]]</paper-item>
+              </template>
+            </mostly-select>
+          </div>
+          <div class="form-actions">
+            <mostly-toggle-icon icon="error-outline" icon-checked="error"
+                    title="Invert the rule"
+                    checked="{{cond.not}}"
+                    disabled$="[[_hasConditions(cond.rule)]]"></mostly-toggle-icon>
+          </div>
+          <div class="form-actions">
+            <paper-icon-button icon="mostly:remove"
+                    class="remove"
+                    data-index="[[index]]"
+                    on-tap="_removeRule"></paper-icon-button>
+          </div>
+        </div>
+
+        <template is="dom-if" if="[[!_hasConditions(cond.rule)]]">
+          <div class="form-row">
+            <div class="form-heading">&nbsp;</div>
+            <div class="flex">
+              <iron-pages selected="[[cond.rule]]" attr-for-selected="name">
+
+                <!-- metric rule -->
+                <section name="metric">
+
+                  <mostly-select
+                          placeholder="[[i18n('play.rule.metric.placeholder')]]"
+                          selected="{{cond.metric}}"
+                          data-index="[[index]]"
+                          on-selected-changed="_metricChanged"
+                          attr-for-selected="name"
+                          required>
+                    <template is="dom-repeat" items="[[metrics]]" as="item">
+                      <paper-item name="[[item.id]]">[[item.name]]</paper-item>
+                    </template>
+                  </mostly-select>
+
+                  <iron-pages selected="[[cond.type]]" attr-for-selected="name">
+
+                    <!-- point metric operator -->
+                    <section name="point">
+                      <div class="form-row">
+                        <div class="flex-1">
+                          <mostly-select
+                                  placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                                  selected="{{cond.operator}}"
+                                  attr-for-selected="name"
+                                  no-label-float required>
+                            <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                              <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                            </template>
+                          </mostly-select>
+                        </div>
+                        <div class="flex-3">
+                          <mostly-input
+                              type="number" value="{{cond.value}}"
+                              required></mostly-input>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- set metric operator -->
+                    <section name="set">
+                      <div class="form-row">
+                        <div class="flex-1">
+                          <mostly-select
+                                  placeholder="[[i18n('play.rule.condition.set.placeholder')]]"
+                                  selected="{{cond.item}}"
+                                  attr-for-selected="name"
+                                  no-label-float required>
+                            <template is="dom-repeat" items="[[_getMetricConstraints(cond.metric, 'items')]]" as="item">
+                              <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                            </template>
+                          </mostly-select>
+                        </div>
+                        <div class="flex-1">
+                          <mostly-select
+                                  placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                                  selected="{{cond.operator}}"
+                                  attr-for-selected="name"
+                                  no-label-float required>
+                            <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                              <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                            </template>
+                          </mostly-select>
+                        </div>
+                        <div class="flex-2">
+                          <mostly-input
+                              type="number" value="{{cond.value}}"
+                              required></mostly-input>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- state metric operator -->
+                    <section name="state">
+                      <div class="form-row">
+                        <div class="flex-1">
+                          <mostly-select
+                                  placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                                  selected="{{cond.operator}}"
+                                  attr-for-selected="name"
+                                  no-label-float required>
+                            <template is="dom-repeat" items="[[operationEquals]]" as="op">
+                              <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                            </template>
+                          </mostly-select>
+                        </div>
+                        <div class="flex-3">
+                          <mostly-select
+                                  placeholder="[[i18n('play.rule.condition.state.placeholder')]]"
+                                  selected="{{cond.value}}"
+                                  attr-for-selected="name"
+                                  no-label-float required>
+                            <template is="dom-repeat" items="[[_getMetricConstraints(cond.metric, 'states')]]" as="item">
+                              <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                            </template>
+                          </mostly-select>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- compound metric operator -->
+                    <section name="compound">
+                      <div class="form-row">
+                        <div class="flex-1">
+                          <mostly-select
+                                  placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                                  selected="{{cond.operator}}"
+                                  attr-for-selected="name"
+                                  no-label-float required>
+                            <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                              <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                            </template>
+                          </mostly-select>
+                        </div>
+                        <div class="flex-3">
+                          <mostly-input
+                              type="number" value="{{cond.value}}"
+                              required></mostly-input>
+                        </div>
+                      </div>
+                    </section>
+
+                  </iron-pages>
+                </section>
+
+                <!-- action rule -->
+                <section name="action">
+                  <div class="form-row">
+                    <div class="flex-1">
+                      <mostly-select
+                              placeholder="[[i18n('play.rule.action.placeholder')]]"
+                              selected="{{cond.action}}"
+                              attr-for-selected="name"
+                              no-label-float required>
+                        <template is="dom-repeat" items="[[actions]]" as="item">
+                          <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                        </template>
+                      </mostly-select>
+                    </div>
+                    <div class="flex-1">
+                      <mostly-select
+                              placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                              selected="{{cond.operator}}"
+                              attr-for-selected="name"
+                              no-label-float required>
+                        <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                          <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                        </template>
+                      </mostly-select>
+                    </div>
+                    <div class="flex-2">
+                      <mostly-input
+                          type="number" value="{{cond.value}}"
+                          required></mostly-input>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- team rule -->
+                <section name="team">
+                  <div class="form-row">
+                    <div class="flex-2">
+                      <mostly-select
+                              placeholder="[[i18n('play.rule.team.placeholder')]]"
+                              selected="{{cond.team}}"
+                              attr-for-selected="name"
+                              no-label-float required>
+                        <template is="dom-repeat" items="[[actions]]" as="item">
+                          <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                        </template>
+                      </mostly-select>
+                    </div>
+                    <div class="flex-1">
+                      <label>[[i18n('play.rule.team.role.with')]]</label>
+                    </div>
+                    <div class="flex-2">
+                      <mostly-select
+                              placeholder="[[i18n('play.rule.team.role.placeholder')]]"
+                              selected="{{cond.role}}"
+                              attr-for-selected="name"
+                              no-label-float required>
+                        <template is="dom-repeat" items="[[_getTeamRoles(cond.team)]]" as="role">
+                          <paper-item name="[[role]]">role</paper-item>
+                        </template>
+                      </mostly-select>
+                    </div>
+                  </div>
+                </section>
+
+              </iron-pages>
+            </div>
+            <div class="form-actions">&nbsp;</div>
+            <div class="form-actions">&nbsp;</div>
+          </div>
+        </template>
+
+        <template is="dom-if" if="[[cond.conditions]]">
+          <playing-view-conditions data="{{cond.conditions}}"></playing-view-conditions>
+          <div class="form-buttons">
+            <paper-button noink id="addConditionButton" class="primary"
+                    data-index="[[index]]"
+                    on-tap="_addCondition">[[i18n('play.rule.command.rule.add')]]</paper-button>
+          </div>
+        </template>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    class PlayingViewConditions extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior], Polymer.Element) {
+
+      static get is() { return 'playing-view-conditions' };
+      
+      static get properties() {
+        return {
+          /**
+           * the rules array
+           */
+          data: {
+            type: Array,
+            value: [],
+            observer: '_dataChanged'
+          },
+
+          /**
+           * metrics
+           */
+          metrics: {
+            type: Array
+          },
+
+          /**
+           * actions
+           */
+          actions: {
+            type: Array
+          },
+
+          /**
+           * teams
+           */
+          teams: {
+            type: Array
+          },
+
+          /**
+           * all rule types
+           */
+          conditionRules: {
+            type: Array,
+            value: ['metric', 'action', 'team', 'and', 'or']
+          },
+
+          /**
+           * all operation types
+           */
+          operationTypes: {
+            type: Array,
+            value: ['eq', 'ne', 'gt', 'ge', 'lt', 'le']
+          },
+
+          /**
+           * equal or not operations
+           */
+          operationEquals: {
+            type: Array,
+            value: ['eq', 'ne']
+          }
+        };
+      }
+
+      _hasConditions(rule) {
+        return rule && (rule === 'and' || rule === 'or');
+      }
+
+      _getMetricConstraints(metric, field) {
+        if (this.metrics) {
+          var index = this.metrics.findIndex(m => m.id === metric);
+          if (index >= 0) {
+            var constraints = this.metrics[index].constraints;
+            return constraints && constraints[field];
+          }
+        }
+        return [];
+      }
+
+      _getTeamRoles(team) {
+        if (this.teams) {
+          var index = this.teams.findIndex(t => t.di == team);
+          if (index >= 0) {
+            return this.teams[index].roles;
+          }
+        }
+      }
+
+      _addCondition(e) {
+        this.push(`data.${e.currentTarget.dataIndex}.conditions`, { rule: null });
+      }
+
+      _createRule() {
+        this.set('data', [{ rule: null }]);
+      }
+
+      _removeRule(e) {
+        this.splice('data', e.currentTarget.dataIndex, 1);
+      }
+
+      _ruleChanged(e) {
+        var rule = {};
+        switch (e.detail.value) {
+          case 'metric': rule = { rule: 'metric' }; break;
+          case 'action': rule = { rule: 'action' }; break;
+          case 'team': rule = { rule: 'team' }; break;
+          case 'and': rule = { rule: 'and', conditions: [{ rule: null }] }; break;
+          case 'or': rule = { rule: 'or', conditions: [{ rule: null }] }; break;
+        }
+        this.splice('data', e.currentTarget.dataIndex, 1, rule)
+      }
+
+      _metricChanged(e) {
+        var index = this.metrics.findIndex(m => m.id === e.detail.value);
+        if (index >= 0) {
+          var metric = this.metrics[index];
+          var rule = { rule: 'metric', metric: e.detail.value, type: metric.type }
+          this.set(`data.${e.currentTarget.dataIndex}`, rule);
+        }
+      }
+    }
+
+    customElements.define(PlayingViewConditions.is, PlayingViewConditions);
+  </script>
+</dom-module>

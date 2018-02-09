@@ -1,3 +1,5 @@
+<link rel="import" href="playing-view-conditions.html">
+
 <!--
 An element for displaying achievement rule data.
 
@@ -35,21 +37,29 @@ Example:
     </div>
 
     <div role="widget">
-      <label>[[i18n('play.rule.field.constraints')]]</label>
+      <label>[[i18n('play.rule.achievement')]]</label>
+      <div name="achievement">[[rule.achievement.metric.name]]</div>
+    </div>
+
+    <div class="widget">
+      <label role="widget">[[i18n('play.rule.rewards.rules')]]</label>
       <div class="table">
         <div class="table-header">
-          <div class="flex">[[i18n('play.rule.achievement.constraints.minimum')]]</div>
-          <div class="flex">[[i18n('play.rule.achievement.constraints.maximum')]]</div>
-          <div class="flex">[[i18n('play.rule.achievement.constraints.default')]]</div>
+          <div class="flex-1">[[i18n('play.metric.heading')]]</div>
+          <div class="flex-6">[[i18n('play.rule.condition.heading')]]</div>
         </div>
         <div class="table-rows">
-          <div class="table-row">
-            <div class="flex">[[rule.constraints.minimum]]</div>
-            <div class="flex">[[rule.constraints.maximum]]</div>
-            <div class="flex">[[rule.constraints.default]]</div>
-          </div>
+          <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">
+            <div class="table-row">
+              <div class="flex-1">[[reward.item.name]] × 1</div>
+              <div class="flex-6">
+                <playing-view-conditions requires="[[item.requires]]"></playing-view-conditions>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
+      </template>
     </div>
 
   </template>
