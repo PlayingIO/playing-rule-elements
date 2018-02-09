@@ -54,7 +54,7 @@ Example:
           <label>[[i18n('play.rule.achievement.rules')]]</label>
           <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">
             <div class="form-row">
-              <div class="flex-2">
+              <div class="flex">
                 <mostly-select
                         label="[[i18n('play.rule.achievement.rules.item')]]"
                         placeholder="[[i18n('play.rule.achievement.rules.item.placeholder')]]"
@@ -66,11 +66,13 @@ Example:
                   </template>
                 </mostly-select>
               </div>
-              <div class="flex-4">
-                <playing-edit-conditions requires="[[item.requires]]"></playing-edit-conditions>
-              </div>
               <div class="form-actions">
                 <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeReward"></iron-icon>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="flex">
+                <playing-edit-conditions requires="[[item.requires]]"></playing-edit-conditions>
               </div>
             </div>
           </template>
@@ -81,9 +83,9 @@ Example:
           </div>
         </template>
         <div class="form-buttons">
-          <paper-button noink id="addItemButton" class="primary"
+          <paper-button noink id="addRewardButton" class="primary"
                   disabled="[[!_getAvailableRewards(rule.achievement.rules.splices)]]"
-                  on-tap="_addReward">[[i18n('command.add')]]</paper-button>
+                  on-tap="_addReward">[[i18n('play.rule.command.reward.add')]]</paper-button>
         </div>
       </template>
     </div>
