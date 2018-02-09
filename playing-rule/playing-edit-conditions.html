@@ -54,6 +54,16 @@ Data model
     <mostly-resource id="teams" auto path="teams" response="{{teams}}"></mostly-resource>
 
     <div role="widget">
+
+      <template is="dom-if" if="[[!data.length]]">
+        <label>[[i18n('play.rule.command.rule.create.guide')]]</label>
+        <div class="form-buttons">
+          <paper-button noink id="createRuleButton" class="primary"
+                  data-index="[[index]]"
+                  on-tap="_createRule">[[i18n('play.rule.command.rule.create')]]</paper-button>
+        </div>
+      </template>
+
       <template is="dom-repeat" items="{{data}}" as="cond">
         <div class="form-row">
           <div class="form-heading">Match</div>
@@ -289,15 +299,14 @@ Data model
 
         <template is="dom-if" if="[[cond.conditions]]">
           <playing-edit-conditions data="{{cond.conditions}}" parentRule="[[cond.rule]]"></playing-edit-conditions>
+          <div class="form-buttons">
+            <paper-button noink id="addConditionButton" class="primary"
+                    data-index="[[index]]"
+                    on-tap="_addCondition">[[i18n('play.rule.command.rule.add')]]</paper-button>
+          </div>
         </template>
       </template>
     </div>
-    <template is="dom-if" if="[[!!parentRule]]">
-      <div class="form-buttons">
-        <paper-button noink id="addRuleButton" class="primary"
-                on-tap="_addRule">[[i18n('play.rule.command.rule.add')]]</paper-button>
-      </div>
-    </template>
 
   </template>
 
@@ -314,7 +323,7 @@ Data model
            */
           data: {
             type: Array,
-            value: () => [{ rule: null }]
+            value: []
           },
 
           /**
@@ -387,8 +396,12 @@ Data model
         }
       }
 
-      _addRule() {
-        this.push('data', { rule: null });
+      _addCondition(e) {
+        this.push(`data.${e.currentTarget.dataIndex}.conditions`, { rule: null });
+      }
+
+      _createRule() {
+        this.set('data', [{ rule: null }]);
       }
 
       _removeRule(e) {
@@ -401,8 +414,8 @@ Data model
           case 'metric': rule = { rule: 'metric' }; break;
           case 'action': rule = { rule: 'action' }; break;
           case 'team': rule = { rule: 'team' }; break;
-          case 'and': rule = { rule: 'and', conditions: [] }; break;
-          case 'or': rule = { rule: 'or', conditions: [] }; break;
+          case 'and': rule = { rule: 'and', conditions: [{ rule: null }] }; break;
+          case 'or': rule = { rule: 'or', conditions: [{ rule: null }] }; break;
         }
         this.splice('data', e.currentTarget.dataIndex, 1, rule)
       }
