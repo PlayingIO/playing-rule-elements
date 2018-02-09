@@ -80,7 +80,7 @@ Data model
             <paper-icon-button icon="mostly:remove"
                     class="remove"
                     data-index="[[index]]"
-                    on-tap="_removeCondition"
+                    on-tap="_removeRule"
                     disabled$="[[!parentRule]]"></paper-icon-button>
           </div>
         </div>
@@ -292,10 +292,10 @@ Data model
         </template>
       </template>
     </div>
-    <template is="dom-if" if="[[_hasConditions(parentRule)]]">
+    <template is="dom-if" if="[[!!parentRule]]">
       <div class="form-buttons">
-        <paper-button noink id="addConditionButton" class="primary"
-                on-tap="_addCondition">[[i18n('play.rule.command.rule.add')]]</paper-button>
+        <paper-button noink id="addRuleButton" class="primary"
+                on-tap="_addRule">[[i18n('play.rule.command.rule.add')]]</paper-button>
       </div>
     </template>
 
@@ -387,11 +387,11 @@ Data model
         }
       }
 
-      _addCondition() {
+      _addRule() {
         this.push('data', { rule: null });
       }
 
-      _removeCondition(e) {
+      _removeRule(e) {
         this.splice('data', e.currentTarget.dataIndex, 1);
       }
 
