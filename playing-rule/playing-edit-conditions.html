@@ -49,6 +49,7 @@ Data model
     </style>
 
     <mostly-resource id="metrics" auto path="metrics" response="{{metrics}}"></mostly-resource>
+    <mostly-resource id="actions" auto path="actions" response="{{actions}}"></mostly-resource>
 
     <div role="widget">
       <template is="dom-repeat" items="{{data}}" as="cond">
@@ -208,6 +209,39 @@ Data model
                   </section>
 
                 </iron-pages>
+              </section>
+
+              <!-- action rule -->
+              <section name="action">
+                <div class="form-row">
+                  <div class="flex-1">
+                    <mostly-select
+                            placeholder="[[i18n('play.rule.action.placeholder')]]"
+                            selected="{{cond.action}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[actions.data]]" as="item">
+                        <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-1">
+                    <mostly-select
+                            placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                            selected="{{cond.operator}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                        <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-2">
+                    <mostly-input
+                        type="number" value="{{cond.value}}"
+                        required></mostly-input>
+                  </div>
+                </div>
               </section>
 
             </iron-pages>
