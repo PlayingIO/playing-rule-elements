@@ -49,9 +49,9 @@ Data model
       }
     </style>
 
-    <mostly-resource id="metrics" path="metrics" schemas="*" response-data={{metrics}}></mostly-resource>
-    <mostly-resource id="actions" path="actions" schemas="*" response-data={{actions}}></mostly-resource>
-    <mostly-resource id="teams" path="teams"" schemas="*" response-data={{teams}}></mostly-resource>
+    <mostly-resource id="metrics" path="metrics" schemas="*" response-data={{metrics}} auto cached></mostly-resource>
+    <mostly-resource id="actions" path="actions" schemas="*" response-data={{actions}} auto cached></mostly-resource>
+    <mostly-resource id="teams" path="teams"" schemas="*" response-data={{teams}} auto cached></mostly-resource>
 
     <div role="widget">
 
@@ -297,8 +297,7 @@ Data model
         </template>
 
         <template is="dom-if" if="[[cond.conditions]]">
-          <playing-edit-conditions data="{{cond.conditions}}"
-                  metrics="[[metrics]]" actions="[[actions]]" teams="[[teams]]"></playing-edit-conditions>
+          <playing-edit-conditions data="{{cond.conditions}}"></playing-edit-conditions>
           <div class="form-buttons">
             <paper-button noink id="addConditionButton" class="primary"
                     data-index="[[index]]"
@@ -372,13 +371,6 @@ Data model
             value: ['eq', 'ne']
           }
         };
-      }
-
-      _dataChanged() {
-        // fetch metrics/actions/teams data
-        if (!this.metrics) this.$.metrics.get();
-        if (!this.actions) this.$.actions.get();
-        if (!this.teams) this.$.teams.get();
       }
 
       _hasConditions(rule) {
