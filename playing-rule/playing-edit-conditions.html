@@ -6,13 +6,13 @@ Data model
   type: 'and',
   conditions: [
     {
-      type: 'metric', id: 'exp', operator: 'gt', value: '100'
+      type: 'metric', metric: 'exp', operator: 'gt', value: '100'
     },
     {
       type: 'and',
       conditions: [
-        { type: 'point', id: 'exp', operator: 'lt', value: '200' },
-        { type: 'action', id: 'login', operator: 'eq', value: '10' }
+        { type: 'metric', metric: 'point', operator: 'lt', value: '200' },
+        { type: 'action', action: 'login', operator: 'eq', value: '10' }
       ]
     }
   ]
@@ -69,7 +69,7 @@ Data model
           <div class="form-heading">Match</div>
           <div class="flex">
             <mostly-select
-                    placeholder="[[i18n('play.rule.rule.placeholder')]]"
+                    placeholder="[[i18n('play.rule.rewards.rules.placeholder')]]"
                     selected="{{cond.rule}}"
                     data-index="[[index]]"
                     on-selected-changed="_ruleChanged"

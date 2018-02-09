@@ -51,13 +51,13 @@ Example:
 
       <template is="dom-if" if="[[_isMetricSelected(rule.achievement.metric)]]">
         <div class="layout vertical">
-          <label>[[i18n('play.rule.achievement.rules')]]</label>
+          <label>[[i18n('play.rule.rewards.rules')]]</label>
           <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">
             <div class="form-row">
               <div class="flex">
                 <mostly-select
-                        label="[[i18n('play.rule.achievement.rules.item')]]"
-                        placeholder="[[i18n('play.rule.achievement.rules.item.placeholder')]]"
+                        label="[[i18n('play.rule.rewards.rules.item')]]"
+                        placeholder="[[i18n('play.rule.rewards.rules.item.placeholder')]]"
                         selected="{{reward.item.name}}"
                         attr-for-selected="name"
                         required>
@@ -79,7 +79,7 @@ Example:
         </div>
         <template is="dom-if" if=[[_empty(rule.achievement.rules.*)]]>
           <div class="form-row">
-            <div class="empty-result">[[i18n('play.rule.achievement.rules.empty')]]</div>
+            <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
           </div>
         </template>
         <div class="form-buttons">
