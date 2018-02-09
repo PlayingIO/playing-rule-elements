@@ -50,6 +50,7 @@ Data model
 
     <mostly-resource id="metrics" auto path="metrics" response="{{metrics}}"></mostly-resource>
     <mostly-resource id="actions" auto path="actions" response="{{actions}}"></mostly-resource>
+    <mostly-resource id="teams" auto path="teams" response="{{teams}}"></mostly-resource>
 
     <div role="widget">
       <template is="dom-repeat" items="{{data}}" as="cond">
@@ -244,6 +245,37 @@ Data model
                 </div>
               </section>
 
+              <!-- team rule -->
+              <section name="team">
+                <div class="form-row">
+                  <div class="flex-2">
+                    <mostly-select
+                            placeholder="[[i18n('play.rule.team.placeholder')]]"
+                            selected="{{cond.team}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[actions.data]]" as="item">
+                        <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-1">
+                    <label>[[i18n('play.rule.team.role.with')]]</label>
+                  </div>
+                  <div class="flex-2">
+                    <mostly-select
+                            placeholder="[[i18n('play.rule.team.role.placeholder')]]"
+                            selected="{{cond.role}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[_getTeamRoles(cond.team)]]" as="role">
+                        <paper-item name="[[role]]">role</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                </div>
+              </section>
+
             </iron-pages>
           </div>
           <div class="form-actions">&nbsp;</div>
@@ -283,6 +315,16 @@ Data model
            * metrics response data
            */
           metrics: Object,
+
+          /**
+           * actions response data
+           */
+          actions: Object,
+
+          /**
+           * teams response data
+           */
+          teams: Object,
 
           /**
            * parent rule type
@@ -328,6 +370,15 @@ Data model
           }
         }
         return [];
+      }
+
+      _getTeamRoles(team) {
+        if (this.teams) {
+          var index = this.teams.data.findIndex(t => t.di == team);
+          if (index >= 0) {
+            return this.teams.data[index].roles;
+          }
+        }
       }
 
       _addCondition() {
