@@ -61,7 +61,7 @@ Example:
                         selected="{{reward.item.name}}"
                         attr-for-selected="name"
                         required>
-                  <template is="dom-repeat" items="[[selectedMetric.constraints.items]]" as="item">
+                  <template is="dom-repeat" items="[[targetMetric.constraints.items]]" as="item">
                     <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                   </template>
                 </mostly-select>
@@ -127,7 +127,7 @@ Example:
 
           metrics: Object,
 
-          selectedMetric: Object
+          targetMetric: Object
         }
       }
 
@@ -157,17 +157,17 @@ Example:
                 return metric.id === selected;
               });
               if (index >= 0) {
-                this.selectedMetric = metrics[index];
+                this.targetMetric = metrics[index];
               }
             }
           };
           if (this.metrics) {
-            selectedMetric(this.metrics);
+            selectMetric(this.metrics);
           } else {
             this.$.metrics.get().then(response => selectMetric(response.data));
           }
         } else {
-          this.selectedMetric = null;
+          this.targetMetric = null;
         }
       }
 
@@ -184,8 +184,8 @@ Example:
       }
 
       _getAvailableRewards() {
-        if (this.selectedMetric && this.rule.achievement.rules) {
-          return this.rule.achievement.rules.length < this.selectedMetric.constraints.items.length;
+        if (this.targetMetric && this.rule.achievement.rules) {
+          return this.rule.achievement.rules.length < this.targetMetric.constraints.items.length;
         }
         return true;
       }
