@@ -25,7 +25,9 @@ Example:
         @apply --mostly-label;
       }
     </style>
-    
+
+    <mostly-resource id="metrics" path="sets" response-data="{{metrics}}" auto cached></mostly-resource>
+
     <div role="widget" hidden$="[[!rule.description]]">
       <label>[[i18n('play.rule.field.description')]]</label>
       <div name="description" class="multiline">[[rule.description]]</div>
@@ -38,7 +40,7 @@ Example:
 
     <div role="widget">
       <label>[[i18n('play.rule.achievement')]]</label>
-      <div name="achievement">[[rule.achievement.metric.name]]</div>
+      <div name="achievement">[[targetMetric.name]]</div>
     </div>
 
     <div class="widget">
@@ -72,12 +74,43 @@ Example:
       static get properties() {
         return {
           /**
-           * The rule object to be displayed.
+           * The rule object to be edited or created.
            */
           rule: {
             type: Object,
             value: {}
+          },
+
+          metrics: Object,
+
+          targetMetric: Object
+        }
+      }
+
+      static get observers() {
+        return [
+          '_refresh(rule.achievement.metric)'
+        ];
+      }
+
+      _refresh() {
+        if (this.rule && this.rule.achievement && this.rule.achievement.metric) {
+          var selectMetric = (metrics) => {
+            if (metrics) {
+              var index = metrics.findIndex((metric) =>
+                metric.id === this.rule.achievement.metric);
+              if (index >= 0) {
+                this.targetMetric = metrics[index];
+              }
+            }
+          };
+          if (this.metrics) {
+            selectMetric(this.metrics);
+          } else {
+            this.$.metrics.get().then(response => selectMetric(response.data));
           }
+        } else {
+          this.targetMetric = null;
         }
       }
     }
