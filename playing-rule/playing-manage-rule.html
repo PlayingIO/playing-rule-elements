@@ -158,16 +158,18 @@ Example:
       <div id="errors" hidden$="[[!errors]]">[[errors]]</div>
 
       <iron-pages selected="[[page]]" attr-for-selected="id">
+
         <section id="viewer">
           <mostly-layout id="viewerLayout" href="[[_layoutHref(type, 'view')]]"
                 model="[[_layoutModel(rule, new)]]"></mostly-layout>
         </section>
+
         <section id="editor">
           <h3>[[i18n('play.rule.editRule.heading')]]</h3>
           <iron-form id="editRuleForm">
             <form class="vertical layout">
               <mostly-layout id="editorLayout" href="[[_layoutHref(type, 'edit')]]"
-                  model="[[_layoutModel(rule, new)]]"></mostly-layout>
+                  model="{{_layoutModel(rule, new)}}"></mostly-layout>
             </form>
           </iron-form>
           <div class="horizontal end-justified layout">
@@ -179,6 +181,9 @@ Example:
             </paper-button>
           </div>
         </section>
+
+      </iron-pages>
+
     </mostly-card>
 
     <mostly-dialog id="deleteRuleDialog" with-backdrop>
