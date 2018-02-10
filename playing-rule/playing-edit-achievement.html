@@ -1,5 +1,3 @@
-<link rel="import" href="playing-edit-conditions.html">
-
 <!--
 An element for creating and editing achievement rule data.
 
@@ -103,7 +101,8 @@ Example:
   </template>
 
   <script>
-    class PlayingEditAchievement extends Polymer.mixinBehaviors([Mostly.I18nBehavior], Polymer.Element) {
+    class PlayingEditAchievement extends Polymer.mixinBehaviors(
+          [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-edit-achievement' };
 
@@ -150,20 +149,7 @@ Example:
 
       _refresh() {
         if (this.rule && this.rule.achievement && this.rule.achievement.metric) {
-          var selectMetric = (metrics) => {
-            if (metrics) {
-              var index = metrics.findIndex((metric) =>
-                metric.id === this.rule.achievement.metric);
-              if (index >= 0) {
-                this.targetMetric = metrics[index];
-              }
-            }
-          };
-          if (this.metrics) {
-            selectMetric(this.metrics);
-          } else {
-            this.$.metrics.get().then(response => selectMetric(response.data));
-          }
+          this._selectMetric('targetMetric', this.rule.achievement.metric);
         } else {
           this.targetMetric = null;
         }
