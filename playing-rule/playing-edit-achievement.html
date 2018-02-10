@@ -27,7 +27,7 @@ Example:
       }
     </style>
 
-    <mostly-resource id="metrics" auto path="sets" response="{{metrics}}"></mostly-resource>
+    <mostly-resource id="metrics" path="sets" response-data="{{metrics}}" auto cached></mostly-resource>
 
     <div class="layout vertical">
       <mostly-input name="description" label="[[i18n('play.rule.field.description')]]"
@@ -44,7 +44,7 @@ Example:
               selected="{{rule.achievement.metric}}"
               attr-for-selected="name"
               required>
-        <template is="dom-repeat" items="[[metrics.data]]" as="item">
+        <template is="dom-repeat" items="[[metrics]]" as="item">
           <paper-item name="[[item.id]]">[[item.name]]</paper-item>
         </template>
       </mostly-select>
@@ -150,9 +150,21 @@ Example:
 
       _refresh() {
         if (this.rule && this.rule.achievement && this.rule.achievement.metric) {
-          var index = this.metrics.data.findIndex(m => m.id === this.rule.achievement.metric);
-          if (index >= 0) {
-            this.selectedMetric = this.metrics.data[index];
+          var selectMetric = (metrics) => {
+            if (metrics) {
+              var index = metrics.findIndex((metric) => {
+                var selected = this.rule.achievement.metric.id || this.rule.achievement.metric;
+                return metric.id === selected;
+              });
+              if (index >= 0) {
+                this.selectedMetric = metrics[index];
+              }
+            }
+          };
+          if (this.metrics) {
+            selectedMetric(this.metrics);
+          } else {
+            this.$.metrics.get().then(response => selectMetric(response.data));
           }
         } else {
           this.selectedMetric = null;
@@ -162,7 +174,6 @@ Example:
       _addReward() {
         this.set('rule.achievement.rules', this.rule.achievement.rules || []);
         this.push('rule.achievement.rules', {
-          selected: -1,
           item: { name: '', number: 1 },
           requires: []
         });
