@@ -152,10 +152,8 @@ Example:
         if (this.rule && this.rule.achievement && this.rule.achievement.metric) {
           var selectMetric = (metrics) => {
             if (metrics) {
-              var index = metrics.findIndex((metric) => {
-                var selected = this.rule.achievement.metric.id || this.rule.achievement.metric;
-                return metric.id === selected;
-              });
+              var index = metrics.findIndex((metric) =>
+                metric.id === this.rule.achievement.metric);
               if (index >= 0) {
                 this.targetMetric = metrics[index];
               }
