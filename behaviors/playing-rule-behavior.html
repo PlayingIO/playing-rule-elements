@@ -1,0 +1,24 @@
+<link rel="import" href="../../mostly-elements/behaviors/mostly-func-behavior.html">
+
+<script>
+  var Playing = Playing || {};
+
+  /**
+   * @polymerBehavior Playing.RuleBehavior
+   */
+  Playing.RuleBehavior = [Mostly.FuncBehavior, {
+
+    properties: {
+    },
+
+    _selectMetric(target, id) {
+      if (this.metrics) {
+        this.set(target, this.findById(this.metrics, id));
+      } else {
+        this.$.metrics.get().then(response => {
+          this.set(target, this.findById(response.data, id));
+        });
+      }
+    }
+  }];
+</script>
