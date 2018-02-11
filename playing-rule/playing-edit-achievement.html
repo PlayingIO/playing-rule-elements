@@ -47,7 +47,7 @@ Example:
         </template>
       </mostly-select>
 
-      <template is="dom-if" if="[[_isMetricSelected(rule.achievement.metric)]]">
+      <template is="dom-if" if="[[_isMetricSelected(rule.achievement.metric)]]" restamp>
         <div class="layout vertical">
           <label>[[i18n('play.rule.rewards.rules')]]</label>
           <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">

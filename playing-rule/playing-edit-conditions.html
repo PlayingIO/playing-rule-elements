@@ -55,7 +55,7 @@ Data model
 
     <div role="widget">
 
-      <template is="dom-if" if="[[!data.length]]">
+      <template is="dom-if" if="[[!data.length]]" restamp>
         <label>[[i18n('play.rule.command.rule.create.guide')]]</label>
         <div class="form-buttons">
           <paper-button noink id="createRuleButton" class="primary"
@@ -95,13 +95,13 @@ Data model
           </div>
         </div>
 
-        <template is="dom-if" if="[[!_hasConditions(cond.rule)]]">
+        <template is="dom-if" if="[[!_hasConditions(cond.rule)]]" restamp>
           <div class="form-row">
             <div class="form-heading">&nbsp;</div>
             <div class="flex">
 
               <!-- metric rule -->
-              <template is="dom-if" if="[[isEqual(cond.rule, 'metric')]]">
+              <template is="dom-if" if="[[isEqual(cond.rule, 'metric')]]" restamp>
                 <mostly-select id="metricSelector"
                         placeholder="[[i18n('play.rule.metric.placeholder')]]"
                         selected="{{cond.metric}}"
@@ -115,7 +115,7 @@ Data model
                 </mostly-select>
 
                 <!-- point metric operator -->
-                <template is="dom-if" if="[[isEqual(cond.type, 'point')]]">
+                <template is="dom-if" if="[[isEqual(cond.type, 'point')]]" restamp>
                   <div class="form-row">
                     <div class="flex-1">
                       <mostly-select id="opSelector"
@@ -137,7 +137,7 @@ Data model
                 </template>
 
                 <!-- set metric operator -->
-                <template is="dom-if" if="[[isEqual(cond.type, 'set')]]">
+                <template is="dom-if" if="[[isEqual(cond.type, 'set')]]" restamp>
                   <div class="form-row">
                     <div class="flex-1">
                       <mostly-select id="itemsSelector"
@@ -170,7 +170,7 @@ Data model
                 </template>
 
                 <!-- state metric operator -->
-                <template is="dom-if" if="[[isEqual(cond.type, 'state')]]">
+                <template is="dom-if" if="[[isEqual(cond.type, 'state')]]" restamp>
                   <div class="form-row">
                     <div class="flex-1">
                       <mostly-select id="opSelector"
@@ -198,7 +198,7 @@ Data model
                 </template>
 
                 <!-- compound metric operator -->
-                <template is="dom-if" if="[[isEqual(cond.type, 'compound')]]">
+                <template is="dom-if" if="[[isEqual(cond.type, 'compound')]]" restamp>
                   <div class="form-row">
                     <div class="flex-1">
                       <mostly-select id="opSelector"
@@ -222,7 +222,7 @@ Data model
               </template>
 
               <!-- action rule -->
-              <template is="dom-if" if="[[isEqual(cond.rule, 'action')]]">
+              <template is="dom-if" if="[[isEqual(cond.rule, 'action')]]" restamp>
                 <div class="form-row">
                   <div class="flex-1">
                     <mostly-select id="actionSelector"
@@ -255,7 +255,7 @@ Data model
               </template>
 
               <!-- team rule -->
-              <template is="dom-if" if="[[isEqual(cond.rule, 'team')]]">
+              <template is="dom-if" if="[[isEqual(cond.rule, 'team')]]" restamp>
                 <div class="form-row">
                   <div class="flex-2">
                     <mostly-select id="teamSelector"
@@ -291,7 +291,7 @@ Data model
           </div>
         </template>
 
-        <template is="dom-if" if="[[cond.conditions]]">
+        <template is="dom-if" if="[[cond.conditions]]" restamp>
           <playing-edit-conditions id="[[index]]" data="{{cond.conditions}}"></playing-edit-conditions>
           <div class="form-buttons">
             <paper-button noink id="addConditionButton" class="primary"
