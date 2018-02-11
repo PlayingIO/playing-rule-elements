@@ -65,10 +65,11 @@ Data model
       </template>
 
       <template is="dom-repeat" items="{{data}}" as="cond">
+
         <div class="form-row">
           <div class="form-heading">Match</div>
           <div class="flex">
-            <mostly-select
+            <mostly-select id="ruleSelector"
                     placeholder="[[i18n('play.rule.rewards.rules.placeholder')]]"
                     selected="{{cond.rule}}"
                     data-index="[[index]]"
@@ -101,7 +102,7 @@ Data model
 
               <!-- metric rule -->
               <template is="dom-if" if="[[isEqual(cond.rule, 'metric')]]">
-                <mostly-select
+                <mostly-select id="metricSelector"
                         placeholder="[[i18n('play.rule.metric.placeholder')]]"
                         selected="{{cond.metric}}"
                         data-index="[[index]]"
@@ -117,7 +118,7 @@ Data model
                 <template is="dom-if" if="[[isEqual(cond.type, 'point')]]">
                   <div class="form-row">
                     <div class="flex-1">
-                      <mostly-select
+                      <mostly-select id="opSelector"
                               placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
                               selected="{{cond.operator}}"
                               attr-for-selected="name"
@@ -139,7 +140,7 @@ Data model
                 <template is="dom-if" if="[[isEqual(cond.type, 'set')]]">
                   <div class="form-row">
                     <div class="flex-1">
-                      <mostly-select
+                      <mostly-select id="itemsSelector"
                               placeholder="[[i18n('play.rule.condition.set.placeholder')]]"
                               selected="{{cond.item}}"
                               attr-for-selected="name"
@@ -150,7 +151,7 @@ Data model
                       </mostly-select>
                     </div>
                     <div class="flex-1">
-                      <mostly-select
+                      <mostly-select id="opSelector"
                               placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
                               selected="{{cond.operator}}"
                               attr-for-selected="name"
@@ -172,7 +173,7 @@ Data model
                 <template is="dom-if" if="[[isEqual(cond.type, 'state')]]">
                   <div class="form-row">
                     <div class="flex-1">
-                      <mostly-select
+                      <mostly-select id="opSelector"
                               placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
                               selected="{{cond.operator}}"
                               attr-for-selected="name"
@@ -183,7 +184,7 @@ Data model
                       </mostly-select>
                     </div>
                     <div class="flex-3">
-                      <mostly-select
+                      <mostly-select id="statesSelector"
                               placeholder="[[i18n('play.rule.condition.state.placeholder')]]"
                               selected="{{cond.value}}"
                               attr-for-selected="name"
@@ -200,7 +201,7 @@ Data model
                 <template is="dom-if" if="[[isEqual(cond.type, 'compound')]]">
                   <div class="form-row">
                     <div class="flex-1">
-                      <mostly-select
+                      <mostly-select id="opSelector"
                               placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
                               selected="{{cond.operator}}"
                               attr-for-selected="name"
@@ -224,7 +225,7 @@ Data model
               <template is="dom-if" if="[[isEqual(cond.rule, 'action')]]">
                 <div class="form-row">
                   <div class="flex-1">
-                    <mostly-select
+                    <mostly-select id="actionSelector"
                             placeholder="[[i18n('play.rule.action.placeholder')]]"
                             selected="{{cond.action}}"
                             attr-for-selected="name"
@@ -235,7 +236,7 @@ Data model
                     </mostly-select>
                   </div>
                   <div class="flex-1">
-                    <mostly-select
+                    <mostly-select id="opSelector"
                             placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
                             selected="{{cond.operator}}"
                             attr-for-selected="name"
@@ -257,7 +258,7 @@ Data model
               <template is="dom-if" if="[[isEqual(cond.rule, 'team')]]">
                 <div class="form-row">
                   <div class="flex-2">
-                    <mostly-select
+                    <mostly-select id="teamSelector"
                             placeholder="[[i18n('play.rule.team.placeholder')]]"
                             selected="{{cond.team}}"
                             attr-for-selected="name"
@@ -271,7 +272,7 @@ Data model
                     <label>[[i18n('play.rule.team.role.with')]]</label>
                   </div>
                   <div class="flex-2">
-                    <mostly-select
+                    <mostly-select id="roleSelector"
                             placeholder="[[i18n('play.rule.team.role.placeholder')]]"
                             selected="{{cond.role}}"
                             attr-for-selected="name"
@@ -291,13 +292,14 @@ Data model
         </template>
 
         <template is="dom-if" if="[[cond.conditions]]">
-          <playing-edit-conditions data="{{cond.conditions}}"></playing-edit-conditions>
+          <playing-edit-conditions id="[[index]]" data="{{cond.conditions}}"></playing-edit-conditions>
           <div class="form-buttons">
             <paper-button noink id="addConditionButton" class="primary"
                     data-index="[[index]]"
                     on-tap="_addCondition">[[i18n('play.rule.command.rule.add')]]</paper-button>
           </div>
         </template>
+
       </template>
     </div>
 
@@ -316,7 +318,8 @@ Data model
            */
           data: {
             type: Array,
-            value: []
+            value: [],
+            notify: true
           },
 
           /**
