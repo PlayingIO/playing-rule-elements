@@ -21,14 +21,6 @@
       }
     },
 
-    _getMetricName(metrics, id) {
-      if (metrics) {
-        var metric = this.findById(metrics, id);
-        if (metric) return metric.name;
-      }
-      return id;
-    },
-
     _getMetricConstraints(id, field) {
       if (this.metrics) {
         var index = this.metrics.findIndex(m => m.id === id);
