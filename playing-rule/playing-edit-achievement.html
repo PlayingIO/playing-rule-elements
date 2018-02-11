@@ -70,7 +70,7 @@ Example:
             </div>
             <div class="form-row">
               <div class="flex">
-                <playing-edit-conditions requires="[[item.requires]]"></playing-edit-conditions>
+                <playing-edit-conditions data="{{reward.requires}}"></playing-edit-conditions>
               </div>
             </div>
           </template>
@@ -113,7 +113,8 @@ Example:
            */
           rule: {
             type: Object,
-            value: {}
+            value: {},
+            notify: true
           },
 
           /**

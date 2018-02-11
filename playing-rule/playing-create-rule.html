@@ -96,7 +96,7 @@
           </paper-input>
 
           <mostly-layout id="editorLayout" href="[[_layoutHref(type)]]"
-                  model="[[_layoutModel(rule, new)]]"></mostly-layout>
+                  model="{{_layoutModel(rule, new)}}"></mostly-layout>
 
           <div class="form-buttons">
             <paper-button noink id="cancelButton" on-tap="_cancel">[[i18n('command.cancel')]]</paper-button>
@@ -115,7 +115,8 @@
   </template>
 
   <script>
-    class PlayingCreateRule extends Polymer.mixinBehaviors([Mostly.I18nBehavior], Polymer.Element) {
+    class PlayingCreateRule extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior, Mostly.FuncBehavior], Polymer.Element) {
 
       static get is() { return 'playing-create-rule' };
 
