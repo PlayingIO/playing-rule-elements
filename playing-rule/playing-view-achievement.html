@@ -53,7 +53,7 @@ Example:
             <div class="table-row">
               <div class="flex-1">[[reward.item.name]] × 1</div>
               <div class="flex-6">
-                <playing-view-conditions requires="[[item.requires]]"></playing-view-conditions>
+                <playing-view-conditions data="[[reward.requires]]"></playing-view-conditions>
               </div>
             </div>
           </template>
@@ -99,7 +99,7 @@ Example:
           this.targetMetric = null;
         }
       }
-      
+
     }
 
     customElements.define(PlayingViewAchievement.is, PlayingViewAchievement);
