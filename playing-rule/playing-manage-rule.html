@@ -134,10 +134,10 @@ Example:
     <mostly-card>
       <div class="header horizontal layout">
         <paper-icon-button class="backButton" icon="icons:arrow-back" on-tap="_goHome"></paper-icon-button>
-        <iron-icon icon="[[_ruleIcon(type)]]" class="icon"></iron-icon>
+        <iron-icon icon="[[ruleTypeIcon(type)]]" class="icon"></iron-icon>
         <div class="layout vertical">
           <h3 class="name">[[rule.name]]</h3>
-          <h4 class="subname">[[_ruleHeading(type)]]</h4>
+          <h4 class="subname">[[ruleHeading(type)]]</h4>
         </div>
 
         <div class="actions">
@@ -200,7 +200,7 @@ Example:
 
   <script>
     class PlayingManageRule extends Polymer.mixinBehaviors(
-        [Mostly.I18nBehavior, Mostly.FiltersBehavior, Mostly.FuncBehavior], Polymer.Element) {
+        [Mostly.I18nBehavior, Mostly.FiltersBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-manage-rule' };
 
@@ -232,7 +232,7 @@ Example:
 
           path: {
             type: String,
-            computed: '_rulePath(rule)'
+            computed: 'rulePath(rule)'
           },
 
           empty: Boolean,
@@ -265,26 +265,6 @@ Example:
             this.origRule = this.fp.clone(this.rule);
           });
         }
-      }
-
-      _rulePath(rule) {
-        if (rule && rule.id) {
-          return 'rules/' + rule.id;
-        } else {
-          return 'rules/' + rule;
-        }
-      }
-
-      _ruleIcon(type) {
-        switch (type) {
-          case 'achievement': return 'playing:badge';
-          case 'level': return 'playing:state';
-          case 'custom': return 'playing:rules';
-        }
-      }
-
-      _ruleHeading(type) {
-        return this.i18n('play.rule.' + type + '.heading');
       }
 
       _layoutHref(type, layout) {

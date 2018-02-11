@@ -77,9 +77,9 @@
     <mostly-card>
       <div class="header horizontal layout">
         <paper-icon-button class="backButton" icon="icons:arrow-back" on-tap="_goHome"></paper-icon-button>
-        <iron-icon icon="[[_ruleIcon(type)]]" class="icon"></iron-icon>
+        <iron-icon icon="[[ruleTypeIcon(type)]]" class="icon"></iron-icon>
         <div class="layout vertical">
-          <h3 class="name">[[_ruleHeading(type)]]</h3>
+          <h3 class="name">[[ruleHeading(type)]]</h3>
           <h4 class="subname">[[i18n('play.rule.new')]]</h4>
         </div>
       </div>
@@ -116,7 +116,7 @@
 
   <script>
     class PlayingCreateRule extends Polymer.mixinBehaviors(
-        [Mostly.I18nBehavior, Mostly.FuncBehavior], Polymer.Element) {
+        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-create-rule' };
 
@@ -164,18 +164,6 @@
           event.preventDefault();
           this._create();
         });
-      }
-
-      _ruleIcon(type) {
-        switch (type) {
-          case 'achievement': return 'playing:badge';
-          case 'level': return 'playing:state';
-          case 'custom': return 'playing:rules';
-        }
-      }
-
-      _ruleHeading(type) {
-        return this.i18n('play.rule.' + type + '.heading');
       }
 
       _layoutHref(type) {

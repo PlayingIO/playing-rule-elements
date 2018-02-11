@@ -150,7 +150,7 @@ Example:
 
       _refresh() {
         if (this.rule && this.rule.achievement && this.rule.achievement.metric) {
-          this._selectMetric('targetMetric', this.rule.achievement.metric);
+          this.selectMetric('targetMetric', this.rule.achievement.metric);
         } else {
           this.targetMetric = null;
         }

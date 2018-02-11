@@ -87,7 +87,8 @@
   </template>
 
   <script>
-    class PlayingRuleSearch extends Polymer.mixinBehaviors([Mostly.I18nBehavior], Polymer.Element) {
+    class PlayingRuleSearch extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-rule-search' };
 

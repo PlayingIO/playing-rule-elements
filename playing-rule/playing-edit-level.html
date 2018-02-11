@@ -105,7 +105,8 @@ Example:
   </template>
 
   <script>
-    class PlayingEditLevel extends Polymer.mixinBehaviors([Mostly.I18nBehavior], Polymer.Element) {
+    class PlayingEditLevel extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-edit-level' };
 

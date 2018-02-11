@@ -97,20 +97,20 @@
         <div class="content">
           <!-- and rule -->
           <template is="dom-if" if="[[isEqual(cond.rule, 'and')]]">
-            <iron-icon class="heading" icon="[[_ruleIcon(cond.rule)]]"></iron-icon>
+            <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
             [[i18n('play.rule.condition.desc.and')]]
           </template>
 
           <!-- or rule -->
           <template is="dom-if" if="[[isEqual(cond.rule, 'or')]]">
-            <iron-icon class="heading" icon="[[_ruleIcon(cond.rule)]]"></iron-icon>
+            <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
             [[i18n('play.rule.condition.desc.or')]]
           </template>
 
           <!-- metric rule -->
           <template is="dom-if" if="[[isEqual(cond.rule, 'metric')]]">
-            <iron-icon class="heading" icon="[[_ruleIcon(cond.rule)]]"></iron-icon>
-            [[_ruleDesc(cond.rule, cond.not)]]
+            <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
+            [[ruleDesciption(cond.rule, cond.not)]]
 
             <!-- point metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'point')]]">
@@ -149,8 +149,8 @@
 
           <!-- action rule -->
           <template is="dom-if" if="[[isEqual(cond.rule, 'action')]]">
-            <iron-icon class="heading" icon="[[_ruleIcon(cond.rule)]]"></iron-icon>
-            [[_ruleDesc(cond.rule)]]
+            <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
+            [[ruleDesciption(cond.rule)]]
             [[findById(actions, cond.action, 'name')]]
             [[p18n('play.rule.condition.operator', cond.operator)]]
             [[cond.value]]
@@ -159,8 +159,8 @@
 
           <!-- team rule -->
           <template is="dom-if" if="[[isEqual(cond.rule, 'team')]]">
-            <iron-icon class="heading" icon="[[_ruleIcon(cond.rule)]]"></iron-icon>
-            [[_ruleDesc(cond.rule)]]
+            <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
+            [[ruleDesciption(cond.rule)]]
             [[findById(teams, cond.team, 'name')]]
             [[i18n('play.rule.team.role.with')]]
             [[cond.role]].
@@ -178,7 +178,7 @@
 
   <script>
     class PlayingViewConditions extends Polymer.mixinBehaviors(
-        [Mostly.I18nBehavior, Mostly.FuncBehavior, Playing.RuleBehavior], Polymer.Element) {
+        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-view-conditions' };
       
@@ -238,30 +238,6 @@
             value: ['eq', 'ne']
           }
         };
-      }
-
-      _ruleIcon(type) {
-        switch (type) {
-          case 'metric': return 'playing:metric';
-          case 'action': return 'playing:action';
-          case 'team': return 'playing:team';
-          case 'and': return 'playing:all-done';
-          case 'or': return 'playing:done';
-        }
-      }
-
-      _ruleDesc(type, not) {
-        switch (type) {
-          case 'metric': return this.i18n('play.rule.condition.desc.metric.' + !not);
-          case 'action': return this.i18n('play.rule.condition.desc.action');
-          case 'team': return this.i18n('play.rule.condition.desc.team.' + !not);
-          case 'and': return this.i18n('play.rule.condition.desc.and');
-          case 'or': return this.i18n('play.rule.condition.desc.or');
-        }
-      }
-
-      _hasConditions(rule) {
-        return rule && (rule === 'and' || rule === 'or');
       }
     }
 

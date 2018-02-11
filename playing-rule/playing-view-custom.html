@@ -42,7 +42,8 @@ Example:
   </template>
 
   <script>
-    class PlayingViewCustom extends Polymer.mixinBehaviors([Mostly.I18nBehavior], Polymer.Element) {
+    class PlayingViewCustom extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-view-custom' };
 

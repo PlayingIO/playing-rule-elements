@@ -145,7 +145,7 @@ Data model
                               selected="{{cond.item}}"
                               attr-for-selected="name"
                               no-label-float required>
-                        <template is="dom-repeat" items="[[_getMetricConstraints(cond.metric, 'items')]]" as="item">
+                        <template is="dom-repeat" items="[[findById(metrics, cond.metric, 'constraints.items')]]" as="item">
                           <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                         </template>
                       </mostly-select>
@@ -189,7 +189,7 @@ Data model
                               selected="{{cond.value}}"
                               attr-for-selected="name"
                               no-label-float required>
-                        <template is="dom-repeat" items="[[_getMetricConstraints(cond.metric, 'states')]]" as="item">
+                        <template is="dom-repeat" items="[[findById(metrics, cond.metric, 'constraints.states')]]" as="item">
                           <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                         </template>
                       </mostly-select>
@@ -307,7 +307,7 @@ Data model
 
   <script>
     class PlayingEditConditions extends Polymer.mixinBehaviors(
-        [Mostly.I18nBehavior, Mostly.FuncBehavior, Playing.RuleBehavior], Polymer.Element) {
+        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-edit-conditions' };
       

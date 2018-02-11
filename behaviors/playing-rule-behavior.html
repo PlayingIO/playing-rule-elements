@@ -11,7 +11,7 @@
     properties: {
     },
 
-    _selectMetric(target, id) {
+    selectMetric(target, id) {
       if (this.metrics) {
         this.set(target, this.findById(this.metrics, id));
       } else {
@@ -30,6 +30,50 @@
         }
       }
       return [];
+    },
+
+    ruleIcon(type) {
+      switch (type) {
+        case 'metric': return 'playing:metric';
+        case 'action': return 'playing:action';
+        case 'team': return 'playing:team';
+        case 'and': return 'playing:all-done';
+        case 'or': return 'playing:done';
+      }
+    },
+
+    rulePath(rule) {
+      if (rule && rule.id) {
+        return 'rules/' + rule.id;
+      } else {
+        return 'rules/' + rule;
+      }
+    },
+
+    ruleTypeIcon(type) {
+      switch (type) {
+        case 'achievement': return 'playing:badge';
+        case 'level': return 'playing:state';
+        case 'custom': return 'playing:rules';
+      }
+    },
+
+    ruleHeading(type) {
+      return this.i18n('play.rule.' + type + '.heading');
+    },
+
+    ruleDesciption(type, not) {
+      switch (type) {
+        case 'metric': return this.i18n('play.rule.condition.desc.metric.' + !not);
+        case 'action': return this.i18n('play.rule.condition.desc.action');
+        case 'team': return this.i18n('play.rule.condition.desc.team.' + !not);
+        case 'and': return this.i18n('play.rule.condition.desc.and');
+        case 'or': return this.i18n('play.rule.condition.desc.or');
+      }
+    },
+
+    hasConditions(rule) {
+      return rule && (rule === 'and' || rule === 'or');
     }
   }];
 </script>
