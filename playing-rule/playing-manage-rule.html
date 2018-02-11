@@ -169,7 +169,7 @@ Example:
           <iron-form id="editRuleForm">
             <form class="vertical layout">
               <mostly-layout id="editorLayout" href="[[_layoutHref(type, 'edit')]]"
-                  model="{{_layoutModel(rule, new)}}"></mostly-layout>
+                  model="[[_layoutModel(rule, new)]]"></mostly-layout>
             </form>
           </iron-form>
           <div class="horizontal end-justified layout">
@@ -215,10 +215,18 @@ Example:
             notify: true
           },
 
+          /**
+           * the current rule
+           */
           rule: {
             type: Object,
             observer: '_fetch'
           },
+
+          /**
+           * original rule object
+           */
+          origRule: Object,
 
           type: String,
 
@@ -254,6 +262,7 @@ Example:
         if (typeof this.rule === 'string') {
           this.$.request.get().then((response) => {
             this.rule = response.data;
+            this.origRule = this.fp.clone(this.rule);
           });
         }
       }
@@ -294,10 +303,15 @@ Example:
       }
 
       _toggleEditRule() {
-        this.page = (this.page === 'viewer')? 'editor' : 'viewer';
+        if (this.page === 'viewer') {
+          this.page = 'editor';
+        } else {
+          this._cancelEditRule();
+        }
       }
 
       _cancelEditRule() {
+        this.set('rule', this.fp.clone(this.origRule));
         this.page = 'viewer';
       }
 
