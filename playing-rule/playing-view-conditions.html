@@ -95,6 +95,17 @@
 
       <template is="dom-repeat" items="[[data]]" as="cond">
         <div class="content">
+          <!-- and rule -->
+          <template is="dom-if" if="[[isEqual(cond.rule, 'and')]]">
+            <iron-icon class="heading" icon="[[_ruleIcon(cond.rule)]]"></iron-icon>
+            [[i18n('play.rule.condition.desc.and')]]
+          </template>
+
+          <!-- or rule -->
+          <template is="dom-if" if="[[isEqual(cond.rule, 'or')]]">
+            <iron-icon class="heading" icon="[[_ruleIcon(cond.rule)]]"></iron-icon>
+            [[i18n('play.rule.condition.desc.or')]]
+          </template>
 
           <!-- metric rule -->
           <template is="dom-if" if="[[isEqual(cond.rule, 'metric')]]">
