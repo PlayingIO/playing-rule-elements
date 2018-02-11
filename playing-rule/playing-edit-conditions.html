@@ -20,7 +20,7 @@ Data model
 ```
 
 `playing-edit-conditions`
-@group Mostly UI
+@group Playing UI
 @element playing-edit-conditions
 -->
 <dom-module id="playing-edit-conditions">
@@ -67,7 +67,7 @@ Data model
       <template is="dom-repeat" items="{{data}}" as="cond">
 
         <div class="form-row">
-          <div class="form-heading">Match</div>
+          <div class="form-heading">[[i18n('play.rule.match')]]</div>
           <div class="flex">
             <mostly-select id="ruleSelector"
                     placeholder="[[i18n('play.rule.rewards.rules.placeholder')]]"
@@ -77,7 +77,7 @@ Data model
                     attr-for-selected="name"
                     no-label-float required>
               <template is="dom-repeat" items="[[conditionRules]]" as="rule">
-                <paper-item name="[[rule]]">[[i18n(rule, 'play.rule.condition.type.')]]</paper-item>
+                <paper-item name="[[rule]]">[[p18n('play.rule.condition.option', rule)]]</paper-item>
               </template>
             </mostly-select>
           </div>
@@ -124,7 +124,7 @@ Data model
                               attr-for-selected="name"
                               no-label-float required>
                         <template is="dom-repeat" items="[[operationTypes]]" as="op">
-                          <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                          <paper-item name="[[op]]">[[p18n('play.rule.condition.operator', op)]]</paper-item>
                         </template>
                       </mostly-select>
                     </div>
@@ -157,7 +157,7 @@ Data model
                               attr-for-selected="name"
                               no-label-float required>
                         <template is="dom-repeat" items="[[operationTypes]]" as="op">
-                          <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                          <paper-item name="[[op]]">[[p18n('play.rule.condition.operator', op)]]</paper-item>
                         </template>
                       </mostly-select>
                     </div>
@@ -179,7 +179,7 @@ Data model
                               attr-for-selected="name"
                               no-label-float required>
                         <template is="dom-repeat" items="[[operationEquals]]" as="op">
-                          <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                          <paper-item name="[[op]]">[[p18n('play.rule.condition.operator', op)]]</paper-item>
                         </template>
                       </mostly-select>
                     </div>
@@ -207,7 +207,7 @@ Data model
                               attr-for-selected="name"
                               no-label-float required>
                         <template is="dom-repeat" items="[[operationTypes]]" as="op">
-                          <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                          <paper-item name="[[op]]">[[p18n('play.rule.condition.operator', op)]]</paper-item>
                         </template>
                       </mostly-select>
                     </div>
@@ -242,7 +242,7 @@ Data model
                             attr-for-selected="name"
                             no-label-float required>
                       <template is="dom-repeat" items="[[operationTypes]]" as="op">
-                        <paper-item name="[[op]]">[[i18n(op, 'play.rule.condition.operator.')]]</paper-item>
+                        <paper-item name="[[op]]">[[p18n('play.rule.condition.operator', rule)]]</paper-item>
                       </template>
                     </mostly-select>
                   </div>

@@ -70,7 +70,7 @@
           <template is="dom-repeat" items="[[rules.data]]" as="item">
             <div class="table-row" on-tap="_manageRule">
               <div class="flex-2">[[item.name]]</div>
-              <div class="flex-1">[[i18n(item.type, 'play.rule.')]]</div>
+              <div class="flex-1">[[p18n('play.rule', item.type)]]</div>
               <div class="flex-4">[[item.description]]</div>
             </div>
           </template>
