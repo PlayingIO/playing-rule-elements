@@ -307,7 +307,7 @@ Data model
 
   <script>
     class PlayingEditConditions extends Polymer.mixinBehaviors(
-        [Mostly.I18nBehavior, Mostly.FuncBehavior], Polymer.Element) {
+        [Mostly.I18nBehavior, Mostly.FuncBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-edit-conditions' };
       
@@ -375,17 +375,6 @@ Data model
 
       _canInvert(rule) {
         return rule && (rule === 'metric' || rule === 'team');
-      }
-
-      _getMetricConstraints(metric, field) {
-        if (this.metrics) {
-          var index = this.metrics.findIndex(m => m.id === metric);
-          if (index >= 0) {
-            var constraints = this.metrics[index].constraints;
-            return constraints && constraints[field];
-          }
-        }
-        return [];
       }
 
       _getTeamRoles(team) {
