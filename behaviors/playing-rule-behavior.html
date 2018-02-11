@@ -21,15 +21,15 @@
       }
     },
 
-    _getMetricConstraints(id, field) {
-      if (this.metrics) {
-        var index = this.metrics.findIndex(m => m.id === id);
-        if (index >= 0) {
-          var constraints = this.metrics[index].constraints;
-          return constraints && constraints[field];
-        }
-      }
-      return [];
+    layoutHref(type, layout) {
+      return type && this.resolveUrl(`playing-${layout}-${type}.html`);
+    },
+
+    layoutModel() {
+      return {
+        rule: this.rule,
+        "new": true
+      };
     },
 
     ruleIcon(type) {

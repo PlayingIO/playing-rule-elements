@@ -160,16 +160,16 @@ Example:
       <iron-pages selected="[[page]]" attr-for-selected="id">
 
         <section id="viewer">
-          <mostly-layout id="viewerLayout" href="[[_layoutHref(type, 'view')]]"
-                model="[[_layoutModel(rule, new)]]"></mostly-layout>
+          <mostly-layout id="viewerLayout" href="[[layoutHref(type, 'view')]]"
+                model="[[layoutModel(rule, new)]]"></mostly-layout>
         </section>
 
         <section id="editor">
           <h3>[[i18n('play.rule.editRule.heading')]]</h3>
           <iron-form id="editRuleForm">
             <form class="vertical layout">
-              <mostly-layout id="editorLayout" href="[[_layoutHref(type, 'edit')]]"
-                  model="[[_layoutModel(rule, new)]]"></mostly-layout>
+              <mostly-layout id="editorLayout" href="[[layoutHref(type, 'edit')]]"
+                  model="[[layoutModel(rule, new)]]"></mostly-layout>
             </form>
           </iron-form>
           <div class="horizontal end-justified layout">
@@ -265,17 +265,6 @@ Example:
             this.origRule = this.fp.clone(this.rule);
           });
         }
-      }
-
-      _layoutHref(type, layout) {
-        return type && this.resolveUrl(`playing-${layout}-${type}.html`);
-      }
-
-      _layoutModel() {
-        return {
-          rule: this.rule,
-          "new": true
-        };
       }
 
       _toggleDialog(e) {

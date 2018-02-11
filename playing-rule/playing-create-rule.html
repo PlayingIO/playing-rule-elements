@@ -95,8 +95,8 @@
                   auto-validate required always-float-label>
           </paper-input>
 
-          <mostly-layout id="editorLayout" href="[[_layoutHref(type)]]"
-                  model="{{_layoutModel(rule, new)}}"></mostly-layout>
+          <mostly-layout id="editorLayout" href="[[layoutHref(type, 'edit')]]"
+                  model="{{layoutModel(rule, new)}}"></mostly-layout>
 
           <div class="form-buttons">
             <paper-button noink id="cancelButton" on-tap="_cancel">[[i18n('command.cancel')]]</paper-button>
@@ -164,17 +164,6 @@
           event.preventDefault();
           this._create();
         });
-      }
-
-      _layoutHref(type) {
-        return type && this.resolveUrl(`playing-edit-${type}.html`);
-      }
-
-      _layoutModel() {
-        return {
-          rule: this.rule,
-          "new": true
-        };
       }
 
       _goHome() {
