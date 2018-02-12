@@ -126,7 +126,6 @@ An element for managing rules in Playing game services.
               </template>
             </div>
             <playing-rule-search></playing-rule-search>
-            <!--playing-edit-conditions data="[[data]]"></playing-edit-conditions-->
           </section>
 
           <section name="create-rule">
@@ -161,29 +160,6 @@ An element for managing rules in Playing game services.
             type: String,
             value: 'search',
             notify: true
-          },
-
-          data: {
-            type: Array,
-            value: () => {
-              return [{
-                rule: 'and',
-                conditions: [
-                  {
-                    rule: 'metric', metric: '5a69a7b531a71a1199c5cfef', type: 'point', operator: 'gt', value: '100'
-                  },
-                  {
-                    rule: 'and',
-                    conditions: [
-                      { rule: 'metric', metric: '5a6a962631a71a1199c5cff0', type: 'set', item: 'Badge01', operator: 'eq', value: '1' },
-                      { rule: 'action', action: 'login', operator: 'eq', value: '10' }
-                    ]
-                  },
-                  { rule: null },
-                  { rule: null }
-                ]
-              }];
-            }
           },
 
           /**
