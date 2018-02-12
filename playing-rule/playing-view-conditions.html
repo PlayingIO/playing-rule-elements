@@ -5,7 +5,7 @@
 -->
 <dom-module id="playing-view-conditions">
   <template>
-    <style include="mostly-styles">
+    <style include="mostly-styles playing-styles">
       *[role=widget] {
         padding-left: 1em;
         border-left: 1px solid #ddd;
@@ -13,10 +13,6 @@
 
       label {
         @apply --mostly-label;
-      }
-
-      .fade-6 {
-        opacity: 0.6;
       }
 
       iron-icon.heading {
@@ -28,58 +24,6 @@
       .content {
         padding: 5px 0px;
         line-height: 1.2rem;
-      }
-
-      .metric-point {
-        color: #2060df;
-      }
-
-      .metric-set {
-        color: #551fad;
-      }
-
-      .metric-state {
-        color: #9c1c49;
-      }
-
-      .metric-compound {
-        color: #000;
-      }
-
-      .rule-object {
-        padding: 1px 0.25em;
-        border: 1px solid currentcolor;
-      }
-
-      .rule-object.rule-metric {
-        color: #b2aaba;
-      }
-
-      .rule-object.rule-team {
-        color: #779a2d;
-      }
-
-      .rule-object.rule-item {
-        color: #fff;
-        background-color: #6db2ea;
-      }
-
-      .rule-object.rule-timeslice {
-        background-color: #222;
-        color: #fff;
-      }
-
-      .rule-object.rule-role {
-        color: #c4662b;
-      }
-
-      .rule-object.rule-value {
-        background-color: #89b628;
-      }
-
-      .rule-operator {
-        font-style: italic;
-        font-weight: bold;
       }
     </style>
 
@@ -114,35 +58,35 @@
 
             <!-- point metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'point')]]">
-              [[findById(metrics, cond.metric, 'name')]]
+              <span class="rule-object rule-metric">[[findById(metrics, cond.metric, 'name')]]</span>
               [[i18n('play.rule.condition.desc.metric.value')]]
-              [[p18n('play.rule.condition.operator', cond.operator)]]
-              [[cond.value]].
+              <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
+              <span class="rule-object rule-value">[[cond.value]]</span>.
             </template>
 
             <!-- set metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'set')]]">
-              [[findById(metrics, cond.metric, 'name')]]
+              <span class="rule-object rule-metric">[[findById(metrics, cond.metric, 'name')]]</span>
               [[i18n('play.rule.condition.desc.metric.item')]]
-              [[cond.item]]
-              [[p18n('play.rule.condition.operator', cond.operator)]]
-              [[cond.value]].
+              <span class="rule-object rule-item">[[cond.item]]</span>
+              <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
+              <span class="rule-object rule-value">[[cond.value]]</span>.
             </template>
 
             <!-- state metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'state')]]">
-              [[findById(metrics, cond.metric, 'name')]]
+              <span class="rule-object rule-metric">[[findById(metrics, cond.metric, 'name')]]</span>
               [[i18n('play.rule.condition.desc.metric.state')]]
-              [[p18n('play.rule.condition.operator', cond.operator)]]
-              [[cond.value]].
+              <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
+              <span class="rule-object rule-value">[[cond.value]]</span>.
             </template>
 
             <!-- compound metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'compound')]]">
-              [[findById(metrics, cond.metric, 'name')]]
+              <span class="rule-object rule-metric">[[findById(metrics, cond.metric, 'name')]]</span>
               [[i18n('play.rule.condition.desc.metric.value')]]
-              [[p18n('play.rule.condition.operator', cond.operator)]]
-              [[cond.value]].
+              <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
+              <span class="rule-object rule-value">[[cond.value]]</span>.
             </template>
 
           </template>
@@ -151,9 +95,9 @@
           <template is="dom-if" if="[[isEqual(cond.rule, 'action')]]">
             <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
             [[ruleDesciption(cond.rule)]]
-            [[findById(actions, cond.action, 'name')]]
-            [[p18n('play.rule.condition.operator', cond.operator)]]
-            [[cond.value]]
+            <span class="rule-object rule-action">[[findById(actions, cond.action, 'name')]]</span>
+            <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
+            <span class="rule-object rule-value">[[cond.value]]</span>
             [[i18n('play.rule.condition.desc.action.value')]].
           </template>
 
@@ -161,9 +105,9 @@
           <template is="dom-if" if="[[isEqual(cond.rule, 'team')]]">
             <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
             [[ruleDesciption(cond.rule)]]
-            [[findById(teams, cond.team, 'name')]]
+            <span class="rule-object rule-team">[[findById(teams, cond.team, 'name')]]</span>
             [[i18n('play.rule.team.role.with')]]
-            [[cond.role]].
+            <span class="rule-object rule-role">[[cond.role]]</span>.
           </template>
         </div>
 
