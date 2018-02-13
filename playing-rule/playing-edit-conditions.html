@@ -129,9 +129,7 @@ Data model
                       </mostly-select>
                     </div>
                     <div class="flex-3">
-                      <mostly-input
-                          type="number" value="{{cond.value}}"
-                          required></mostly-input>
+                      <mostly-input value="{{cond.value}}" required></mostly-input>
                     </div>
                   </div>
                 </template>
@@ -162,9 +160,7 @@ Data model
                       </mostly-select>
                     </div>
                     <div class="flex-2">
-                      <mostly-input
-                          type="number" value="{{cond.value}}"
-                          required></mostly-input>
+                      <mostly-input value="{{cond.value}}" required></mostly-input>
                     </div>
                   </div>
                 </template>
@@ -212,9 +208,7 @@ Data model
                       </mostly-select>
                     </div>
                     <div class="flex-3">
-                      <mostly-input
-                          type="number" value="{{cond.value}}"
-                          required></mostly-input>
+                      <mostly-input value="{{cond.value}}" required></mostly-input>
                     </div>
                   </div>
                 </template>
@@ -247,9 +241,7 @@ Data model
                     </mostly-select>
                   </div>
                   <div class="flex-2">
-                    <mostly-input
-                        type="number" value="{{cond.value}}"
-                        required></mostly-input>
+                    <mostly-input value="{{cond.value}}" required></mostly-input>
                   </div>
                 </div>
               </template>
@@ -300,9 +292,7 @@ Data model
                     </mostly-select>
                   </div>
                   <div class="flex-1">
-                    <mostly-input
-                            type="number" value="{{cond.value}}"
-                            required></mostly-input>
+                    <mostly-input value="{{cond.value}}" required></mostly-input>
                   </div>
                   <div class="flex-2">
                     <mostly-select id="opSelector"
@@ -314,6 +304,29 @@ Data model
                         <paper-item name="[[unit]]">[[p18n('play.rule.condition.time', unit)]]</paper-item>
                       </template>
                     </mostly-select>
+                  </div>
+                </div>
+              </template>
+
+              <!-- formula rule -->
+              <template is="dom-if" if="[[isEqual(cond.rule, 'formula')]]" restamp>
+                <div class="form-row">
+                  <div class="flex-1">
+                    <mostly-input value="{{cond.lhs}}" required></mostly-input>
+                  </div>
+                  <div class="flex-2">
+                    <mostly-select id="opSelector"
+                            placeholder="[[i18n('play.rule.condition.operator.placeholder')]]"
+                            selected="{{cond.operator}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[operationTypes]]" as="op">
+                        <paper-item name="[[op]]">[[p18n('play.rule.condition.operator.formula', op)]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-1">
+                    <mostly-input value="{{cond.rhs}}" required></mostly-input>
                   </div>
                 </div>
               </template>
