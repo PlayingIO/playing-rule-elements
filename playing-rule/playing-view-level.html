@@ -23,7 +23,10 @@ Example:
         @apply --mostly-label;
       }
     </style>
-    
+
+    <mostly-resource id="states" path="states" response-data="{{states}}" auto cached></mostly-resource>
+    <mostly-resource id="points" path="points" response-data="{{points}}" auto cached></mostly-resource>
+
     <div role="widget" hidden$="[[!rule.description]]">
       <label>[[i18n('play.rule.field.description')]]</label>
       <div name="description" class="multiline">[[rule.description]]</div>
@@ -35,36 +38,41 @@ Example:
     </div>
 
     <div role="widget">
-      <label>[[i18n('play.rule.level.constraints.items')]]</label>
-      <div class="table">
-        <div class="table-header">
-          <div class="flex-4">[[i18n('play.rule.level.constraints.items.name')]]</div>
-          <div class="flex-1">[[i18n('play.rule.level.constraints.items.maximum')]]</div>
-          <div class="flex-1">[[i18n('play.rule.level.constraints.items.hidden')]]</div>
-        </div>
-        <div class="table-rows">
-          <template is="dom-repeat" items="[[rule.constraints.items]]" as="item">
-            <div class="table-row">
-              <div class="flex-4">[[item.name]]</div>
-              <div class="flex-1">[[item.maximum]]</div>
-              <div class="flex-1">[[item.hidden]]</div>
-            </div>
-          </template>
-        </div>
-      </div>
+      <label>[[i18n('play.rule.level.metric.level')]]</label>
+      <div name="levelMetric">[[findById(states, rule.level.state, 'name')]]</div>
     </div>
 
     <div role="widget">
-      <label>[[i18n('play.rule.field.constraints')]]</label>
+      <label>[[i18n('play.rule.level.metric.base')]]</label>
+      <div name="pointMetric">[[findById(points, rule.level.point, 'name')]]</div>
+    </div>
+
+    <div role="widget">
+      <label>[[i18n('play.rule.level.levels')]]</label>
       <div class="table">
+
         <div class="table-header">
-          <div class="flex">[[i18n('play.rule.level.constraints.maxItems')]]</div>
+          <div class="flex-1">[[i18n('play.rule.level.index')]]</div>
+          <div class="flex-2">[[i18n('play.rule.level.rank')]]</div>
+          <div class="flex-3">[[i18n('play.rule.level.range')]]</div>
         </div>
+
         <div class="table-rows">
-          <div class="table-row">
-            <div class="flex">[[rule.constraints.maxItems]]</div>
-          </div>
+          <template is="dom-repeat" items="[[rule.level.levels]]" as="item">
+            <div class="table-row">
+              <div class="flex-1">[[index]]</div>
+              <div class="flex-2">[[item.rank]]</div>
+              <div class="flex-3">[[_thresholdFrom(points, index)]] - [[item.threshold]]</div>
+            </div>
+          </template>
         </div>
+
+        <template is="dom-if" if=[[!rule.level.levels.length]]>
+          <div class="table-row">
+            <div class="empty-result">[[i18n('play.rule.level.levels.empty')]]</div>
+          </div>
+        </template>
+
       </div>
     </div>
 
@@ -84,8 +92,27 @@ Example:
           rule: {
             type: Object,
             value: {}
+          },
+
+          states: Object,
+          points: Object,
+        }
+      }
+
+      _thresholdFrom(points, index) {
+        if (this.rule && this.rule.level) {
+          var levels = this.rule.level.levels || [];
+          if (index > 0) {
+            return parseInt(levels[index - 1].threshold) + 1;
+          }
+          if (points && this.rule.level.point) {
+            var point = this.findById(points, this.rule.level.point);
+            if (point) {
+              return point.constraints.minimum;
+            }
           }
         }
+        return 0;
       }
     }
 
