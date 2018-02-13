@@ -117,6 +117,18 @@
             <span class="rule-operator">[[p18n('play.rule.condition.operator.time', cond.operator)]]</span>
             <span class="rule-object rule-timeunit">[[ordinal(cond.value)]] [[p18n('play.rule.condition.time', cond.unit)]]</span>.
           </template>
+
+          <!-- formula rule -->
+          <template is="dom-if" if="[[isEqual(cond.rule, 'formula')]]">
+            <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
+            [[ruleDesciption(cond.rule)]]
+            <span class="rule-operator"></span>
+            <span class="rule-object rule-formula">
+              [[cond.lhs]]
+              [[p18n('play.rule.condition.operator.formula', cond.operator)]]
+              [[cond.rhs]]
+            </span>.
+          </template>
         </div>
 
         <template is="dom-if" if="[[cond.conditions]]">
