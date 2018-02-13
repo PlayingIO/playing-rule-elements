@@ -47,7 +47,7 @@ Example:
         </template>
       </mostly-select>
 
-      <template is="dom-if" if="[[_isMetricSelected(rule.achievement.metric)]]" restamp>
+      <template is="dom-if" if="[[isValid(rule.achievement.metric)]]" restamp>
         <div class="layout vertical">
           <label>[[i18n('play.rule.rewards.rules')]]</label>
 
@@ -75,13 +75,13 @@ Example:
               </div>
             </div>
           </template>
-        </div>
 
-        <template is="dom-if" if=[[!rule.achievement.rules.length]]>
-          <div class="form-row">
-            <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
-          </div>
-        </template>
+          <template is="dom-if" if=[[!rule.achievement.rules.length]]>
+            <div class="form-row">
+              <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
+            </div>
+          </template>
+        </div>
 
         <div class="form-buttons">
           <paper-button noink id="addRewardButton" class="primary"
@@ -137,10 +137,6 @@ Example:
        */
       _resetFields() {
         this.rule = { achievement: {} };
-      }
-
-      _isMetricSelected() {
-        return this.rule && this.rule.achievement && this.rule.achievement.metric;
       }
 
       _addReward() {
