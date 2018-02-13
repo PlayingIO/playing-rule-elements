@@ -85,7 +85,7 @@ Data model
             <mostly-toggle-icon icon="error-outline" icon-checked="error"
                     title="Invert the rule"
                     checked="{{cond.not}}"
-                    disabled$="[[_canInvert(cond.rule)]]"></mostly-toggle-icon>
+                    disabled$="[[!_canInvert(cond.rule)]]"></mostly-toggle-icon>
           </div>
           <div class="form-actions">
             <paper-icon-button icon="mostly:remove"
