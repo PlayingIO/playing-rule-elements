@@ -143,7 +143,7 @@ Example:
         this.set('rule.achievement.rules', this.rule.achievement.rules || []);
         this.push('rule.achievement.rules', {
           item: { name: '', number: 1 },
-          requires: []
+          requires: [{ rule: null }]
         });
       }
 

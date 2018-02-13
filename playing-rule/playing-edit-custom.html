@@ -223,10 +223,6 @@ Example:
         });
       }
 
-      _removeRewardSet(e) {
-        this.splice('rule.custom.rules', e.currentTarget.dataIndex, 1);
-      }
-
       _addReward(e) {
         var rewardset = e.target.dataRewardset;
         this.set(`rule.custom.rules.${rewardset}.rewards`,
@@ -237,6 +233,9 @@ Example:
       _removeReward(e) {
         var rewardset = e.target.dataRewardset;
         this.splice(`rule.custom.rules.${rewardset}.rewards`, e.currentTarget.dataIndex, 1);
+        if (this.rule.custom.rules[rewardset].rewards.length == 0) {
+          this.splice('rule.custom.rules', e.currentTarget.dataIndex, 1);
+        }
       }
 
       _resultFormatter(item) {
