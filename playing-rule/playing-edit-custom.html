@@ -64,7 +64,7 @@ Example:
             </mostly-select>
           </div>
           <div class="flex-2">
-            <mostly-input value="{{var.default}}" required="[[var.required]]"></mostly-input>
+            <mostly-input value="{{var.default}}" required="[[!var.required]]"></mostly-input>
           </div>
           <div class="form-actions">
             <mostly-toggle-icon icon="playing:round-exclaimation" icon-checked="playing:round-exclaimation-fill"
@@ -93,29 +93,52 @@ Example:
     <div class="layout vertical">
       <label>[[i18n('play.rule.rewards.rules')]]</label>
 
-      <template is="dom-repeat" items="{{rule.custom.rules}}" as="reward">
+      <template is="dom-repeat" items="{{rule.custom.rules}}" as="rewardSet" index-as="rewardsetIndex">
+
+        <!-- rewards -->
+        <template is="dom-repeat" items="{{rewardSet.rewards}}" as="reward">
+
+          <div class="form-row">
+            <div class="flex">
+              <mostly-select
+                      label="[[i18n('play.rule.rewards.rules.item')]]"
+                      placeholder="[[i18n('play.rule.rewards.rules.item.placeholder')]]"
+                      selected="{{reward.metric}}"
+                      attr-for-selected="id"
+                      required>
+                <template is="dom-repeat" items="[[metrics]]" as="item">
+                  <paper-item id="[[item.id]]">[[item.name]]</paper-item>
+                </template>
+              </mostly-select>
+            </div>
+            <div class="form-actions">
+              <iron-icon icon="mostly:remove" class="remove"
+                      data-rewardset="[[rewardsetIndex]]" data-index="[[index]]"
+                      on-tap="_removeReward"></iron-icon>
+            </div>
+          </div>
+
+        </template>
+
+        <template is="dom-if" if=[[!rewardSet.rewards.length]]>
+          <div class="form-row">
+            <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
+          </div>
+        </template>
+
+        <div class="form-buttons">
+          <paper-button noink id="addRewardButton" class="primary"
+                  data-rewardset="[[rewardsetIndex]]"
+                  on-tap="_addReward">[[i18n('play.rule.command.reward.add')]]</paper-button>
+        </div>
+
+        <!-- conditions -->
         <div class="form-row">
           <div class="flex">
-            <mostly-select
-                    label="[[i18n('play.rule.rewards.rules.item')]]"
-                    placeholder="[[i18n('play.rule.rewards.rules.item.placeholder')]]"
-                    selected="{{reward.item.name}}"
-                    attr-for-selected="name"
-                    required>
-              <template is="dom-repeat" items="[[findById(metrics, rule.custom.metric, 'constraints.items')]]" as="item">
-                <paper-item name="[[item.name]]">[[item.name]]</paper-item>
-              </template>
-            </mostly-select>
-          </div>
-          <div class="form-actions">
-            <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeReward"></iron-icon>
+            <playing-edit-conditions data="{{rewardSet.requires}}"></playing-edit-conditions>
           </div>
         </div>
-        <div class="form-row">
-          <div class="flex">
-            <playing-edit-conditions data="{{reward.requires}}"></playing-edit-conditions>
-          </div>
-        </div>
+
       </template>
 
       <template is="dom-if" if=[[!rule.custom.rules.length]]>
@@ -126,10 +149,11 @@ Example:
     </div>
 
     <div class="form-buttons">
-      <paper-button noink id="addRewardButton" class="primary"
-              on-tap="_addReward">[[i18n('play.rule.command.reward.add')]]</paper-button>
+      <paper-button noink id="addRewardSetButton" class="primary"
+              on-tap="_addRewardSet">[[i18n('play.rule.command.rewardset.add')]]</paper-button>
     </div>
 
+    <!-- advanced settings -->
     <mostly-collapse-button role="widget">
       <div slot="collapse-trigger">[[i18n('play.rule.advanced')]]</div>
       <div slot="collapse-content">
@@ -184,27 +208,35 @@ Example:
 
       _addVar() {
         this.set('rule.variables', this.rule.variables || []);
-        this.push('rule.variables', {
-          name: '',
-          type: 'Number',
-          default: ''
-        });
+        this.push('rule.variables', { name: null });
       }
 
       _removeItem(e) {
         this.splice('rule.variables', e.target.dataIndex, 1);
       }
 
-      _addReward() {
+      _addRewardSet() {
         this.set('rule.custom.rules', this.rule.custom.rules || []);
         this.push('rule.custom.rules', {
-          item: { name: '', number: 1 },
-          requires: []
+          rewards: [{ metric: null }],
+          requires: [{ rule: null }]
         });
       }
 
-      _removeReward(e) {
+      _removeRewardSet(e) {
         this.splice('rule.custom.rules', e.currentTarget.dataIndex, 1);
+      }
+
+      _addReward(e) {
+        var rewardset = e.target.dataRewardset;
+        this.set(`rule.custom.rules.${rewardset}.rewards`,
+          this.rule.custom.rules[rewardset].rewards || []);
+        this.push(`rule.custom.rules.${rewardset}.rewards`, { metric: null });
+      }
+
+      _removeReward(e) {
+        var rewardset = e.target.dataRewardset;
+        this.splice(`rule.custom.rules.${rewardset}.rewards`, e.currentTarget.dataIndex, 1);
       }
 
       _resultFormatter(item) {
