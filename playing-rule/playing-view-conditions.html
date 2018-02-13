@@ -109,6 +109,14 @@
             [[i18n('play.rule.team.role.with')]]
             <span class="rule-object rule-role">[[cond.role]]</span>.
           </template>
+
+          <!-- timed rule -->
+          <template is="dom-if" if="[[isEqual(cond.rule, 'time')]]">
+            <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
+            [[ruleDesciption(cond.rule)]]
+            <span class="rule-operator">[[p18n('play.rule.condition.operator.time', cond.operator)]]</span>
+            <span class="rule-object rule-timeunit">[[ordinal(cond.value)]] [[p18n('play.rule.condition.time', cond.unit)]]</span>.
+          </template>
         </div>
 
         <template is="dom-if" if="[[cond.conditions]]">
@@ -122,7 +130,7 @@
 
   <script>
     class PlayingViewConditions extends Polymer.mixinBehaviors(
-        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
+        [Mostly.I18nBehavior, Mostly.FormatBehavior, Playing.RuleBehavior], Polymer.Element) {
 
       static get is() { return 'playing-view-conditions' };
       
@@ -156,30 +164,6 @@
            */
           teams: {
             type: Array
-          },
-
-          /**
-           * all rule types
-           */
-          conditionRules: {
-            type: Array,
-            value: ['metric', 'action', 'team', 'and', 'or']
-          },
-
-          /**
-           * all operation types
-           */
-          operationTypes: {
-            type: Array,
-            value: ['eq', 'ne', 'gt', 'ge', 'lt', 'le']
-          },
-
-          /**
-           * equal or not operations
-           */
-          operationEquals: {
-            type: Array,
-            value: ['eq', 'ne']
           }
         };
       }
