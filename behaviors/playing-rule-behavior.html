@@ -9,6 +9,38 @@
   Playing.RuleBehavior = [Mostly.FuncBehavior, {
 
     properties: {
+      /**
+       * all rule types
+       */
+      conditionRules: {
+        type: Array,
+        value: ['metric', 'action', 'team', 'time', 'formula', 'and', 'or']
+      },
+
+      /**
+       * all operation types
+       */
+      operationTypes: {
+        type: Array,
+        value: ['eq', 'ne', 'gt', 'ge', 'lt', 'le']
+      },
+
+      /**
+       * equal or not operations
+       */
+      operationEquals: {
+        type: Array,
+        value: ['eq', 'ne']
+      },
+
+      /**
+       * time units
+       */
+      timeUnits: {
+        type: Array,
+        value: ['hour_of_day', 'day_of_week', 'day_of_month',
+          'day_of_year', 'week_of_year', 'month_of_year']
+      }
     },
 
     selectMetric(target, id) {
@@ -37,6 +69,8 @@
         case 'metric': return 'playing:metric';
         case 'action': return 'playing:action';
         case 'team': return 'playing:team';
+        case 'time': return 'playing:calendar';
+        case 'formula': return 'playing:code';
         case 'and': return 'playing:all-done';
         case 'or': return 'playing:done';
       }
@@ -67,6 +101,8 @@
         case 'metric': return this.i18n('play.rule.condition.desc.metric.' + !not);
         case 'action': return this.i18n('play.rule.condition.desc.action');
         case 'team': return this.i18n('play.rule.condition.desc.team.' + !not);
+        case 'time': return this.i18n('play.rule.condition.desc.time');
+        case 'formula': return this.i18n('play.rule.condition.desc.formula');
         case 'and': return this.i18n('play.rule.condition.desc.and');
         case 'or': return this.i18n('play.rule.condition.desc.or');
       }

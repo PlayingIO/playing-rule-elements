@@ -374,39 +374,6 @@ Data model
            */
           teams: {
             type: Array
-          },
-
-          /**
-           * all rule types
-           */
-          conditionRules: {
-            type: Array,
-            value: ['metric', 'action', 'team', 'time', 'formula', 'and', 'or']
-          },
-
-          /**
-           * all operation types
-           */
-          operationTypes: {
-            type: Array,
-            value: ['eq', 'ne', 'gt', 'ge', 'lt', 'le']
-          },
-
-          /**
-           * equal or not operations
-           */
-          operationEquals: {
-            type: Array,
-            value: ['eq', 'ne']
-          },
-
-          /**
-           * time units
-           */
-          timeUnits: {
-            type: Array,
-            value: ['hour_of_day', 'day_of_week', 'day_of_month',
-              'day_of_year', 'week_of_year', 'month_of_year']
           }
         };
       }
