@@ -78,7 +78,7 @@ Example:
 
         <div class="table-header">
           <div class="flex-1">[[i18n('play.metric.heading')]]</div>
-          <div class="flex-5">[[i18n('play.rule.condition.heading')]]</div>
+          <div class="flex-4">[[i18n('play.rule.condition.heading')]]</div>
         </div>
 
         <div class="table-rows">
@@ -87,14 +87,19 @@ Example:
               <div class="flex-1">
                 <template is="dom-repeat" items="{{rewardset.rewards}}" as="reward">
                   <div class="content">
-                    <span class="rule-object rule-metric">[[findById(metrics, reward.metric, 'name')]]</span>
-                    <span class="rule-operator">[[reward.verb]]</span>
-                    <span class="rule-item">[[reward.item]]</span>
+                    <span class="rule-object rule-metric">
+                      <i class$="icon-[[findById(metrics, reward.metric, 'type')]]"></i>
+                      [[findById(metrics, reward.metric, 'name')]]
+                    </span>&nbsp;
+                    <span class="rule-operator">[[reward.verb]]</span>&nbsp;
+                    <template is="dom-if" if="[[reward.item]]">
+                      <span class="rule-item">[[reward.item]] × </span>
+                    </template>
                     <span class="rule-value">[[reward.value]]</span>
                   </div>
                 </template>
               </div>
-              <div class="flex-5">
+              <div class="flex-4">
                 <playing-view-conditions data="[[rewardset.requires]]"></playing-view-conditions>
               </div>
             </div>

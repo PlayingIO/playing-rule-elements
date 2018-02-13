@@ -58,7 +58,10 @@
 
             <!-- point metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'point')]]">
-              <span class="rule-object rule-metric">[[findById(metrics, cond.metric, 'name')]]</span>
+              <span class="rule-object rule-metric">
+                <i class$="icon-[[findById(metrics, cond.metric, 'type')]]"></i>
+                [[findById(metrics, cond.metric, 'name')]]
+              </span>&nbsp;
               [[i18n('play.rule.condition.desc.metric.value')]]
               <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
               <span class="rule-object rule-value">[[cond.value]]</span>.
@@ -66,7 +69,10 @@
 
             <!-- set metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'set')]]">
-              <span class="rule-object rule-metric">[[findById(metrics, cond.metric, 'name')]]</span>
+              <span class="rule-object rule-metric">
+                <i class$="icon-[[findById(metrics, cond.metric, 'type')]]"></i>
+                [[findById(metrics, cond.metric, 'name')]]
+              </span>&nbsp;
               [[i18n('play.rule.condition.desc.metric.item')]]
               <span class="rule-object rule-item">[[cond.item]]</span>
               <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
@@ -75,7 +81,10 @@
 
             <!-- state metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'state')]]">
-              <span class="rule-object rule-metric">[[findById(metrics, cond.metric, 'name')]]</span>
+              <span class="rule-object rule-metric">
+                <i class$="icon-[[findById(metrics, cond.metric, 'type')]]"></i>
+                [[findById(metrics, cond.metric, 'name')]]
+              </span>&nbsp;
               [[i18n('play.rule.condition.desc.metric.state')]]
               <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
               <span class="rule-object rule-value">[[cond.value]]</span>.
@@ -83,7 +92,10 @@
 
             <!-- compound metric operator -->
             <template is="dom-if" if="[[isEqual(cond.type, 'compound')]]">
-              <span class="rule-object rule-metric">[[findById(metrics, cond.metric, 'name')]]</span>
+              <span class="rule-object rule-metric">
+                <i class$="icon-[[findById(metrics, cond.metric, 'type')]]"></i>
+                [[findById(metrics, cond.metric, 'name')]]
+              </span>&nbsp;
               [[i18n('play.rule.condition.desc.metric.value')]]
               <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
               <span class="rule-object rule-value">[[cond.value]]</span>.
