@@ -22,8 +22,14 @@ Example:
       label {
         @apply --mostly-label;
       }
+
+      .content {
+        line-height: 2.4rem;
+      }
     </style>
-    
+
+    <mostly-resource id="metrics" path="metrics" response-data="{{metrics}}" auto cached></mostly-resource>
+
     <div role="widget" hidden$="[[!rule.description]]">
       <label>[[i18n('play.rule.field.description')]]</label>
       <div name="description" class="multiline">[[rule.description]]</div>
@@ -34,9 +40,75 @@ Example:
       <img id="image" src$="[[rule.image.url]]">
     </div>
 
-    <div role="widget" hidden$="[[!rule.constraints.formula]]">
-      <label>[[i18n('play.rule.custom.constraints.formula')]]</label>
-      <div name="formula" class="multiline">[[rule.constraints.formula]]</div>
+    <!-- variables -->
+    <div role="widget">
+      <label>[[i18n('play.rule.variables')]]</label>
+
+      <div class="table">
+
+        <div class="table-header">
+          <div class="flex-2">[[i18n('play.rule.variable.name')]]</div>
+          <div class="flex-1">[[i18n('play.rule.variable.type')]]</div>
+          <div class="flex-2">[[i18n('play.rule.variable.default')]]</div>
+        </div>
+
+        <div class="table-rows">
+          <template is="dom-repeat" items="[[rule.variables]]" as="var">
+            <div class="table-row">
+              <div class="flex-2">[[var.name]]</div>
+              <div class="flex-1">[[var.type]]</div>
+              <div class="flex-2"><span class$="[[_getDefaultStyle(var)]]">[[_getDefaultValue(var)]]</span></div>
+            </div>
+          </template>
+        </div>
+
+        <template is="dom-if" if=[[!rule.variables.length]]>
+          <div class="table-row">
+            <div class="empty-result">[[i18n('play.rule.variables.empty')]]</div>
+          </div>
+        </template>
+
+      </div>
+    </div>
+
+    <!-- rewards & conditions -->
+    <div class="widget">
+      <label role="widget">[[i18n('play.rule.rewards.rules')]]</label>
+      <div class="table">
+
+        <div class="table-header">
+          <div class="flex-1">[[i18n('play.metric.heading')]]</div>
+          <div class="flex-5">[[i18n('play.rule.condition.heading')]]</div>
+        </div>
+
+        <div class="table-rows">
+          <template is="dom-repeat" items="{{rule.custom.rules}}" as="rewardset">
+            <div class="table-row">
+              <div class="flex-1">
+                <template is="dom-repeat" items="{{rewardset.rewards}}" as="reward">
+                  <div class="content">
+                    <span class="rule-object rule-metric">[[findById(metrics, reward.metric, 'name')]]</span>
+                    <span class="rule-operator">[[reward.verb]]</span>
+                    <span class="rule-item">[[reward.item]]</span>
+                    <span class="rule-value">[[reward.value]]</span>
+                  </div>
+                </template>
+              </div>
+              <div class="flex-5">
+                <playing-view-conditions data="[[rewardset.requires]]"></playing-view-conditions>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <template is="dom-if" if=[[!rule.custom.rules.length]]>
+          <div class="form-row">
+            <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
+          </div>
+        </template>
+
+      </div>
+      </template>
     </div>
 
   </template>
@@ -55,7 +127,21 @@ Example:
           rule: {
             type: Object,
             value: {}
-          }
+          },
+
+          metrics: Object
+        }
+      }
+
+      _getDefaultStyle(v) {
+        return v.required? 'mini-tag' : '';
+      }
+
+      _getDefaultValue(v) {
+        if (v.required) {
+          return 'Required';
+        } else {
+          return v.default;
         }
       }
     }
