@@ -69,6 +69,7 @@ Example:
       </div>
     </div>
 
+    <!-- levels -->
     <template is="dom-if" if="[[allValid(rule.level.state, rule.level.point)]]" restamp>
       <div class="layout vertical">
         <label>[[i18n('play.rule.level.levels')]]</label>
@@ -128,6 +129,7 @@ Example:
       </div>
     </template>
 
+    <!-- advanced settings -->
     <mostly-collapse-button role="widget">
       <div slot="collapse-trigger">[[i18n('play.rule.advanced')]]</div>
       <div slot="collapse-content">
