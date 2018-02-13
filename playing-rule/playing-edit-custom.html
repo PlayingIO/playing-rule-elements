@@ -18,18 +18,116 @@ Example:
       *[role=widget] {
         margin-bottom: 16px;
       }
+
+      .form-buttons {
+        padding: 1em;
+        margin: 5px -0.7rem 0;
+      }
     </style>
+
+    <mostly-resource id="metrics" path="metrics" response-data="{{metrics}}" auto cached></mostly-resource>
 
     <div class="layout vertical" role="widget">
       <mostly-input name="description" label="[[i18n('play.rule.field.description')]]"
             value="{{rule.description}}" maxlength="300"
             char-counter always-float-label></mostly-input>
+
       <playing-dropzone name="image" role="widget"
               label="[[i18n('play.rule.field.image')]]"
               document="{{rule}}" xpath="image"></playing-dropzone>
-      <mostly-input name="formula" label="[[i18n('play.rule.custom.constraints.formula')]]"
-            value="{{rule.constraints.formula}}" maxlength="300"
-            char-counter always-float-label></mostly-input>
+    </div>
+
+    <!-- variables -->
+    <div class="layout vertical" role="widget">
+      <label>[[i18n('play.rule.variables')]]</label>
+
+      <div class="table-header">
+        <div class="flex-2">[[i18n('play.rule.variable.name')]]</div>
+        <div class="flex-1">[[i18n('play.rule.variable.type')]]</div>
+        <div class="flex-2">[[i18n('play.rule.variable.default')]]</div>
+        <div class="form-actions">&nbsp;</div>
+      </div>
+
+      <template is="dom-repeat" items="{{rule.variables}}" as="var">
+        <div class="form-row">
+          <div class="flex-2">
+            <mostly-input value="{{var.name}}" required></mostly-input>
+          </div>
+          <div class="flex-1">
+            <mostly-select id="statesSelector"
+                    selected="{{var.type}}"
+                    attr-for-selected="name"
+                    no-label-float required>
+              <template is="dom-repeat" items="[[variableTypes]]" as="type">
+                <paper-item name="[[type]]">[[type]]</paper-item>
+              </template>
+            </mostly-select>
+          </div>
+          <div class="flex-2">
+            <mostly-input value="{{var.default}}" required="[[var.required]]"></mostly-input>
+          </div>
+          <div class="form-actions">
+            <mostly-toggle-icon icon="playing:round-exclaimation" icon-checked="playing:round-exclaimation-fill"
+                    title="[[i18n('play.rule.variable.required.tip')]]"
+                    checked="{{var.required}}"></mostly-toggle-icon>
+          </div>
+          <div class="form-actions">
+            <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeItem"></iron-icon>
+          </div>
+        </div>
+      </template>
+
+      <template is="dom-if" if=[[!rule.variables.length]]>
+        <div class="form-row">
+          <div class="empty-result">[[i18n('play.rule.variables.empty')]]</div>
+        </div>
+      </template>
+
+    </div>
+
+    <div class="form-buttons">
+      <paper-button noink id="addVarButton" class="primary" on-tap="_addVar">[[i18n('command.add')]]</paper-button>
+    </div>
+
+    <!-- rewards & conditions -->
+    <div class="layout vertical">
+      <label>[[i18n('play.rule.rewards.rules')]]</label>
+
+      <template is="dom-repeat" items="{{rule.custom.rules}}" as="reward">
+        <div class="form-row">
+          <div class="flex">
+            <mostly-select
+                    label="[[i18n('play.rule.rewards.rules.item')]]"
+                    placeholder="[[i18n('play.rule.rewards.rules.item.placeholder')]]"
+                    selected="{{reward.item.name}}"
+                    attr-for-selected="name"
+                    required>
+              <template is="dom-repeat" items="[[findById(metrics, rule.custom.metric, 'constraints.items')]]" as="item">
+                <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+              </template>
+            </mostly-select>
+          </div>
+          <div class="form-actions">
+            <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeReward"></iron-icon>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="flex">
+            <playing-edit-conditions data="{{reward.requires}}"></playing-edit-conditions>
+          </div>
+        </div>
+      </template>
+
+      <template is="dom-if" if=[[!rule.custom.rules.length]]>
+        <div class="form-row">
+          <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
+        </div>
+      </template>
+    </div>
+
+    <div class="form-buttons">
+      <paper-button noink id="addRewardButton" class="primary"
+              on-tap="_addReward">[[i18n('play.rule.command.reward.add')]]</paper-button>
     </div>
 
     <mostly-collapse-button role="widget">
@@ -82,6 +180,31 @@ Example:
        */
       _resetFields() {
         this.rule = { custom: {}, variables: [] };
+      }
+
+      _addVar() {
+        this.set('rule.variables', this.rule.variables || []);
+        this.push('rule.variables', {
+          name: '',
+          type: 'Number',
+          default: ''
+        });
+      }
+
+      _removeItem(e) {
+        this.splice('rule.variables', e.target.dataIndex, 1);
+      }
+
+      _addReward() {
+        this.set('rule.custom.rules', this.rule.custom.rules || []);
+        this.push('rule.custom.rules', {
+          item: { name: '', number: 1 },
+          requires: []
+        });
+      }
+
+      _removeReward(e) {
+        this.splice('rule.custom.rules', e.currentTarget.dataIndex, 1);
       }
 
       _resultFormatter(item) {
