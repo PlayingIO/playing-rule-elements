@@ -38,7 +38,7 @@ Example:
 
     <div role="widget">
       <label>[[i18n('play.rule.achievement')]]</label>
-      <div name="achievement">[[targetMetric.name]]</div>
+      <div name="achievement">[[findById(metrics, rule.achievement.metric, 'name')]]</div>
     </div>
 
     <div class="widget">
@@ -80,26 +80,9 @@ Example:
             value: {}
           },
 
-          metrics: Object,
-
-          targetMetric: Object
+          metrics: Object
         }
       }
-
-      static get observers() {
-        return [
-          '_refresh(rule.achievement.metric)'
-        ];
-      }
-
-      _refresh() {
-        if (this.rule && this.rule.achievement && this.rule.achievement.metric) {
-          this.selectMetric('targetMetric', this.rule.achievement.metric);
-        } else {
-          this.targetMetric = null;
-        }
-      }
-
     }
 
     customElements.define(PlayingViewAchievement.is, PlayingViewAchievement);
