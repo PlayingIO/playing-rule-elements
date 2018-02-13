@@ -44,10 +44,12 @@ Example:
     <div class="widget">
       <label role="widget">[[i18n('play.rule.rewards.rules')]]</label>
       <div class="table">
+
         <div class="table-header">
           <div class="flex-1">[[i18n('play.metric.heading')]]</div>
           <div class="flex-6">[[i18n('play.rule.condition.heading')]]</div>
         </div>
+
         <div class="table-rows">
           <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">
             <div class="table-row">
@@ -58,6 +60,13 @@ Example:
             </div>
           </template>
         </div>
+
+        <template is="dom-if" if=[[!rule.achievement.rules.length]]>
+          <div class="form-row">
+            <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
+          </div>
+        </template>
+
       </div>
       </template>
     </div>

@@ -50,6 +50,7 @@ Example:
       <template is="dom-if" if="[[_isMetricSelected(rule.achievement.metric)]]" restamp>
         <div class="layout vertical">
           <label>[[i18n('play.rule.rewards.rules')]]</label>
+
           <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">
             <div class="form-row">
               <div class="flex">
@@ -75,11 +76,13 @@ Example:
             </div>
           </template>
         </div>
-        <template is="dom-if" if=[[_empty(rule.achievement.rules.*)]]>
+
+        <template is="dom-if" if=[[!rule.achievement.rules.length]]>
           <div class="form-row">
             <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
           </div>
         </template>
+
         <div class="form-buttons">
           <paper-button noink id="addRewardButton" class="primary"
                   disabled="[[!_hasAvailableRewards(rule.achievement.rules.splices)]]"
@@ -158,13 +161,6 @@ Example:
           return this.rule.achievement.rules.length < metric.constraints.items.length;
         }
         return true;
-      }
-
-      _empty() {
-        return !(this.rule
-          && this.rule.achievement
-          && this.rule.achievement.rules
-          && this.rule.achievement.rules.length >= 0);
       }
     }
 

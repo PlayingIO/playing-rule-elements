@@ -87,12 +87,6 @@ Example:
           <div class="form-actions">&nbsp;</div>
         </div>
 
-        <template is="dom-if" if=[[!rule.level.levels.length]]>
-          <div class="form-row">
-            <div class="empty-result">[[i18n('play.rule.level.levels.empty')]]</div>
-          </div>
-        </template>
-
         <template is="dom-repeat" items="{{rule.level.levels}}" as="level">
           <div class="form-row">
             <div class="flex-1">[[index]]</div>
@@ -120,6 +114,13 @@ Example:
             </div>
           </div>
         </template>
+
+        <template is="dom-if" if=[[!rule.level.levels.length]]>
+          <div class="form-row">
+            <div class="empty-result">[[i18n('play.rule.level.levels.empty')]]</div>
+          </div>
+        </template>
+
       </div>
 
       <div class="form-buttons">
