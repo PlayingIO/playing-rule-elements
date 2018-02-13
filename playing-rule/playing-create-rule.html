@@ -91,10 +91,10 @@
             <p>[[p18n('play.rule.guide', type)]]</p>
           </div>
         
-          <paper-input name="name" label="[[i18n('play.rule.field.name')]]"
+          <mostly-input name="name" label="[[i18n('play.rule.field.name')]]"
                   value="{{rule.name}}" minlength="3" maxlength="20"
                   auto-validate required always-float-label>
-          </paper-input>
+          </mostly-input>
 
           <mostly-layout id="editorLayout" href="[[layoutHref(type, 'edit')]]"
                   model="{{layoutModel(rule, new)}}"></mostly-layout>

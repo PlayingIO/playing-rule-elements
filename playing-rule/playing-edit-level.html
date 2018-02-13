@@ -25,72 +25,107 @@ Example:
 
       .form-buttons {
         padding: 1em;
-        margin: 16px -1.2rem 0;
+        margin: 5px -0.7rem 0;
       }
     </style>
+
+    <mostly-resource id="states" path="states" response-data="{{states}}" auto cached></mostly-resource>
+    <mostly-resource id="points" path="points" response-data="{{points}}" auto cached></mostly-resource>
 
     <div class="layout vertical">
       <mostly-input name="description" label="[[i18n('play.rule.field.description')]]"
             value="{{rule.description}}" maxlength="300"
             char-counter always-float-label></mostly-input>
+
       <playing-dropzone name="image" role="widget"
               label="[[i18n('play.rule.field.image')]]"
               document="{{rule}}" xpath="image"></playing-dropzone>
+
+      <div class="form-row">
+        <div class="flex">
+          <mostly-select role="widget"
+                  label="[[i18n('play.rule.level.metric.level')]]"
+                  placeholder="[[i18n('play.rule.level.metric.level.placeholder')]]"
+                  selected="{{rule.level.state}}"
+                  attr-for-selected="name"
+                  required>
+            <template is="dom-repeat" items="[[states]]" as="item">
+              <paper-item name="[[item.id]]">[[item.name]]</paper-item>
+            </template>
+          </mostly-select>
+        </div>
+        <div class="flex">
+          <mostly-select role="widget"
+                  label="[[i18n('play.rule.level.metric.base')]]"
+                  placeholder="[[i18n('play.rule.level.metric.base.placeholder')]]"
+                  selected="{{rule.level.point}}"
+                  attr-for-selected="name"
+                  required>
+            <template is="dom-repeat" items="[[points]]" as="item">
+              <paper-item name="[[item.id]]">[[item.name]]</paper-item>
+            </template>
+          </mostly-select>
+        </div>
+      </div>
     </div>
 
-    <div class="layout vertical">
-      <label>[[i18n('play.rule.level.levels')]]</label>
-      <template is="dom-repeat" items="{{rule.levels}}" as="item">
-        <div class="form-row">
-          <div class="form-dropzone">
-            <playing-dropzone name="content"
-                    label="[[i18n('play.rule.level.levels.image')]]"
-                    document="{{item}}" xpath="image"></playing-dropzone>
-          </div>
-          <div class="flex">
-            <div class="form-row">
-              <div class="flex-4">
-                <mostly-input name="itemName" label="[[i18n('play.rule.level.levels.name')]]"
-                        value="{{item.name}}" minlength="3" maxlength="20"
-                        auto-validate required always-float-label></mostly-input>
-              </div>
-              <div class="flex-4">
-                <mostly-input name="itemMaximum" label="[[i18n('play.rule.level.levels.maximum')]]"
-                        type="number" value="{{item.maximum}}"
-                        required always-float-label></mostly-input>
-              </div>
-              <div class="form-actions">
-                <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeItem"></iron-icon>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="flex-4">
-                <paper-checkbox name="itemHidden"
-                        value="{{item.hidden}}" noink>[[i18n('play.rule.level.levels.hidden.heading')]]</paper-checkbox>
-              </div>
-              <div class="form-actions">&nbsp;</div>
-            </div>
-            <div class="form-row">
-              <div class="flex-4">
-                <mostly-input name="itemDescription" label="[[i18n('play.rule.level.levels.description')]]"
-                        value="{{item.description}}" maxlength="300"
-                        always-float-label></mostly-input>
-              </div>
-              <div class="form-actions">&nbsp;</div>
-            </div>
-          </div>
-        </div>
-      </template>
-      <template is="dom-if" if=[[_empty(rule.levels)]]>
-        <div class="form-row">
-          <div class="empty-result">[[i18n('play.rule.level.levels.empty')]]</div>
-        </div>
-      </template>
-    </div>
+    <template is="dom-if" if="[[allValid(rule.level.state, rule.level.point)]]" restamp>
+      <div class="layout vertical">
+        <label>[[i18n('play.rule.level.levels')]]</label>
 
-    <div class="form-buttons">
-      <paper-button noink id="addItemButton" class="primary" on-tap="_addItem">[[i18n('command.add')]]</paper-button>
-    </div>
+        <div class="table-header">
+          <div class="flex-1">[[i18n('play.rule.level.index')]]</div>
+          <div class="flex-2">[[i18n('play.rule.level.rank')]]</div>
+          <div class="flex-4">[[i18n('play.rule.level.range')]]</div>
+          <div class="form-actions">&nbsp;</div>
+        </div>
+        <div class="form-row">
+          <div class="flex-1">&nbsp;</div>
+          <div class="flex-2">&nbsp;</div>
+          <div class="flex-2">From</div>
+          <div class="flex-2">To</div>
+          <div class="form-actions">&nbsp;</div>
+        </div>
+
+        <template is="dom-if" if=[[!rule.level.levels.length]]>
+          <div class="form-row">
+            <div class="empty-result">[[i18n('play.rule.level.levels.empty')]]</div>
+          </div>
+        </template>
+
+        <template is="dom-repeat" items="{{rule.level.levels}}" as="level">
+          <div class="form-row">
+            <div class="flex-1">[[index]]</div>
+            <div class="flex-2">
+              <mostly-select id="statesSelector"
+                      placeholder="[[i18n('play.rule.condition.state.placeholder')]]"
+                      selected="{{level.rank}}"
+                      attr-for-selected="name"
+                      no-label-float required>
+                <template is="dom-repeat" items="[[findById(states, rule.level.state, 'constraints.states')]]" as="item">
+                  <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                </template>
+              </mostly-select>
+            </div>
+            <div class="flex-2">
+              <label>[[getIndex(thresholds, index)]]</label>
+            </div>
+            <div class="flex-2">
+              <mostly-input name="threshold"
+                      type="number" value="{{level.threshold}}"
+                      required></mostly-input>
+            </div>
+            <div class="form-actions">
+              <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeItem"></iron-icon>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div class="form-buttons">
+        <paper-button noink id="addItemButton" class="primary" on-tap="_addItem">[[i18n('command.add')]]</paper-button>
+      </div>
+    </template>
 
     <mostly-collapse-button role="widget">
       <div slot="collapse-trigger">[[i18n('play.rule.advanced')]]</div>
@@ -121,6 +156,14 @@ Example:
           },
 
           /**
+           * the threshold ranges
+           */
+          thresholds: {
+            type: Array,
+            value: []
+          },
+
+          /**
            * If true, a new rule is being created; if false, an already existing rule is being edited.
            */
           new: {
@@ -137,6 +180,12 @@ Example:
         };
       }
 
+      static get observers() {
+        return [
+          '_thresholdChanged(rule.level.levels.*)'
+        ];
+      }
+
       /**
        * Resets the form fields to empty values.
        */
@@ -145,25 +194,39 @@ Example:
       }
 
       _addItem() {
-        this.set('rule.constraints.items', this.rule.constraints.items || []);
-        this.push('rule.constraints.items', {
-          name: '',
-          description: '',
-          maxItems: 1,
-          hidden: false
-        });
+        this.set('rule.level.levels', this.rule.level.levels || []);
+        var point = this.findById(this.points, this.rule.level.point);
+        if (point) {
+          this.push('rule.level.levels', {
+            rank: '',
+            threshold:  point.constraints.maximum
+          });
+        }
+        console.log('###isEmpty', this.isEmpty(this.rule.level.levels));
       }
 
       _removeItem(e) {
-        this.splice('rule.constraints.items', e.target.dataIndex, 1);
+        this.splice('rule.level.levels', e.target.dataIndex, 1);
+      }
+
+      _thresholdChanged() {
+        if (this.points && this.rule && this.rule.level && this.rule.level.point) {
+          var point = this.findById(this.points, this.rule.level.point);
+          var levels = this.rule.level.levels || [];
+          var thresholds = levels.map((level, index) => {
+            if (index === 0) {
+              return point.constraints.minimum;
+            } else {
+              return parseInt(levels[index - 1].threshold) + 1;
+            }
+          });
+          this.set('thresholds', thresholds);
+        }
+        return 0;
       }
 
       _resultFormatter(item) {
         return item.name;
-      }
-
-      _empty(items) {
-        return !items || items.length === 0;
       }
     }
 
