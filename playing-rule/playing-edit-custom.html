@@ -110,6 +110,97 @@ Example:
                   <paper-item id="[[item.id]]">[[item.name]]</paper-item>
                 </template>
               </mostly-select>
+
+              <!-- point metric reward -->
+              <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'point')]]" restamp>
+                <div class="form-row">
+                  <div class="flex-1">
+                    <mostly-select id="opSelector"
+                            selected="{{reward.verb}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[rewardVerbs]]" as="op">
+                        <paper-item name="[[op]]">[[p18n('play.rule.reward.verb', op)]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-2">
+                    <mostly-input value="{{reward.value}}" required></mostly-input>
+                  </div>
+                </div>
+              </template>
+
+              <!-- set metric reward -->
+              <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'set')]]" restamp>
+                <div class="form-row">
+                  <div class="flex-1">
+                    <mostly-select id="opSelector"
+                            selected="{{reward.verb}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[rewardVerbs]]" as="op">
+                        <paper-item name="[[op]]">[[p18n('play.rule.reward.verb', op)]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-1">
+                    <mostly-select id="itemsSelector"
+                            selected="{{reward.item}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[findById(metrics, reward.metric, 'constraints.items')]]" as="item">
+                        <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-1">
+                    <mostly-input value="{{reward.value}}" required></mostly-input>
+                  </div>
+                </div>
+              </template>
+
+              <!-- state metric reward -->
+              <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'state')]]" restamp>
+                <div class="form-row">
+                  <div class="flex-1">
+                    <mostly-select id="opSelector"
+                            selected="{{reward.verb}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <paper-item name="set">[[i18n('play.rule.reward.verb.set')]]</paper-item>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-2">
+                    <mostly-select id="itemsSelector"
+                            selected="{{reward.value}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[findById(metrics, reward.metric, 'constraints.states')]]" as="item">
+                        <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                </div>
+              </template>
+
+              <!-- compound metric reward -->
+              <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'compound')]]" restamp>
+                <div class="form-row">
+                  <div class="flex-1">
+                    <mostly-select id="opSelector"
+                            selected="{{reward.verb}}"
+                            attr-for-selected="name"
+                            no-label-float required>
+                      <template is="dom-repeat" items="[[rewardVerbs]]" as="op">
+                        <paper-item name="[[op]]">[[p18n('play.rule.reward.verb', op)]]</paper-item>
+                      </template>
+                    </mostly-select>
+                  </div>
+                  <div class="flex-2">
+                    <mostly-input value="{{reward.value}}" required></mostly-input>
+                  </div>
+                </div>
+              </template>
             </div>
             <div class="form-actions">
               <iron-icon icon="mostly:remove" class="remove"
