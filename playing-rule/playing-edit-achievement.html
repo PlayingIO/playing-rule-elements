@@ -59,7 +59,7 @@ Example:
                         selected="{{reward.item.name}}"
                         attr-for-selected="name"
                         required>
-                  <template is="dom-repeat" items="[[targetMetric.constraints.items]]" as="item">
+                  <template is="dom-repeat" items="[[findById(metrics, rule.achievement.metric, 'constraints.items')]]" as="item">
                     <paper-item name="[[item.name]]">[[item.name]]</paper-item>
                   </template>
                 </mostly-select>
@@ -82,7 +82,7 @@ Example:
         </template>
         <div class="form-buttons">
           <paper-button noink id="addRewardButton" class="primary"
-                  disabled="[[!_getAvailableRewards(rule.achievement.rules.splices)]]"
+                  disabled="[[!_hasAvailableRewards(rule.achievement.rules.splices)]]"
                   on-tap="_addReward">[[i18n('play.rule.command.reward.add')]]</paper-button>
         </div>
       </template>
@@ -125,16 +125,8 @@ Example:
             value: false
           },
 
-          metrics: Object,
-
-          targetMetric: Object
+          metrics: Object
         }
-      }
-
-      static get observers() {
-        return [
-          '_refresh(rule.achievement.metric)'
-        ];
       }
 
       /**
@@ -146,14 +138,6 @@ Example:
 
       _isMetricSelected() {
         return this.rule && this.rule.achievement && this.rule.achievement.metric;
-      }
-
-      _refresh() {
-        if (this.rule && this.rule.achievement && this.rule.achievement.metric) {
-          this.selectMetric('targetMetric', this.rule.achievement.metric);
-        } else {
-          this.targetMetric = null;
-        }
       }
 
       _addReward() {
@@ -168,9 +152,10 @@ Example:
         this.splice('rule.achievement.rules', e.currentTarget.dataIndex, 1);
       }
 
-      _getAvailableRewards() {
-        if (this.targetMetric && this.rule.achievement.rules) {
-          return this.rule.achievement.rules.length < this.targetMetric.constraints.items.length;
+      _hasAvailableRewards() {
+        if (this.metrics && this.rule.achievement.metric && this.rule.achievement.rules) {
+          var metric = this.findById(this.metrics, this.rule.achievement.metric);
+          return this.rule.achievement.rules.length < metric.constraints.items.length;
         }
         return true;
       }
