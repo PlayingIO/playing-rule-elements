@@ -1,3 +1,5 @@
+<link rel="import" href="../behaviors/playing-rule-behavior.html">
+
 <!--
 An element for creating and editing rewards and conditions.
 
@@ -39,8 +41,8 @@ Example:
           <div class="form-row">
             <div class="flex">
               <mostly-select
-                      label="[[i18n('play.rule.rewards.rules.item')]]"
-                      placeholder="[[i18n('play.rule.rewards.rules.item.placeholder')]]"
+                      label="[[i18n('play.rule.rewards.rules.metric')]]"
+                      placeholder="[[i18n('play.rule.rewards.rules.metric.placeholder')]]"
                       selected="{{reward.metric}}"
                       attr-for-selected="id"
                       required>
