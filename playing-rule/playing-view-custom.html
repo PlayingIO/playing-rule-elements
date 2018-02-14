@@ -41,35 +41,7 @@ Example:
     </div>
 
     <!-- variables -->
-    <div role="widget">
-      <label>[[i18n('play.rule.variables')]]</label>
-
-      <div class="table">
-
-        <div class="table-header">
-          <div class="flex-2">[[i18n('play.rule.variable.name')]]</div>
-          <div class="flex-1">[[i18n('play.rule.variable.type')]]</div>
-          <div class="flex-2">[[i18n('play.rule.variable.default')]]</div>
-        </div>
-
-        <div class="table-rows">
-          <template is="dom-repeat" items="[[rule.variables]]" as="var">
-            <div class="table-row">
-              <div class="flex-2">[[var.name]]</div>
-              <div class="flex-1">[[var.type]]</div>
-              <div class="flex-2"><span class$="[[_getDefaultStyle(var)]]">[[_getDefaultValue(var)]]</span></div>
-            </div>
-          </template>
-        </div>
-
-        <template is="dom-if" if=[[!rule.variables.length]]>
-          <div class="table-row">
-            <div class="empty-result">[[i18n('play.rule.variables.empty')]]</div>
-          </div>
-        </template>
-
-      </div>
-    </div>
+    <playing-view-variables data="[[rule.variables]]"></playing-view-variables>
 
     <!-- rewards & conditions -->
     <div class="widget">

@@ -1,0 +1,93 @@
+<!--
+An element for displaying point rule data.
+
+Example:
+
+    <playing-view-variables rule=[[rule]] new></playing-view-variables>
+
+@group Playing Elements
+@element playing-view-variables
+-->
+<dom-module id="playing-view-variables">
+  <template>
+    <style include="mostly-styles playing-styles">
+      :host {
+        display: block;
+      }
+
+      *[role=widget] {
+        margin-bottom: 16px;
+      }
+
+      label {
+        @apply --mostly-label;
+      }
+    </style>
+
+    <!-- variables -->
+    <div role="widget">
+      <label role="widget">[[i18n('play.rule.variables')]]</label>
+
+      <div class="table">
+
+        <div class="table-header">
+          <div class="flex-2">[[i18n('play.rule.variable.name')]]</div>
+          <div class="flex-1">[[i18n('play.rule.variable.type')]]</div>
+          <div class="flex-2">[[i18n('play.rule.variable.default')]]</div>
+        </div>
+
+        <div class="table-rows">
+          <template is="dom-repeat" items="[[data]]" as="var">
+            <div class="table-row">
+              <div class="flex-2">[[var.name]]</div>
+              <div class="flex-1">[[var.type]]</div>
+              <div class="flex-2"><span class$="[[_getDefaultStyle(var)]]">[[_getDefaultValue(var)]]</span></div>
+            </div>
+          </template>
+        </div>
+
+        <template is="dom-if" if=[[!data.length]]>
+          <div class="table-row">
+            <div class="empty-result">[[i18n('play.rule.variables.empty')]]</div>
+          </div>
+        </template>
+
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    class PlayingViewVariables extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
+
+      static get is() { return 'playing-view-variables' };
+
+      static get properties() {
+        return {
+          /**
+           * The variables array to be displayed.
+           */
+          data: {
+            type: Array,
+            value: []
+          }
+        }
+      }
+
+      _getDefaultStyle(v) {
+        return v.required? 'mini-tag' : '';
+      }
+
+      _getDefaultValue(v) {
+        if (v.required) {
+          return 'Required';
+        } else {
+          return v.default;
+        }
+      }
+    }
+
+    customElements.define(PlayingViewVariables.is, PlayingViewVariables);
+  </script>
+</dom-module>
