@@ -1,0 +1,102 @@
+<!--
+An element for displaying rewards and conditions.
+
+Example:
+
+    <playing-view-rewardsets data=[[rules]]></playing-view-rewardsets>
+
+@group Playing Elements
+@element playing-view-rewardsets
+-->
+<dom-module id="playing-view-rewardsets">
+  <template>
+    <style include="mostly-styles playing-styles">
+      :host {
+        display: block;
+      }
+
+      *[role=widget] {
+        margin-bottom: 16px;
+      }
+
+      label {
+        @apply --mostly-label;
+      }
+
+      .content {
+        line-height: 2.4rem;
+      }
+    </style>
+
+    <mostly-resource id="metrics" path="metrics" response-data="{{metrics}}" auto cached></mostly-resource>
+
+    <!-- rewards & conditions -->
+    <div class="widget">
+      <label role="widget">[[i18n('play.rule.rewards.rules')]]</label>
+      <div class="table">
+
+        <div class="table-header">
+          <div class="flex-1">[[i18n('play.metric.heading')]]</div>
+          <div class="flex-4">[[i18n('play.rule.condition.heading')]]</div>
+        </div>
+
+        <div class="table-rows">
+          <template is="dom-repeat" items="[[data]]" as="rewardset">
+            <div class="table-row">
+              <div class="flex-1">
+                <template is="dom-repeat" items="[[rewardset.rewards]]" as="reward">
+                  <div class="content">
+                    <span class="rule-object rule-metric">
+                      <i class$="icon-[[findById(metrics, reward.metric, 'type')]]"></i>
+                      [[findById(metrics, reward.metric, 'name')]]
+                    </span>&nbsp;
+                    <span class="rule-operator">[[reward.verb]]</span>&nbsp;
+                    <template is="dom-if" if="[[reward.item]]">
+                      <span class="rule-item">[[reward.item]] × </span>
+                    </template>
+                    <span class="rule-value">[[reward.value]]</span>
+                  </div>
+                </template>
+              </div>
+              <div class="flex-4">
+                <playing-view-conditions data="[[rewardset.requires]]"></playing-view-conditions>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <template is="dom-if" if=[[!data.length]]>
+          <div class="form-row">
+            <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
+          </div>
+        </template>
+
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    class PlayingViewRewardSets extends Polymer.mixinBehaviors(
+        [Mostly.I18nBehavior, Playing.RuleBehavior], Polymer.Element) {
+
+      static get is() { return 'playing-view-rewardsets' };
+
+      static get properties() {
+        return {
+          /**
+           * The rewardsets array to be displayed.
+           */
+          data: {
+            type: Array,
+            value: []
+          },
+
+          metrics: Object
+        }
+      }
+    }
+
+    customElements.define(PlayingViewRewardSets.is, PlayingViewRewardSets);
+  </script>
+</dom-module>

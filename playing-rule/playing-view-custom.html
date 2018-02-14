@@ -1,5 +1,5 @@
 <!--
-An element for displaying point rule data.
+An element for displaying custom rule data.
 
 Example:
 
@@ -28,8 +28,6 @@ Example:
       }
     </style>
 
-    <mostly-resource id="metrics" path="metrics" response-data="{{metrics}}" auto cached></mostly-resource>
-
     <div role="widget" hidden$="[[!rule.description]]">
       <label>[[i18n('play.rule.field.description')]]</label>
       <div name="description" class="multiline">[[rule.description]]</div>
@@ -44,49 +42,7 @@ Example:
     <playing-view-variables data="[[rule.variables]]"></playing-view-variables>
 
     <!-- rewards & conditions -->
-    <div class="widget">
-      <label role="widget">[[i18n('play.rule.rewards.rules')]]</label>
-      <div class="table">
-
-        <div class="table-header">
-          <div class="flex-1">[[i18n('play.metric.heading')]]</div>
-          <div class="flex-4">[[i18n('play.rule.condition.heading')]]</div>
-        </div>
-
-        <div class="table-rows">
-          <template is="dom-repeat" items="{{rule.custom.rules}}" as="rewardset">
-            <div class="table-row">
-              <div class="flex-1">
-                <template is="dom-repeat" items="{{rewardset.rewards}}" as="reward">
-                  <div class="content">
-                    <span class="rule-object rule-metric">
-                      <i class$="icon-[[findById(metrics, reward.metric, 'type')]]"></i>
-                      [[findById(metrics, reward.metric, 'name')]]
-                    </span>&nbsp;
-                    <span class="rule-operator">[[reward.verb]]</span>&nbsp;
-                    <template is="dom-if" if="[[reward.item]]">
-                      <span class="rule-item">[[reward.item]] × </span>
-                    </template>
-                    <span class="rule-value">[[reward.value]]</span>
-                  </div>
-                </template>
-              </div>
-              <div class="flex-4">
-                <playing-view-conditions data="[[rewardset.requires]]"></playing-view-conditions>
-              </div>
-            </div>
-          </template>
-        </div>
-
-        <template is="dom-if" if=[[!rule.custom.rules.length]]>
-          <div class="form-row">
-            <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
-          </div>
-        </template>
-
-      </div>
-      </template>
-    </div>
+    <playing-view-rewardsets data="[[rule.custom.rules]]"></playing-view-rewardsets>
 
   </template>
 
@@ -104,21 +60,7 @@ Example:
           rule: {
             type: Object,
             value: {}
-          },
-
-          metrics: Object
-        }
-      }
-
-      _getDefaultStyle(v) {
-        return v.required? 'mini-tag' : '';
-      }
-
-      _getDefaultValue(v) {
-        if (v.required) {
-          return 'Required';
-        } else {
-          return v.default;
+          }
         }
       }
     }
