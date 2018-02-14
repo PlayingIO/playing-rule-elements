@@ -29,9 +29,9 @@
       }
     </style>
 
-    <mostly-resource id="metrics" path="metrics" schemas="*" response-data={{metrics}} auto cached></mostly-resource>
-    <mostly-resource id="actions" path="actions" schemas="*" response-data={{actions}} auto cached></mostly-resource>
-    <mostly-resource id="teams" path="teams"" schemas="*" response-data={{teams}} auto cached></mostly-resource>
+    <mostly-resource id="metrics" path="metrics" schemas="*" response-data={{metrics}} auto cached="60"></mostly-resource>
+    <mostly-resource id="actions" path="actions" schemas="*" response-data={{actions}} auto cached="60"></mostly-resource>
+    <mostly-resource id="teams" path="teams"" schemas="*" response-data={{teams}} auto cached="60"></mostly-resource>
 
     <div role="widget">
 
@@ -109,7 +109,7 @@
           <template is="dom-if" if="[[isEqual(cond.rule, 'action')]]">
             <iron-icon class="heading" icon="[[ruleIcon(cond.rule)]]"></iron-icon>
             [[ruleDesciption(cond.rule)]]
-            <span class="rule-object rule-action">[[findById(actions, cond.action, 'name')]]</span>
+            <span class="rule-object rule-action">[[cond.action]]</span>
             <span class="rule-operator">[[p18n('play.rule.condition.operator', cond.operator)]]</span>
             <span class="rule-object rule-value">[[cond.value]]</span>
             [[i18n('play.rule.condition.desc.action.value')]].

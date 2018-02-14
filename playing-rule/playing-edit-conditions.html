@@ -51,9 +51,9 @@ Data model
       }
     </style>
 
-    <mostly-resource id="metrics" path="metrics" schemas="*" response-data={{metrics}} auto cached></mostly-resource>
-    <mostly-resource id="actions" path="actions" schemas="*" response-data={{actions}} auto cached></mostly-resource>
-    <mostly-resource id="teams" path="teams"" schemas="*" response-data={{teams}} auto cached></mostly-resource>
+    <mostly-resource id="metrics" path="metrics" schemas="*" response-data={{metrics}} auto cached="60"></mostly-resource>
+    <mostly-resource id="actions" path="actions" schemas="*" response-data={{actions}} auto cached="60"></mostly-resource>
+    <mostly-resource id="teams" path="teams"" schemas="*" response-data={{teams}} auto cached="60"></mostly-resource>
 
     <div role="widget">
 
@@ -238,7 +238,7 @@ Data model
                             attr-for-selected="name"
                             no-label-float required>
                       <template is="dom-repeat" items="[[operationTypes]]" as="op">
-                        <paper-item name="[[op]]">[[p18n('play.rule.condition.operator', rule)]]</paper-item>
+                        <paper-item name="[[op]]">[[p18n('play.rule.condition.operator', op)]]</paper-item>
                       </template>
                     </mostly-select>
                   </div>

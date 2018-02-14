@@ -29,8 +29,8 @@ Example:
       }
     </style>
 
-    <mostly-resource id="states" path="states" response-data="{{states}}" auto cached></mostly-resource>
-    <mostly-resource id="points" path="points" response-data="{{points}}" auto cached></mostly-resource>
+    <mostly-resource id="states" path="states" response-data="{{states}}" auto cached="60"></mostly-resource>
+    <mostly-resource id="points" path="points" response-data="{{points}}" auto cached="60"></mostly-resource>
 
     <div class="layout vertical">
       <mostly-input name="description" label="[[i18n('play.rule.field.description')]]"
