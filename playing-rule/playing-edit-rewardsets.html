@@ -40,16 +40,27 @@ Example:
 
           <div class="form-row">
             <div class="flex">
-              <mostly-select
-                      label="[[i18n('play.rule.rewards.rules.metric')]]"
-                      placeholder="[[i18n('play.rule.rewards.rules.metric.placeholder')]]"
-                      selected="{{reward.metric}}"
-                      attr-for-selected="id"
-                      required>
-                <template is="dom-repeat" items="[[metrics]]" as="item">
-                  <paper-item id="[[item.id]]">[[item.name]]</paper-item>
-                </template>
-              </mostly-select>
+              <div class="form-row">
+                <div class="flex-4">
+                  <mostly-select
+                          label="[[i18n('play.rule.rewards.rules.metric')]]"
+                          placeholder="[[i18n('play.rule.rewards.rules.metric.placeholder')]]"
+                          selected="{{reward.metric}}"
+                          attr-for-selected="id"
+                          required>
+                    <template is="dom-repeat" items="[[metrics]]" as="item">
+                      <paper-item id="[[item.id]]">[[item.name]]</paper-item>
+                    </template>
+                  </mostly-select>
+                </div>
+                <div class="flex-1">
+                  <mostly-input type="number" label="[[i18n('play.rule.reward.chance')]]"
+                          placeholder="100"
+                          value="{{reward.chance}}">
+                    <div slot="suffix">%</div>
+                  </mostly-input>
+                </div>
+              </div>
 
               <!-- point metric reward -->
               <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'point')]]" restamp>
