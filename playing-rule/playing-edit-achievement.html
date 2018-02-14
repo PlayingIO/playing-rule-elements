@@ -134,13 +134,6 @@ Example:
         }
       }
 
-      /**
-       * Resets the form fields to empty values.
-       */
-      _resetFields() {
-        this.rule = { achievement: {} };
-      }
-
       _addReward() {
         this.set('rule.achievement.rules', this.rule.achievement.rules || []);
         this.push('rule.achievement.rules', {

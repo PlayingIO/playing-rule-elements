@@ -71,7 +71,7 @@
               <div class="flex-4">[[item.description]]</div>
             </div>
           </template>
-          <template is="dom-if" if=[[_empty(rules.data)]]>
+          <template is="dom-if" if=[[!rules.data.length]]>
             <div class="table-row">
               <div class="empty-result">[[i18n('play.rule.search.empty')]]</div>
             </div>
@@ -137,11 +137,6 @@
       _manageRule(e) {
         this.fire('manageRule', { rule: e.model.item });
       }
-
-      _empty(entries) {
-        return entries && entries.length === 0;
-      }
-
     }
 
     customElements.define(PlayingRuleSearch.is, PlayingRuleSearch);
