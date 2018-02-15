@@ -271,7 +271,7 @@ Data model
                             selected="{{cond.role}}"
                             attr-for-selected="name"
                             no-label-float required>
-                      <template is="dom-repeat" items="[[_getTeamRoles(cond.team)]]" as="role">
+                      <template is="dom-repeat" items="[[findById(teams, cond.team, 'roles')]]" as="role">
                         <paper-item name="[[role]]">role</paper-item>
                       </template>
                     </mostly-select>
@@ -399,15 +399,6 @@ Data model
 
       _canInvert(rule) {
         return rule && (rule === 'metric' || rule === 'team');
-      }
-
-      _getTeamRoles(team) {
-        if (this.teams) {
-          var index = this.teams.findIndex(t => t.di == team);
-          if (index >= 0) {
-            return this.teams[index].roles;
-          }
-        }
       }
 
       _addCondition(e) {
