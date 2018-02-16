@@ -257,8 +257,8 @@ Data model
                             selected="{{cond.team}}"
                             attr-for-selected="name"
                             no-label-float required>
-                      <template is="dom-repeat" items="[[actions]]" as="item">
-                        <paper-item name="[[item.name]]">[[item.name]]</paper-item>
+                      <template is="dom-repeat" items="[[teams]]" as="item">
+                        <paper-item name="[[item.id]]">[[item.name]]</paper-item>
                       </template>
                     </mostly-select>
                   </div>
@@ -271,8 +271,8 @@ Data model
                             selected="{{cond.role}}"
                             attr-for-selected="name"
                             no-label-float required>
-                      <template is="dom-repeat" items="[[findById(teams, cond.team, 'roles')]]" as="role">
-                        <paper-item name="[[role]]">role</paper-item>
+                      <template is="dom-repeat" items="[[_getRoles(teams, cond.team)]]" as="role">
+                        <paper-item name="[[role]]">[[role]]</paper-item>
                       </template>
                     </mostly-select>
                   </div>
@@ -399,6 +399,14 @@ Data model
 
       _canInvert(rule) {
         return rule && (rule === 'metric' || rule === 'team');
+      }
+
+      _getRoles(teams, id) {
+        var team = this.findById(teams, id);
+        if (team && team.permissions) {
+          return team.permissions.map(perm => perm.role);
+        }
+        return [];
       }
 
       _addCondition(e) {
