@@ -80,6 +80,24 @@
       };
     },
 
+    emptyRule() {
+      return {
+        achievement: {},
+        level: {},
+        custom: {},
+        variables: []
+      };
+    },
+
+    resetFields() {
+      this.rule = this.emptyRule();
+      this.errors = '';
+    },
+
+    hasErrors() {
+      return this.errors !== '';
+    },
+
     ruleIcon(type) {
       switch (type) {
         case 'metric': return 'playing:metric';

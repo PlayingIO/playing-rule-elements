@@ -99,7 +99,7 @@
             </paper-button>
           </div>
 
-          <span id="errors" hidden$="[[!_hasErrors(errors)]]">[[errors]]</span>
+          <span id="errors" hidden$="[[!hasErrors(errors)]]">[[errors]]</span>
 
         </form>
       </iron-form>
@@ -122,13 +122,8 @@
 
           rule: {
             type: Object,
-            value: () => {
-              return {
-                achievement: {},
-                level: {},
-                custom: {},
-                variables: []
-              };
+            value() {
+              return this.emptyRule();
             }
           },
 
@@ -160,7 +155,7 @@
       }
 
       _goHome() {
-        this._resetFields();
+        this.resetFields();
         this.fire('goHome');
       }
 
@@ -185,7 +180,7 @@
        */
       _create() {
         this._doCreate(this.rule).then((rule) => {
-          this._resetFields();
+          this.resetFields();
           if (!this._createAnother) {
             this._goHome();
           }
@@ -204,20 +199,6 @@
 
       _cancel() {
         this._goHome();
-      }
-
-      _resetFields() {
-        this.rule = {
-          achievement: {},
-          level: {},
-          custom: {},
-          variables: []
-        };
-        this.errors = '';
-      }
-
-      _hasErrors() {
-        return this.errors !== '';
       }
     }
 
