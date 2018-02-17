@@ -41,7 +41,10 @@ Example:
 
     <div role="widget">
       <label>[[i18n('play.rule.achievement')]]</label>
-      <div name="achievement">[[findById(metrics, rule.achievement.metric, 'name')]]</div>
+      <span class="rule-object rule-metric">
+        <i class$="icon-[[findById(metrics, rule.achievement.metric, 'type')]]"></i>
+        [[findById(metrics, rule.achievement.metric, 'name')]]
+      </span>
     </div>
 
     <!-- rewards & conditions -->
