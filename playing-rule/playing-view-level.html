@@ -41,12 +41,18 @@ Example:
 
     <div role="widget">
       <label>[[i18n('play.rule.level.metric.level')]]</label>
-      <div name="levelMetric">[[findById(states, rule.level.state, 'name')]]</div>
+      <span class="rule-object rule-metric">
+        <i class$="icon-[[findById(states, rule.level.state, 'type')]]"></i>
+        [[findById(states, rule.level.state, 'name')]]
+      </span>
     </div>
 
     <div role="widget">
       <label>[[i18n('play.rule.level.metric.base')]]</label>
-      <div name="pointMetric">[[findById(points, rule.level.point, 'name')]]</div>
+      <span class="rule-object rule-metric">
+        <i class$="icon-[[findById(points, rule.level.point, 'type')]]"></i>
+        [[findById(points, rule.level.point, 'name')]]
+      </span>
     </div>
 
     <!-- levels -->
