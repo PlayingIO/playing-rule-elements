@@ -45,46 +45,6 @@ An element for managing rules in Playing game services.
       .main {
         position: relative;
       }
-
-      #createDropdown {
-        position: absolute;
-        right: 0;
-        padding: 0;
-        top: 15px;
-      }
-
-      paper-menu-button {
-        width: 130px;
-        height: 48px;
-        margin-bottom: 16px;
-      }
-
-      paper-button {
-        width: 100%;
-      }
-
-      paper-button iron-icon {
-        padding-right: 8px;
-      }
-
-      paper-listbox {
-        width: 130px;
-        outline: none;
-      }
-
-      paper-icon-item {
-        --paper-item-icon-width: 30px;
-      }
-
-      paper-listbox paper-icon-item iron-icon {
-        width: 1.5rem;
-        height: 1.5rem;
-      }
-
-      paper-listbox paper-icon-item:hover {
-        background: var(--mostly-container-hover, #fafafa);
-        cursor: pointer;
-      }
     </style>
 
     <mostly-connection user="{{_currentUser}}"></mostly-connection>
@@ -100,7 +60,7 @@ An element for managing rules in Playing game services.
             <div class="horizontal layout center">
               <template is="dom-if" if="[[_canCreateRule(readonly, _currentUser)]]">
                 <div class="flex">
-                  <paper-menu-button no-animations id="createDropdown" no-overlap
+                  <paper-menu-button no-animations class="dropdown" no-overlap
                           horizontal-align="right" vertical-align="top" vertical-offset="-4">
                     <paper-button noink class="primary" id="createButton" slot="dropdown-trigger">
                       <iron-icon icon="mostly:add"></iron-icon>
