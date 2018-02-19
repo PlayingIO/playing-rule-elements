@@ -43,9 +43,8 @@
       }
     </style>
 
-    <mostly-resource id="ruleSearch" auto
-            path="rules"
-            response="{{rules}}"></mostly-resource>
+    <mostly-resource id="searchRequest" path="rules"
+            response-data="{{rules}}" auto></mostly-resource>
 
     <mostly-card class="search">
       <mostly-input noink autofocus="true" value="{{searchTerm}}" type="search"
@@ -66,21 +65,21 @@
           <div class="flex-4">[[i18n('play.rule.field.description')]]</div>
         </div>
         <div class="table-rows">
-          <template is="dom-repeat" items="[[rules.data]]" as="item">
+          <template is="dom-repeat" items="[[rules]]" as="item">
             <div class="table-row" on-tap="_manageRule">
               <div class="flex-2">[[item.name]]</div>
               <div class="flex-1">[[p18n('play.rule', item.type)]]</div>
               <div class="flex-4">[[item.description]]</div>
             </div>
           </template>
-          <template is="dom-if" if=[[!rules.data.length]]>
+          <template is="dom-if" if=[[!rules.length]]>
             <div class="table-row">
               <div class="empty-result">[[i18n('play.rule.search.empty')]]</div>
             </div>
           </template>
         </div>
       </div>
-      <mostly-pagination-controls page="{{rulesCurrentPage}}" number-of-pages="[[rules.numberOfPages]]"></mostly-pagination-controls>
+      <mostly-pagination-controls page="{{currentPage}}" number-of-pages="[[rules.numberOfPages]]"></mostly-pagination-controls>
     </mostly-card>
 
   </template>
@@ -102,7 +101,7 @@
 
           rules: Object,
 
-          rulesCurrentPage: {
+          currentPage: {
             type: Number,
             value: 1
           },
@@ -116,24 +115,24 @@
 
       static get observers() {
         return [
-          '_searchRules(rulesCurrentPage)'
+          '_searchRules(currentPage)'
         ];
       }
 
       _searchTermChanged() {
-        this.rulesCurrentPage = 1;
+        this.currentPage = 1;
         this.currentPageSize = 10;
         this._searchRules();
       }
 
       _searchRules() {
         var params = {
-          '$skip': (this.rulesCurrentPage - 1) * this.currentPageSize
+          '$skip': (this.currentPage - 1) * this.currentPageSize
         };
         if (this.searchTerm) {
           params['name[$like]'] = this.searchTerm;
         }
-        this.$.ruleSearch.params = params;
+        this.$.searchRequest.params = params;
       }
 
       _manageRule(e) {
