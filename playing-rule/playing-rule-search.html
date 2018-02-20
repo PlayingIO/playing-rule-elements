@@ -136,7 +136,7 @@
       }
 
       _manageRule(e) {
-        this.fire('manageRule', { rule: e.model.item });
+        this.fire('manageRule', { type: e.model.item.type, rule: e.model.item.id });
       }
     }
 

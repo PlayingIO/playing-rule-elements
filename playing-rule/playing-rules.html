@@ -95,8 +95,8 @@ An element for managing rules in Playing game services.
 
           <section name="manage-rule">
             <playing-manage-rule id="ruleManager"
-                    rule="[[selectedRule.id]]"
-                    type="[[selectedRule.type]]"
+                    rule="[[selectedRule]]"
+                    type="[[selectedType]]"
                     readonly$="[[readonly]]"></playing-manage-rule>
           </section>
         </iron-pages>
@@ -112,6 +112,11 @@ An element for managing rules in Playing game services.
 
       static get properties() {
         return {
+          visible: {
+            type: Boolean,
+            observer: '_visibleChanged'
+          },
+
           /**
            * The rule manage page to be displayed.
            */
@@ -121,10 +126,23 @@ An element for managing rules in Playing game services.
             notify: true
           },
 
+          entity: {
+            type: Object,
+            value: {},
+            observer: '_entityChanged'
+          },
+
           /**
-           * Selected rule.
+           * Selected rule id.
            */
-          selectedRule: Object,
+          selectedRule:  {
+            type: String
+          },
+
+          /**
+           * Type of selected rule
+           */
+          selectedType: String,
 
           /**
            * Type of created rule
@@ -153,6 +171,27 @@ An element for managing rules in Playing game services.
         this.addEventListener('manageRule', this._manageRule);
       }
 
+      _entityChanged() {
+        if (!this.visible) return;
+        if (this.entity && this.entity.id && this.entity.type) {
+          this.selectedRule = null;
+          this.selectedType = null;
+          this.selectedRule = this.entity.id;
+          this.selectedType = this.entity.type;
+          this.page = 'manage-rule';
+        } else {
+          this.$$('playing-rule-search')._searchTermChanged();
+        }
+      }
+
+      _visibleChanged() {
+        if (this.visible) {
+          this.async(() => {
+            this._entityChanged();
+          });
+        }
+      }
+
       /**
        * Go to the 'search' page.
        */
@@ -173,9 +212,8 @@ An element for managing rules in Playing game services.
       }
 
       _manageRule(e) {
-        this.selectedRule = null;
-        this.selectedRule = e.detail.rule;
-        this.page = 'manage-rule';
+        var url = 'rule-management/' + e.detail.type + '/' + e.detail.rule;
+        this.navigateTo('play', url);
       }
 
       _hasAdministrationPermissions(user) {
