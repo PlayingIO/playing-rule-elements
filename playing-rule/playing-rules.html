@@ -174,11 +174,13 @@ An element for managing rules in Playing game services.
       _entityChanged() {
         if (!this.visible) return;
         if (this.entity && this.entity.id && this.entity.type) {
-          this.selectedRule = null;
-          this.selectedType = null;
-          this.selectedRule = this.entity.id;
-          this.selectedType = this.entity.type;
-          this.page = 'manage-rule';
+          if (this.entity.route === 'rule-management') {
+            this.selectedRule = null;
+            this.selectedType = null;
+            this.selectedRule = this.entity.id;
+            this.selectedType = this.entity.type;
+            this.page = 'manage-rule';
+          }
         } else {
           this.$$('playing-rule-search')._searchTermChanged();
         }
