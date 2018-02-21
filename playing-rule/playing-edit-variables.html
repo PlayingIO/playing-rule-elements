@@ -29,7 +29,12 @@ Example:
 
     <!-- variables -->
     <div class="layout vertical" role="widget">
-      <label role="widget">[[i18n('play.rule.variables')]]</label>
+      <div class="layout horizontal center actions">
+        <h3 class="flex">[[i18n('play.rule.variables')]]</h3>
+        <paper-button noink id="addVariable" class="flex-end" on-tap="_addVariable">
+          <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.variables.create')]]
+        </paper-button>
+      </div>
 
       <div class="table-header">
         <div class="flex-2">[[i18n('play.rule.variable.name')]]</div>
@@ -75,10 +80,6 @@ Example:
 
     </div>
 
-    <div class="form-buttons">
-      <paper-button noink id="addVarButton" class="primary" on-tap="_addVar">[[i18n('command.add')]]</paper-button>
-    </div>
-
   </template>
 
   <script>
@@ -100,7 +101,7 @@ Example:
         }
       }
 
-      _addVar() {
+      _addVariable() {
         this.set('data', this.data || []);
         this.push('data', { name: null });
       }
