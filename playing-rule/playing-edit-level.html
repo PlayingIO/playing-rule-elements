@@ -16,19 +16,6 @@ Example:
       :host {
         display: block;
       }
-
-      *[role=widget] {
-        margin-bottom: 16px;
-      }
-
-      .form-dropzone {
-        width: 64px;
-      }
-
-      .form-buttons {
-        padding: 1em;
-        margin: 5px -0.7rem 0;
-      }
     </style>
 
     <mostly-resource id="states" path="states" response-data="{{states}}" auto cached="60"></mostly-resource>
@@ -43,7 +30,7 @@ Example:
               label="[[i18n('play.rule.field.image')]]"
               document="{{rule}}" xpath="image"></playing-dropzone>
 
-      <div class="form-row">
+      <div role="widget" class="form-row">
         <div class="flex">
           <mostly-select role="widget"
                   label="[[i18n('play.rule.level.metric.level')]]"
@@ -74,7 +61,13 @@ Example:
     <!-- levels -->
     <template is="dom-if" if="[[allValid(rule.level.state, rule.level.point)]]" restamp>
       <div class="layout vertical">
-        <label>[[i18n('play.rule.level.levels')]]</label>
+        <div class="layout horizontal center actions">
+          <h3 class="flex">[[i18n('play.rule.level.levels')]]</h3>
+          <paper-button noink id="addLevel" class="flex-end"
+                  on-tap="_addLevel" disabled$="[[!_hasAvailableLevel(states, rule.level.levels.splices)]]">
+            <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.level.create')]]
+          </paper-button>
+        </div>
 
         <div class="table-header">
           <div class="flex-1">[[i18n('play.rule.level.index')]]</div>
@@ -113,7 +106,7 @@ Example:
                       required></mostly-input>
             </div>
             <div class="form-actions">
-              <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeItem"></iron-icon>
+              <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeLevel"></iron-icon>
             </div>
           </div>
         </template>
@@ -126,9 +119,6 @@ Example:
 
       </div>
 
-      <div class="form-buttons">
-        <paper-button noink id="addItemButton" class="primary" on-tap="_addItem">[[i18n('command.add')]]</paper-button>
-      </div>
     </template>
 
     <!-- advanced settings -->
@@ -168,6 +158,10 @@ Example:
             value: []
           },
 
+          states: Object,
+
+          points: Object,
+
           /**
            * If true, a new rule is being created; if false, an already existing rule is being edited.
            */
@@ -180,11 +174,11 @@ Example:
 
       static get observers() {
         return [
-          '_thresholdChanged(rule.level.levels.*)'
+          '_thresholdChanged(points, rule.level.levels.*)'
         ];
       }
 
-      _addItem() {
+      _addLevel() {
         this.set('rule.level.levels', this.rule.level.levels || []);
         var point = this.findById(this.points, this.rule.level.point);
         if (point) {
@@ -195,8 +189,16 @@ Example:
         }
       }
 
-      _removeItem(e) {
+      _removeLevel(e) {
         this.splice('rule.level.levels', e.target.dataIndex, 1);
+      }
+
+      _hasAvailableLevel() {
+        if (this.states && this.rule.level.state && this.rule.level.levels) {
+          var state = this.findById(this.states, this.rule.level.state);
+          return this.rule.level.levels.length < state.constraints.states.length;
+        }
+        return true;
       }
 
       _thresholdChanged() {
