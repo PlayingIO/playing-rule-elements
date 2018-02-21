@@ -60,9 +60,10 @@ Data model
       <template is="dom-if" if="[[!data.length]]" restamp>
         <label>[[i18n('play.rule.command.rule.create.guide')]]</label>
         <div class="form-buttons">
-          <paper-button noink id="createRuleButton" class="primary"
-                  data-index="[[index]]"
-                  on-tap="_createRule">[[i18n('play.rule.command.rule.create')]]</paper-button>
+          <paper-button noink id="createRule" class="flex-end"
+                    data-index="[[index]]" on-tap="_createRule">
+            <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.command.rule.create')]]
+          </paper-button>
         </div>
       </template>
 
@@ -342,9 +343,10 @@ Data model
         <template is="dom-if" if="[[cond.conditions]]" restamp>
           <playing-edit-conditions id="[[index]]" data="{{cond.conditions}}"></playing-edit-conditions>
           <div class="form-buttons">
-            <paper-button noink id="addConditionButton" class="primary"
-                    data-index="[[index]]"
-                    on-tap="_addCondition">[[i18n('play.rule.command.rule.add')]]</paper-button>
+            <paper-button noink id="addCondition" class="flex-end"
+                      data-index="[[index]]" on-tap="_addCondition">
+              <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.command.rule.add')]]
+            </paper-button>
           </div>
         </template>
 
