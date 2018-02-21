@@ -1,5 +1,6 @@
 <link rel="import" href="../behaviors/playing-rule-behavior.html">
 <link rel="import" href="playing-edit-conditions.html">
+<link rel="import" href="playing-edit-rewards.html">
 
 <!--
 An element for creating and editing rewards and conditions.
@@ -16,15 +17,12 @@ Example:
     <style include="mostly-styles playing-styles">
       :host {
         display: block;
+        margin-bottom: 25px;
       }
 
-      *[role=widget] {
-        margin-bottom: 16px;
-      }
-
-      .form-buttons {
-        padding: 1em;
-        margin: 5px -0.7rem 0;
+      iron-icon.remove {
+        padding-top: 7px;
+        width: 22px;
       }
     </style>
 
@@ -32,153 +30,33 @@ Example:
 
     <!-- rewards & conditions -->
     <div class="layout vertical">
-      <label role="widget">[[i18n('play.rule.rewards.rules')]]</label>
+      <div class="layout horizontal center actions">
+        <h3 class="flex">[[i18n('play.rule.rewards.rules')]]</h3>
+        <paper-button noink id="addRewardSet" class="flex-end" on-tap="_addRewardSet">
+          <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.command.rewardset.create')]]
+        </paper-button>
+      </div>
 
-      <template is="dom-repeat" items="{{data}}" as="rewardSet" index-as="rewardsetIndex">
+      <div class="table-header">
+        <div class="flex-1">[[i18n('play.rule.rewards.rules.rewards')]]</div>
+        <div class="flex-2">[[i18n('play.rule.rewards.rules.conditions')]]</div>
+        <div class="form-actions">&nbsp;</div>
+      </div>
 
-        <!-- rewards -->
-        <template is="dom-repeat" items="{{rewardSet.rewards}}" as="reward">
+      <template is="dom-repeat" items="{{data}}" as="rewardSet">
 
-          <div class="form-row">
-            <div class="flex">
-              <div class="form-row">
-                <div class="flex-4">
-                  <mostly-select
-                          label="[[i18n('play.rule.rewards.rules.metric')]]"
-                          placeholder="[[i18n('play.rule.rewards.rules.metric.placeholder')]]"
-                          selected="{{reward.metric}}"
-                          attr-for-selected="id"
-                          required>
-                    <template is="dom-repeat" items="[[metrics]]" as="item">
-                      <paper-item id="[[item.id]]">[[item.name]]</paper-item>
-                    </template>
-                  </mostly-select>
-                </div>
-                <div class="flex-1">
-                  <mostly-input type="number" label="[[i18n('play.rule.reward.chance')]]"
-                          placeholder="100" min="0" max="100"
-                          value="{{reward.chance}}">
-                    <div slot="suffix">%</div>
-                  </mostly-input>
-                </div>
-              </div>
-
-              <!-- point metric reward -->
-              <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'point')]]" restamp>
-                <div class="form-row">
-                  <div class="flex-1">
-                    <mostly-select id="opSelector"
-                            selected="{{reward.verb}}"
-                            attr-for-selected="name"
-                            no-label-float required>
-                      <template is="dom-repeat" items="[[rewardVerbs]]" as="op">
-                        <paper-item name="[[op]]">[[p18n('play.rule.reward.verb', op)]]</paper-item>
-                      </template>
-                    </mostly-select>
-                  </div>
-                  <div class="flex-2">
-                    <mostly-input value="{{reward.value}}" required></mostly-input>
-                  </div>
-                </div>
-              </template>
-
-              <!-- set metric reward -->
-              <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'set')]]" restamp>
-                <div class="form-row">
-                  <div class="flex-1">
-                    <mostly-select id="opSelector"
-                            selected="{{reward.verb}}"
-                            attr-for-selected="name"
-                            no-label-float required>
-                      <template is="dom-repeat" items="[[rewardVerbs]]" as="op">
-                        <paper-item name="[[op]]">[[p18n('play.rule.reward.verb', op)]]</paper-item>
-                      </template>
-                    </mostly-select>
-                  </div>
-                  <div class="flex-1">
-                    <mostly-select id="itemsSelector"
-                            selected="{{reward.item}}"
-                            attr-for-selected="name"
-                            no-label-float required>
-                      <template is="dom-repeat" items="[[findById(metrics, reward.metric, 'constraints.items')]]" as="item">
-                        <paper-item name="[[item.name]]">[[item.name]]</paper-item>
-                      </template>
-                    </mostly-select>
-                  </div>
-                  <div class="flex-1">
-                    <mostly-input value="{{reward.value}}" required></mostly-input>
-                  </div>
-                </div>
-              </template>
-
-              <!-- state metric reward -->
-              <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'state')]]" restamp>
-                <div class="form-row">
-                  <div class="flex-1">
-                    <mostly-select id="opSelector"
-                            selected="{{reward.verb}}"
-                            attr-for-selected="name"
-                            no-label-float required>
-                      <paper-item name="set">[[i18n('play.rule.reward.verb.set')]]</paper-item>
-                    </mostly-select>
-                  </div>
-                  <div class="flex-2">
-                    <mostly-select id="itemsSelector"
-                            selected="{{reward.value}}"
-                            attr-for-selected="name"
-                            no-label-float required>
-                      <template is="dom-repeat" items="[[findById(metrics, reward.metric, 'constraints.states')]]" as="item">
-                        <paper-item name="[[item.name]]">[[item.name]]</paper-item>
-                      </template>
-                    </mostly-select>
-                  </div>
-                </div>
-              </template>
-
-              <!-- compound metric reward -->
-              <template is="dom-if" if="[[equalById(metrics, reward.metric, 'type', 'compound')]]" restamp>
-                <div class="form-row">
-                  <div class="flex-1">
-                    <mostly-select id="opSelector"
-                            selected="{{reward.verb}}"
-                            attr-for-selected="name"
-                            no-label-float required>
-                      <template is="dom-repeat" items="[[rewardVerbs]]" as="op">
-                        <paper-item name="[[op]]">[[p18n('play.rule.reward.verb', op)]]</paper-item>
-                      </template>
-                    </mostly-select>
-                  </div>
-                  <div class="flex-2">
-                    <mostly-input value="{{reward.value}}" required></mostly-input>
-                  </div>
-                </div>
-              </template>
-            </div>
-            <div class="form-actions">
-              <iron-icon icon="mostly:remove" class="remove"
-                      data-rewardset="[[rewardsetIndex]]" data-index="[[index]]"
-                      on-tap="_removeReward"></iron-icon>
-            </div>
+        <div class="form-row border">
+          <div class="flex-1">
+            <!-- rewards -->
+            <playing-edit-rewards data="{{rewardSet.rewards}}"></playing-edit-rewards>
           </div>
-
-        </template>
-
-        <template is="dom-if" if=[[!rewardSet.rewards.length]]>
-          <div class="form-row">
-            <div class="empty-result">[[i18n('play.rule.rewards.rules.empty')]]</div>
-          </div>
-        </template>
-
-        <div class="form-buttons">
-          <paper-button noink id="addRewardButton" class="primary"
-                  data-rewardset="[[rewardsetIndex]]"
-                  on-tap="_addReward">[[i18n('play.rule.command.reward.add')]]</paper-button>
-        </div>
-
-        <!-- conditions -->
-        <div class="form-row">
-          <div class="flex">
+          <div class="flex-2">
+            <!-- conditions -->
             <playing-edit-conditions data="{{rewardSet.requires}}"></playing-edit-conditions>
+          </div>
+          <div class="form-actions">
+            <iron-icon icon="mostly:clear" class="remove"
+                    data-index="[[index]]" on-tap="_removeRewardset"></iron-icon>
           </div>
         </div>
 
@@ -191,10 +69,6 @@ Example:
       </template>
     </div>
 
-    <div class="form-buttons">
-      <paper-button noink id="addRewardSetButton" class="primary"
-              on-tap="_addRewardSet">[[i18n('play.rule.command.rewardset.add')]]</paper-button>
-    </div>
 
   </template>
 
@@ -227,18 +101,8 @@ Example:
         });
       }
 
-      _addReward(e) {
-        var rewardset = e.target.dataRewardset;
-        this.set(`data.${rewardset}.rewards`, this.data[rewardset].rewards || []);
-        this.push(`data.${rewardset}.rewards`, { metric: null });
-      }
-
-      _removeReward(e) {
-        var rewardset = e.target.dataRewardset;
-        this.splice(`data.${rewardset}.rewards`, e.currentTarget.dataIndex, 1);
-        if (this.data[rewardset].rewards.length == 0) {
-          this.splice('data', e.currentTarget.dataIndex, 1);
-        }
+      _removeRewardset(e) {
+        this.splice('data', e.currentTarget.dataIndex, 1);
       }
     }
 

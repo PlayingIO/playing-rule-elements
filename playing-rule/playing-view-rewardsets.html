@@ -39,13 +39,13 @@ Example:
       <div class="table">
 
         <div class="table-header">
-          <div class="flex-1">[[i18n('play.metric.heading')]]</div>
-          <div class="flex-4">[[i18n('play.rule.condition.heading')]]</div>
+          <div class="flex-1">[[i18n('play.rule.rewards.rules.rewards')]]</div>
+          <div class="flex-4">[[i18n('play.rule.rewards.rules.conditions')]]</div>
         </div>
 
         <div class="table-rows">
           <template is="dom-repeat" items="[[data]]" as="rewardset">
-            <div class="table-row">
+            <div class="table-row start">
               <div class="flex-1">
                 <template is="dom-repeat" items="[[rewardset.rewards]]" as="reward">
                   <div class="content">
