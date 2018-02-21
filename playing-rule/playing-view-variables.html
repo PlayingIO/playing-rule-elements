@@ -15,19 +15,12 @@ Example:
     <style include="mostly-styles playing-styles">
       :host {
         display: block;
-      }
-
-      *[role=widget] {
         margin-bottom: 16px;
-      }
-
-      label {
-        @apply --mostly-label;
       }
     </style>
 
     <!-- variables -->
-    <div role="widget">
+    <div>
       <label role="widget">[[i18n('play.rule.variables')]]</label>
 
       <div class="table">
