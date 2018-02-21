@@ -17,15 +17,6 @@ Example:
       :host {
         display: block;
       }
-
-      *[role=widget] {
-        margin-bottom: 16px;
-      }
-
-      .form-buttons {
-        padding: 1em;
-        margin: 0px -0.7rem 0;
-      }
     </style>
 
     <mostly-resource id="metrics" path="sets" response-data="{{metrics}}" auto cached="60"></mostly-resource>
@@ -54,7 +45,13 @@ Example:
     <!-- rewards & conditions -->
     <template is="dom-if" if="[[isValid(rule.achievement.metric)]]" restamp>
       <div class="layout vertical">
-        <label>[[i18n('play.rule.rewards.rules')]]</label>
+        <div class="layout horizontal center">
+          <h3 class="flex">[[i18n('play.rule.rewards.rules')]]</h3>
+          <paper-button noink id="addReward" class="flex-end"
+                  on-tap="_addReward" disabled$="[[!_hasAvailableRewards(metrics, rule.achievement.rules.splices)]]">
+            <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.command.reward.create')]]
+          </paper-button>
+        </div>
 
         <template is="dom-repeat" items="{{rule.achievement.rules}}" as="reward">
           <div class="form-row">
@@ -74,7 +71,7 @@ Example:
               <iron-icon icon="mostly:remove" class="remove" data-index="[[index]]" on-tap="_removeReward"></iron-icon>
             </div>
           </div>
-          <div class="form-row">
+          <div class="form-row border">
             <div class="flex">
               <playing-edit-conditions data="{{reward.requires}}"></playing-edit-conditions>
             </div>
@@ -88,11 +85,6 @@ Example:
         </template>
       </div>
 
-      <div class="form-buttons">
-        <paper-button noink id="addRewardButton" class="primary"
-                disabled="[[!_hasAvailableRewards(rule.achievement.rules.splices)]]"
-                on-tap="_addReward">[[i18n('play.rule.command.reward.create')]]</paper-button>
-      </div>
     </template>
 
     <!-- advanced settings -->
