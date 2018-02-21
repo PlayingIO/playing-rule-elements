@@ -61,7 +61,7 @@ Example:
     <!-- levels -->
     <template is="dom-if" if="[[allValid(rule.level.state, rule.level.point)]]" restamp>
       <div class="layout vertical">
-        <div class="layout horizontal center actions">
+        <div class="layout horizontal center">
           <h3 class="flex">[[i18n('play.rule.level.levels')]]</h3>
           <paper-button noink id="addLevel" class="flex-end"
                   on-tap="_addLevel" disabled$="[[!_hasAvailableLevel(states, rule.level.levels.splices)]]">
