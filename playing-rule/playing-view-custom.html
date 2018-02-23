@@ -32,10 +32,16 @@ Example:
     </div>
 
     <!-- variables -->
-    <playing-view-variables data="[[rule.variables]]"></playing-view-variables>
+    <div role="widget" class="layout vertical">
+      <label>[[i18n('play.rule.variables')]]</label>
+      <playing-view-variables data="[[rule.variables]]"></playing-view-variables>
+    </div>
 
     <!-- rewards & conditions -->
-    <playing-view-rewardsets data="[[rule.custom.rules]]"></playing-view-rewardsets>
+    <div role="widget" class="layout vertical">
+      <label role="widget">[[i18n('play.rule.rewardsets')]]</label>
+      <playing-view-rewardsets data="[[rule.custom.rules]]"></playing-view-rewardsets>
+    </div>
 
   </template>
 

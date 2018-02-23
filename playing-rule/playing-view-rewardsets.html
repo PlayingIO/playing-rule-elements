@@ -25,7 +25,6 @@ Example:
 
     <!-- rewards & conditions -->
     <div role="widget">
-      <label role="widget">[[i18n('play.rule.rewardsets')]]</label>
       <div class="table">
 
         <div class="table-header">
@@ -35,7 +34,7 @@ Example:
 
         <div class="table-rows">
           <template is="dom-repeat" items="[[data]]" as="rewardset">
-            <div class="table-row start">
+            <div class="table-row top">
               <div class="flex-1">
                 <playing-view-rewards data="[[rewardset.rewards]]"></playing-view-rewards>
               </div>
