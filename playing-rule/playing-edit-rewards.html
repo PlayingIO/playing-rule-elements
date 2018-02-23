@@ -31,8 +31,8 @@ Example:
       <div class="form-row">
         <div class="flex-2">
           <mostly-select
-                  label="[[i18n('play.rule.rewards.rules.metric')]]"
-                  placeholder="[[i18n('play.rule.rewards.rules.metric.placeholder')]]"
+                  label="[[i18n('play.rule.rewardsets.metric')]]"
+                  placeholder="[[i18n('play.rule.rewardsets.metric.placeholder')]]"
                   selected="{{reward.metric}}"
                   attr-for-selected="id"
                   required>
@@ -154,13 +154,13 @@ Example:
 
     <template is="dom-if" if=[[!data.length]]>
       <div class="form-row">
-        <div class="empty-result">[[i18n('play.rule.rewards.rules.rewards.empty')]]</div>
+        <div class="empty-result">[[i18n('play.rule.rewardsets.rewards.empty')]]</div>
       </div>
     </template>
 
     <div class="form-buttons">
       <paper-button noink id="addReward" on-tap="_addReward">
-        <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.command.reward.create')]]
+        <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.rewards.create')]]
       </paper-button>
     </div>
 

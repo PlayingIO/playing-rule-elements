@@ -31,10 +31,6 @@
 
     <div role="widget">
 
-      <template is="dom-if" if="[[!data.length]]">
-        <label>[[i18n('play.rule.command.rule.create.guide')]]</label>
-      </template>
-
       <template is="dom-repeat" items="[[data]]" as="cond">
         <div class="content">
           <!-- and rule -->
@@ -146,6 +142,11 @@
         </template>
 
       </template>
+
+      <template is="dom-if" if="[[!data.length]]">
+        <label>[[i18n('play.rule.conditions.empty')]]</label>
+      </template>
+
     </div>
 
   </template>

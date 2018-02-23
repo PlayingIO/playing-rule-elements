@@ -53,23 +53,13 @@ Data model
 
     <div role="widget">
 
-      <template is="dom-if" if="[[!data.length]]" restamp>
-        <label>[[i18n('play.rule.command.rule.create.guide')]]</label>
-        <div class="form-buttons">
-          <paper-button noink id="createRule"
-                    data-index="[[index]]" on-tap="_createRule">
-            <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.command.rule.create')]]
-          </paper-button>
-        </div>
-      </template>
-
       <template is="dom-repeat" items="{{data}}" as="cond">
 
         <div class="form-row">
           <div class="form-heading">[[i18n('play.rule.match')]]</div>
           <div class="flex">
             <mostly-select id="ruleSelector"
-                    placeholder="[[i18n('play.rule.rewards.rules.placeholder')]]"
+                    placeholder="[[i18n('play.rule.rewardsets.placeholder')]]"
                     selected="{{cond.rule}}"
                     data-index="[[index]]"
                     on-selected-changed="_ruleChanged"
@@ -341,12 +331,23 @@ Data model
           <div class="form-buttons">
             <paper-button noink id="addCondition"
                       data-index="[[index]]" on-tap="_addCondition">
-              <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.command.rule.add')]]
+              <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.conditions.add')]]
             </paper-button>
           </div>
         </template>
 
       </template>
+
+      <template is="dom-if" if="[[!data.length]]" restamp>
+        <label>[[i18n('play.rule.conditions.empty')]]</label>
+        <div class="form-buttons">
+          <paper-button noink id="createRule"
+                    data-index="[[index]]" on-tap="_createRule">
+            <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.conditions.create')]]
+          </paper-button>
+        </div>
+      </template>
+
     </div>
 
   </template>
