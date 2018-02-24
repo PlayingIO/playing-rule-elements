@@ -32,9 +32,13 @@ Example:
         </span>&nbsp;
         <span class="rule-operator">[[reward.verb]]</span>&nbsp;
         <template is="dom-if" if="[[reward.item]]">
-          <span class="rule-item">[[reward.item]] × </span>
+          <span class="rule-object rule-item">[[reward.item]]</span> × 
         </template>
-        <span class="rule-value">[[reward.value]]</span>
+        <span class="rule-object rule-value">[[reward.value]]</span>
+        <mostly-tag hidden$="[[!reward.resolution]]">
+          <i class="icon-target"></i> [[reward.resolution]]
+        </mostly-tag>
+        <i class="icon-loop" hidden$="[[!reward.recur]]"></i>
       </div>
     </template>
 
