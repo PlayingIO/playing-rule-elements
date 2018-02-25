@@ -64,7 +64,7 @@ Example:
         <div class="layout horizontal center">
           <h3 class="flex">[[i18n('play.rule.level.levels')]]</h3>
           <paper-button noink id="addLevel" class="flex-end"
-                  on-tap="_addLevel" disabled$="[[!_hasAvailableLevel(states, rule.level.levels.splices)]]">
+                  on-tap="_addLevel" disabled$="[[!_hasAnotherLevel(states, rule.level.levels.splices)]]">
             <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.level.create')]]
           </paper-button>
         </div>
@@ -193,7 +193,7 @@ Example:
         this.splice('rule.level.levels', e.target.dataIndex, 1);
       }
 
-      _hasAvailableLevel() {
+      _hasAnotherLevel() {
         if (this.states && this.rule.level.state && this.rule.level.levels) {
           var state = this.findById(this.states, this.rule.level.state);
           return this.rule.level.levels.length < state.constraints.states.length;

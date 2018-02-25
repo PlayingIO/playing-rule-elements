@@ -48,7 +48,7 @@ Example:
         <div class="layout horizontal center">
           <h3 class="flex">[[i18n('play.rule.rewardsets')]]</h3>
           <paper-button noink id="addReward" class="flex-end"
-                  on-tap="_addReward" disabled$="[[!_hasAvailableRewards(metrics, rule.achievement.rules.splices)]]">
+                  on-tap="_addReward" disabled$="[[!_hasAnotherRewards(metrics, rule.achievement.rules.splices)]]">
             <iron-icon icon="mostly:add"></iron-icon> [[i18n('play.rule.rewards.create')]]
           </paper-button>
         </div>
@@ -141,7 +141,7 @@ Example:
         this.splice('rule.achievement.rules', e.currentTarget.dataIndex, 1);
       }
 
-      _hasAvailableRewards() {
+      _hasAnotherRewards() {
         if (this.metrics && this.rule.achievement.metric && this.rule.achievement.rules) {
           var metric = this.findById(this.metrics, this.rule.achievement.metric);
           return this.rule.achievement.rules.length < metric.constraints.items.length;
