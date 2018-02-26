@@ -5,7 +5,7 @@ An element for displaying rewards and conditions.
 
 Example:
 
-    <playing-view-rewards data=[[rewards]]></playing-view-rewards>
+    <playing-view-rewards rewards=[[rewards]]></playing-view-rewards>
 
 @group Playing Elements
 @element playing-view-rewards
@@ -24,7 +24,7 @@ Example:
 
     <mostly-resource id="metrics" path="metrics" response-data="{{metrics}}" auto cached="60"></mostly-resource>
 
-    <template is="dom-repeat" items="[[data]]" as="reward">
+    <template is="dom-repeat" items="[[rewards]]" as="reward">
       <div class="content">
         <span class="rule-object rule-metric">
           <i class$="icon-[[findById(metrics, reward.metric, 'type')]]"></i>
@@ -55,7 +55,7 @@ Example:
           /**
            * The rewards array to be displayed.
            */
-          data: {
+          rewards: {
             type: Array,
             value: []
           },

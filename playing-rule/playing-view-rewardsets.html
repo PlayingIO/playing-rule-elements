@@ -36,10 +36,10 @@ Example:
           <template is="dom-repeat" items="[[data]]" as="rewardset">
             <div class="table-row top">
               <div class="flex-1">
-                <playing-view-rewards data="[[rewardset.rewards]]"></playing-view-rewards>
+                <playing-view-rewards rewards="[[rewardset.rewards]]"></playing-view-rewards>
               </div>
               <div class="flex-3">
-                <playing-view-conditions data="[[rewardset.requires]]"></playing-view-conditions>
+                <playing-view-conditions requires="[[rewardset.requires]]"></playing-view-conditions>
               </div>
             </div>
           </template>

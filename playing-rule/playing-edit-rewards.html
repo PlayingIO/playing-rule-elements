@@ -5,7 +5,7 @@ An element for creating and editing rewards.
 
 Example:
 
-    <playing-edit-rewards data=[[rewards]] new></playing-edit-rewards>
+    <playing-edit-rewards rewards=[[rewards]] new></playing-edit-rewards>
 
 @group Playing Elements
 @element playing-edit-rewards
@@ -26,7 +26,7 @@ Example:
     <mostly-resource id="metrics" path="metrics" response-data="{{metrics}}" auto cached="60"></mostly-resource>
 
     <!-- rewards -->
-    <template is="dom-repeat" items="{{data}}" as="reward">
+    <template is="dom-repeat" items="{{rewards}}" as="reward">
 
       <div class="form-row">
         <div class="flex-2">
@@ -176,7 +176,7 @@ Example:
 
     </template>
 
-    <template is="dom-if" if=[[!data.length]]>
+    <template is="dom-if" if=[[!rewards.length]]>
       <div class="form-row">
         <div class="empty-result">[[i18n('play.rule.rewardsets.rewards.empty')]]</div>
       </div>
@@ -203,7 +203,7 @@ Example:
           /**
            * The rewards array.
            */
-          data: {
+          rewards: {
             type: Array,
             value: [],
             notify: true
@@ -227,12 +227,12 @@ Example:
       }
 
       _addReward(e) {
-        this.set('data', this.data || []);
-        this.push('data', { metric: null });
+        this.set('rewards', this.rewards || []);
+        this.push('rewards', { metric: null });
       }
 
       _removeReward(e) {
-        this.splice('data', e.currentTarget.dataIndex, 1);
+        this.splice('rewards', e.currentTarget.dataIndex, 1);
       }
     }
 

@@ -53,7 +53,7 @@ Data model
 
     <div role="widget">
 
-      <template is="dom-repeat" items="{{data}}" as="cond">
+      <template is="dom-repeat" items="{{requires}}" as="cond">
 
         <div class="form-row">
           <div class="form-heading">[[i18n('play.rule.match')]]</div>
@@ -327,7 +327,7 @@ Data model
         </template>
 
         <template is="dom-if" if="[[cond.conditions]]" restamp>
-          <playing-edit-conditions id="[[index]]" data="{{cond.conditions}}"></playing-edit-conditions>
+          <playing-edit-conditions requires="{{cond.conditions}}"></playing-edit-conditions>
           <div class="form-buttons">
             <paper-button noink id="addCondition"
                       data-index="[[index]]" on-tap="_addCondition">
@@ -338,7 +338,7 @@ Data model
 
       </template>
 
-      <template is="dom-if" if="[[!data.length]]" restamp>
+      <template is="dom-if" if="[[!requires.length]]" restamp>
         <label>[[i18n('play.rule.conditions.empty')]]</label>
         <div class="form-buttons">
           <paper-button noink id="createRule"
@@ -361,9 +361,9 @@ Data model
       static get properties() {
         return {
           /**
-           * the rules array
+           * the requires array
            */
-          data: {
+          requires: {
             type: Array,
             value: [],
             notify: true
@@ -409,15 +409,15 @@ Data model
       }
 
       _addCondition(e) {
-        this.push(`data.${e.currentTarget.dataIndex}.conditions`, { rule: null });
+        this.push(`requires.${e.currentTarget.dataIndex}.conditions`, { rule: null });
       }
 
       _createRule() {
-        this.set('data', [{ rule: null }]);
+        this.set('requires', [{ rule: null }]);
       }
 
       _removeRule(e) {
-        this.splice('data', e.currentTarget.dataIndex, 1);
+        this.splice('requires', e.currentTarget.dataIndex, 1);
       }
 
       _ruleChanged(e) {
@@ -431,7 +431,7 @@ Data model
           case 'and': rule = { rule: 'and', conditions: [{ rule: null }] }; break;
           case 'or': rule = { rule: 'or', conditions: [{ rule: null }] }; break;
         }
-        this.splice('data', e.currentTarget.dataIndex, 1, rule)
+        this.splice('requires', e.currentTarget.dataIndex, 1, rule)
       }
 
       _metricChanged(e) {
@@ -439,7 +439,7 @@ Data model
         if (index >= 0) {
           var metric = this.metrics[index];
           var rule = { rule: 'metric', metric: e.detail.value, type: metric.type }
-          this.set(`data.${e.currentTarget.dataIndex}`, rule);
+          this.set(`requires.${e.currentTarget.dataIndex}`, rule);
         }
       }
     }

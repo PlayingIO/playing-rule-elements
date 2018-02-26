@@ -32,7 +32,7 @@
 
     <div role="widget">
 
-      <template is="dom-repeat" items="[[data]]" as="cond">
+      <template is="dom-repeat" items="[[requires]]" as="cond">
         <div class="content">
           <!-- and rule -->
           <template is="dom-if" if="[[isEqual(cond.rule, 'and')]]">
@@ -139,12 +139,12 @@
         </div>
 
         <template is="dom-if" if="[[cond.conditions]]">
-          <playing-view-conditions id="[[index]]" data="[[cond.conditions]]"></playing-view-conditions>
+          <playing-view-conditions requires="[[cond.conditions]]"></playing-view-conditions>
         </template>
 
       </template>
 
-      <template is="dom-if" if="[[!data.length]]">
+      <template is="dom-if" if="[[!requires.length]]">
         <label>[[i18n('play.rule.conditions.empty')]]</label>
       </template>
 
@@ -163,7 +163,7 @@
           /**
            * the rules array
            */
-          data: {
+          requires: {
             type: Array,
             value: [],
             notify: true
