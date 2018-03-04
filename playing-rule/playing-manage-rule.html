@@ -46,12 +46,8 @@ Example:
       }
     </style>
 
-    <mostly-resource id="request"
-            path="[[path]]"
-            schemas='*'></mostly-resource>
-    <mostly-resource id="editRequest"
-            path="[[path]]"
-            schemas='*'></mostly-resource>
+    <mostly-resource id="request" path="[[path]]" schemas="*"></mostly-resource>
+    <mostly-resource id="editRequest" path="[[path]]" schemas="*"></mostly-resource>
 
     <paper-toast id="toast"></paper-toast>
 
@@ -218,6 +214,7 @@ Example:
         this.$.editRequest.data = editedRule;
         this.$.editRequest.patch().then((response) => {
           this.rule = response.data;
+          this.origRule = this.fp.clone(this.rule);
           this._toast(this.i18n('play.rule.updated'));
         });
       }
