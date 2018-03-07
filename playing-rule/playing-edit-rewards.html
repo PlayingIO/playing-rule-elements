@@ -34,6 +34,8 @@ Example:
                   label="[[i18n('play.rule.rewardsets.metric')]]"
                   placeholder="[[i18n('play.rule.rewardsets.metric.placeholder')]]"
                   selected="{{reward.metric}}"
+                  data-index="[[index]]"
+                  on-selected-changed="_metricChanged"
                   attr-for-selected="id"
                   required>
             <template is="dom-repeat" items="[[metrics]]" as="item">
@@ -233,6 +235,13 @@ Example:
 
       _removeReward(e) {
         this.splice('rewards', e.currentTarget.dataIndex, 1);
+      }
+
+      _metricChanged(e) {
+        var metric = this.findById(this.metrics, e.detail.value);
+        if (metric) {
+          this.set(`rewards.${e.currentTarget.dataIndex}.type`, metric.type);
+        }
       }
     }
 
