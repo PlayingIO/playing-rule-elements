@@ -1,7 +1,7 @@
 Playing Game Rules Web Components
 =================================
 
-Game rules management web components for playful applications.
+Game rules management web components for building playful applications.
 
 # Usage
 
