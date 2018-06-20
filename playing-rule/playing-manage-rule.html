@@ -172,7 +172,7 @@ Example:
 
       ready() {
         super.ready();
-        this.$.editRuleForm.addEventListener('iron-form-presubmit', (event) => {
+        this.$.editRuleForm.addEventListener('iron-form-presubmit', event => {
           event.preventDefault();
           this._saveRule();
         });
@@ -180,7 +180,7 @@ Example:
 
       _fetch() {
         if (typeof this.rule === 'string') {
-          this.$.request.get().then((response) => {
+          this.$.request.get().then(response => {
             this.rule = response.data;
             this.origRule = this.fp.clone(this.rule);
           });
@@ -212,7 +212,7 @@ Example:
         this.page = 'viewer';
         var editedRule = JSON.parse(JSON.stringify(this.rule));
         this.$.editRequest.data = editedRule;
-        this.$.editRequest.patch().then((response) => {
+        this.$.editRequest.patch().then(response => {
           this.rule = response.data;
           this.origRule = this.fp.clone(this.rule);
           this._toast(this.i18n('play.rule.updated'));
@@ -225,7 +225,7 @@ Example:
 
       _deleteRule() {
         this.$.deleteRuleDialog.toggle();
-        this.$.editRequest.remove().then((response) => {
+        this.$.editRequest.remove().then(response => {
           this.fire('playing-rule-deleted', this.rule);
           this._goHome();
         });

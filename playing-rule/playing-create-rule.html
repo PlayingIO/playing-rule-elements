@@ -121,7 +121,7 @@
 
       ready() {
         super.ready();
-        this.$.form.addEventListener('iron-form-presubmit', (event) => {
+        this.$.form.addEventListener('iron-form-presubmit', event => {
           event.preventDefault();
           this._create();
         });
@@ -152,12 +152,12 @@
        * Creates a new rule if the form was successfully submitted.
        */
       _create() {
-        this._doCreate(this.rule).then((rule) => {
+        this._doCreate(this.rule).then(rule => {
           this.resetFields();
           if (!this._createAnother) {
             this._goHome();
           }
-        }).catch((error) => {
+        }).catch(error => {
           this.errors = error.message;
         });
       }
@@ -165,7 +165,7 @@
       _doCreate(rule) {
         rule.type = this.type;
         this.$.request.data = rule;
-        return this.$.request.post().then((response) => {
+        return this.$.request.post().then(response => {
           this.fire('playing-rule-created', response.data);
         })
       }
